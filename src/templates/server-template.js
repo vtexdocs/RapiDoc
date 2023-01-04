@@ -38,7 +38,7 @@ function serverVarsTemplate() {
   // const selectedServerObj = this.resolvedSpec.servers.find((v) => (v.url === this.selectedServer));
   return this.selectedServer && this.selectedServer.variables
     ? html`
-    <table class='m-table'>
+    <table style="margin-block: 16px;" class='m-table'>
       ${Object.entries(this.selectedServer.variables).map((kv) => html`
         <tr>
           <td style="vertical-align: middle;" >${kv[0]}</td>
@@ -89,7 +89,7 @@ export default function serverTemplate() {
   return html`
   <section id = 'servers' part="section-servers" style="text-align:left; direction:ltr; margin-block: 32px 24px;" class='regular-font observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap'}'>
     <span class="api-base-url">Base URL</span>
-    <div style="margin-block: 16px; overflow: auto;">
+    <div style="overflow: auto;">
       ${serverVarsTemplate.call(this)}
     </div>
     <div style="display: flex; align-items: center;">

@@ -390,10 +390,9 @@ export default function securitySchemeTemplate() {
   }
   return html`
   <section id='auth' part="section-auth" style="text-align:left; direction:ltr; margin-top:24px; margin-bottom:24px;" class = 'observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
-    <div class="header-auth-title">Header Auth</div>
-
     ${this.resolvedSpec.securitySchemes && this.resolvedSpec.securitySchemes.length > 0
       ? html`
+      <div class="header-auth-title">Header Auth</div>
         <div id="auth-table">
           ${this.resolvedSpec.securitySchemes.map((v) => html`
             <div id="security-scheme-${v.securitySchemeId}" class="header-auth-container ${v.type.toLowerCase()}">
