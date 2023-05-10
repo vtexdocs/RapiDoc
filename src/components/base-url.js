@@ -2,7 +2,7 @@
 import { LitElement, html, css } from 'lit';
 // eslint-disable-next-line import/extensions
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { joinURLandPath } from '~/utils/url';
+import { joinURLandPath } from '../utils/url';
 import checkSymbol from './assets/check-symbol';
 import copySymbol from './assets/copy-symbol';
 import './toast-component';
@@ -122,7 +122,7 @@ export class BaseUrl extends LitElement {
                 flex: 1 0 auto;
                 padding: 4px 8px;
                 font-family: var(--font-mono);
-                font-size: var(--font-size-mono)
+                font-size: var(--font-size-small)
             }
 
             .url:hover {
@@ -217,4 +217,4 @@ export class BaseUrl extends LitElement {
       }
 }
 
-customElements.define('base-url', BaseUrl);
+if (!customElements.get('base-url')) customElements.define('base-url', BaseUrl);

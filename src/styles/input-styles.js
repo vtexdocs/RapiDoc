@@ -103,7 +103,7 @@ input[type="file"],
 input[type="text"],
 input[type="password"] {
   font-family:var(--font-mono); 
-  font-size: var(--font-size-mono);
+  font-size: var(--font-size-small);
   transition: border .2s;
   padding: 6px 8px;
   line-height: 140%;

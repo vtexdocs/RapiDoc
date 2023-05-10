@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import ColorUtils from '~/utils/color-utils';
+import ColorUtils from '../utils/color-utils';
 /* Generates an schema object containing type and constraint info */
 export default function setTheme(baseTheme, theme = {}) {
   let newTheme = {};
@@ -231,7 +231,7 @@ export default function setTheme(baseTheme, theme = {}) {
     
     --resp-area-height: ${this.responseAreaHeight};
     --font-size-small:  ${this.fontSize === 'default' ? '12px' : (this.fontSize === 'large' ? '13px' : '14px')};
-    --font-size-mono:   ${this.fontSize === 'default' ? '13px' : (this.fontSize === 'large' ? '14px' : '15px')};
+    --font-size-mono:   ${this.fontSize === 'default' ? '15px' : (this.fontSize === 'large' ? '16px' : '15px')};
     --font-size-regular: ${this.fontSize === 'default' ? '16px' : (this.fontSize === 'large' ? '17px' : '18px')};
     --dialog-z-index: 1000;
 
@@ -246,8 +246,6 @@ export default function setTheme(baseTheme, theme = {}) {
     --fg2:${newTheme.fg2};
     --fg3:${newTheme.fg3};
     --light-fg:${newTheme.lightFg};
-    --selection-bg:${newTheme.selectionBg};
-    --selection-fg:${newTheme.selectionFg};
     --overlay-bg:${newTheme.overlayBg};
     
     /* Border Colors */
