@@ -575,7 +575,7 @@ export default class RapiDoc extends LitElement {
   } */
 
   attributeChangedCallback(name, oldVal, newVal) {
-    if (name === 'spec-url') {
+    if (name === 'spec-url' || name === 'spec') {
       if (oldVal !== newVal) {
         // put it at the end of event-loop to load all the attributes
         window.setTimeout(async () => {
