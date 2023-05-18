@@ -7,8 +7,7 @@ customize their theme. Simply add your css to this file and yarn build.
 
 export default css`
 .code-container {
-  padding-inline: 32px;
-  padding-top: 16px;
+  tab-size: 4;
 }
 .code-container > code {
   font-size: 14px;
