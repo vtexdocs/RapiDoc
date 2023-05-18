@@ -15517,6 +15517,9 @@ input[type="checkbox"]:checked:after {
     margin-block: 32px 16px; 
     padding-left: 32px;
   }
+  .clear-btn{
+    margin-left: 32px
+  }
 
   @media (max-width: 1280px) {
     .row-api {
@@ -15526,6 +15529,9 @@ input[type="checkbox"]:checked:after {
     }
     .row-api-right-box{
       padding-left: 0px;
+    }
+    .clear-btn{
+      margin-left: 0px
     }
 
     .row-api-left,
@@ -19621,7 +19627,6 @@ if (!customElements.get('json-tree')) customElements.define('json-tree', JsonTre
   flex-shrink: 1;
   text-overflow: ellipsis;
   overflow: hidden;
-  display: none;
   padding-left: 10px;
 }
 .expanded-descr .key-descr{
@@ -22279,7 +22284,7 @@ class ApiRequest extends lit_element_s {
       }
     }
     return lit_html_x`
-      <button style="margin-left: 32px" class="m-btn m-btn-secondary" part="btn btn-outline" @click="${this.clearResponseData}">CLEAR RESPONSE</button>
+      <button class="clear-btn m-btn m-btn-secondary" part="btn btn-outline" @click="${this.clearResponseData}">CLEAR RESPONSE</button>
       <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 24px;">
         ${this.codeExampleTemplate('flex')}
         <div style="background: #F8F7FC; padding-inline: 32px;padding-block: 16px">
@@ -22684,7 +22689,7 @@ class SchemaTable extends lit_element_s {
       .param-table .tr {
         border-bottom: 1px solid var(--light-border-color);
         display: grid;
-        grid-template-columns: 2fr 1fr 4fr;
+        grid-template-columns: 3fr 2fr 4fr;
         overflow: hidden;
       }
       .param-table .td {
@@ -22698,9 +22703,17 @@ class SchemaTable extends lit_element_s {
       }
       .table .key-descr p {
         margin: 0px;
+        display: inline;
       }
       .key.deprecated .key-label {
         color: var(--red);
+      }
+      .deprecated-label{
+        color: #ef6660;
+        padding: 1px 5px;
+        font-size: 12px;
+        border: 1px solid #ef6660;
+        border-radius: 4px;
       }
       .key-label {
         background-color: #f8f7fc;
@@ -22723,13 +22736,12 @@ class SchemaTable extends lit_element_s {
       .collapsed-all-descr .tr:not(.expanded-descr) {
         max-height: calc(var(--font-size-regular) + var(--font-size-regular) + 10px);
       }
-      .collapsed-all-descr .tr:not(.expanded-descr) p {
+      .collapsed-all-descr .tr:not(.expanded-descr) .td p, .collapsed-all-descr .tr:not(.expanded-descr) .key, .collapsed-all-descr .tr:not(.expanded-descr) .key-type {
         text-overflow: ellipsis;
-        display: inline-block;
+        display: inline;
         min-width: 0;
         white-space: nowrap;
         overflow: hidden;
-        width: 98%;
       }
       .obj-toggle {
         padding: 0 2px;
@@ -22770,7 +22782,7 @@ class SchemaTable extends lit_element_s {
         </div>
         ${(_this$data3 = this.data) !== null && _this$data3 !== void 0 && _this$data3['::description'] ? lit_html_x`<span part="schema-description" class='m-markdown'> ${unsafe_html_o(marked(this.data['::description'] || ''))}</span>` : ''}
         <div class="param-table">
-          <div style='display:grid; grid-template-columns: 2fr 1fr 4fr; overflow: hidden; border-bottom:1px solid var(--light-border-color);'>
+          <div style='display:grid; grid-template-columns: 3fr 2fr 4fr; overflow: hidden; border-bottom:1px solid var(--light-border-color);'>
             <div class='key' style='font-family:var(--font-regular); font-weight:bold;'> Field </div>
             <div class='key-type' style='font-family:var(--font-regular); font-weight:bold;'> Type </div>
             <div class='key-descr' style='font-family:var(--font-regular); font-weight:bold;'> Description </div>
@@ -22853,20 +22865,20 @@ class SchemaTable extends lit_element_s {
                     <span class='obj-toggle ${newSchemaLevel < this.schemaExpandLevel ? 'expanded' : 'collapsed'}' data-obj='${keyLabel}'>
                       ${schemaLevel < this.schemaExpandLevel ? '-' : '+'}
                     </span>` : ''}
-                ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION') ? lit_html_x`<span class="xxx-of-key" style="margin-left:-6px">${keyLabel}</span><span class="${isOneOfLabel ? 'xxx-of-key' : 'xxx-of-descr'}">${keyDescr}</span>` : keyLabel.endsWith('*') ? lit_html_x`<span class="key-label" style="display:inline-block; margin-left:-6px;">${data['::deprecated'] ? '✗' : ''} ${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>*</span>` : lit_html_x`<span class="key-label" style="display:inline-block; margin-left:-6px;">${data['::deprecated'] ? '✗' : ''} ${keyLabel === '::props' ? '' : keyLabel}</span>`}
+                ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION') ? lit_html_x`<span class="xxx-of-key" style="margin-left:-6px">${keyLabel}</span><span class="${isOneOfLabel ? 'xxx-of-key' : 'xxx-of-descr'}">${keyDescr}</span>` : keyLabel.endsWith('*') ? lit_html_x`<span class="key-label" style="display:inline-block; margin-left:-6px;"><span>${data['::deprecated'] ? '❌' : ''} ${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>*</span></span>` : lit_html_x`<span class="key-label" style="display:inline-block; margin-left:-6px;"><span>${data['::deprecated'] ? '❌' : ''} ${keyLabel === '::props' ? '' : keyLabel}</span></span>`}
                 ${data['::type'] === 'xxx-of' && dataType === 'array' ? lit_html_x`<span style="color:var(--primary-color)">ARRAY</span>` : ''} 
               </div>
-              <div class='td key-type' title="${data['::readwrite'] === 'readonly' ? 'Read-Only' : data['::readwrite'] === 'writeonly' ? 'Write-Only' : ''}">
+              <div class='td key-type' title="${data['::readwrite'] === 'readonly' ? 'Read-Only' : data['::readwrite'] === 'writeonly' ? 'Write-Only' : ''}"><span>
                 ${(data['::type'] || '').includes('xxx-of') ? '' : detailObjType}
                 ${data['::readwrite'] === 'readonly' ? ' 🆁' : data['::readwrite'] === 'writeonly' ? ' 🆆' : ''}
-              </div>
+              </span></div>
               <div class='td key-descr' style='line-height:1.7'>${unsafe_html_o(marked(description || ''))}</div>
             </div>` : lit_html_x`
             ${data['::type'] === 'array' && dataType === 'array' ? lit_html_x`
                 <div class='tr'> 
                   <div class='td key'></div> 
                   <div class='td key-type'>
-                    ${arrayType && arrayType !== 'object' ? `${dataType} of ${arrayType}` : dataType}
+                    <span>${arrayType && arrayType !== 'object' ? `${dataType} of ${arrayType}` : dataType}</span>
                   </div> 
                   <div class='td key-descr'></div> 
                 </div>` : ''}`}
@@ -22893,30 +22905,30 @@ class SchemaTable extends lit_element_s {
       return;
     }
     const dataTypeCss = type.replace(/┃.*/g, '').replace(/[^a-zA-Z0-9+]/g, '').substring(0, 4).toLowerCase();
-    const descrExpander = `${constraint || defaultValue || allowedValues || pattern ? '<span class="descr-expand-toggle">➔</span>' : ''}`;
+    const typeDivider = type.replaceAll('┃', ' | ');
+    const descrExpander = `${schemaDescription.length >= 50 || constraint || defaultValue || allowedValues || pattern ? '<span class="descr-expand-toggle">➔</span>' : ''}`;
     let dataTypeHtml = '';
     if (dataType === 'array') {
       dataTypeHtml = lit_html_x` 
-        <div class='td key-type ${dataTypeCss}' title="${readOrWrite === 'readonly' ? 'Read-Only' : readOrWriteOnly === 'writeonly' ? 'Write-Only' : ''}">
-          [${type}] ${readOrWrite === 'readonly' ? '🆁' : readOrWrite === 'writeonly' ? '🆆' : ''}
-        </div>`;
+        <div class='td key-type ${dataTypeCss}' title="${readOrWrite === 'readonly' ? 'Read-Only' : readOrWriteOnly === 'writeonly' ? 'Write-Only' : ''}"><span>
+          [${typeDivider}] ${readOrWrite === 'readonly' ? '🆁' : readOrWrite === 'writeonly' ? '🆆' : ''}
+        </span></div>`;
     } else {
       dataTypeHtml = lit_html_x` 
-        <div class='td key-type ${dataTypeCss}' title="${readOrWriteOnly === '🆁' ? 'Read-Only' : readOrWriteOnly === '🆆' ? 'Write-Only' : ''}">
-          ${type} ${readOrWriteOnly}
-        </div>`;
+        <div class='td key-type ${dataTypeCss}' title="${readOrWriteOnly === '🆁' ? 'Read-Only' : readOrWriteOnly === '🆆' ? 'Write-Only' : ''}"><span>
+          ${typeDivider} ${readOrWriteOnly}
+        </span></div>`;
     }
     return lit_html_x`
       <div class = "tr primitive" title="${deprecated ? 'Deprecated' : ''}">
         <div class="td key ${deprecated}" style='padding-left:${leftPadding}px'>
-          ${deprecated ? lit_html_x`<span style='color:var(--red);'>✗</span>` : ''}
           ${(_keyLabel = keyLabel) !== null && _keyLabel !== void 0 && _keyLabel.endsWith('*') ? lit_html_x`
-              <span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span>
-              <span style='color:var(--red);'>*</span>` : key.startsWith('::OPTION') ? lit_html_x`<span class='xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>` : lit_html_x`${keyLabel ? lit_html_x`<span class="key-label"> ${keyLabel}</span>` : lit_html_x`<span class="xxx-of-descr">${schemaTitle}</span>`}`}
+              <span><span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>*</span></span>` : key.startsWith('::OPTION') ? lit_html_x`<span class='xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>` : lit_html_x`${keyLabel ? lit_html_x`<span class="key-label"> ${keyLabel}</span>` : lit_html_x`<span class="xxx-of-descr">${schemaTitle}</span>`}`}
         </div>
         ${dataTypeHtml}
         <div class='td key-descr'>
           ${lit_html_x`<span>
+          ${deprecated ? lit_html_x`<span class="deprecated-label">Deprecated</span>` : ''}
             ${unsafe_html_o(marked(dataType === 'array' ? `${descrExpander} ${description}` : schemaTitle ? `${descrExpander} <b>${schemaTitle}:</b> ${schemaDescription}` : `${descrExpander} ${schemaDescription}`))}
           </span>`}
           ${constraint ? lit_html_x`<div class='' style='display:inline-block; line-break:anywhere; margin-right:8px;'> <span class='bold-text'>Constraints: </span> ${constraint}</div>` : ''}
@@ -23696,9 +23708,6 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
     ${this.renderStyle === 'read' ? lit_html_x`<div class='divider' part="operation-divider"></div>` : ''}
     <div class='expanded-endpoint-body observe-me ${path.method} ${path.deprecated ? 'deprecated' : ''} ' part="section-operation ${path.elementId}">
     <span part="anchor-endpoint" id='${path.elementId}'></span>
-      ${this.renderStyle === 'focused' && tagName !== 'General ⦂' ? lit_html_x`
-      <h3 class="operation-tag" style="margin-bottom:32px; color: #6b7785" part="section-operation-tag"> <a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>  ›  ${tagName} </h3>
-      ` : ''}
       ${path.deprecated ? lit_html_x`<div class="bold-text red-text"> DEPRECATED </div>` : ''}
       ${lit_html_x`
         ${path.xBadges && ((_path$xBadges = path.xBadges) === null || _path$xBadges === void 0 ? void 0 : _path$xBadges.length) > 0 ? lit_html_x`
@@ -23706,15 +23715,20 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
               ${path.xBadges.map(v => lit_html_x`<span style="margin:1px; margin-right:5px; padding:1px 8px; font-weight:bold; border-radius:12px;  background-color: var(--light-${v.color}, var(--input-bg)); color:var(--${v.color}); border:1px solid var(--${v.color})">${v.label}</span>`)}
             </div>
             ` : ''}
-        ${this.specUrl && this.allowSpecFileDownload ? lit_html_x`<div style="position:absolute; right:0; top:28px;"><div style="display:flex; justify-content: flex-end; margin:0px 0px 32px; gap:8px; flex-wrap: wrap;">
-                <button class="m-btn m-btn-tertiary thin-border" part="btn btn-outline" @click='${e => {
+      <div style="display:flex; justify-content:space-between; flex-wrap: wrap; top:28px; margin-bottom:32px; ">
+      ${this.renderStyle === 'focused' && tagName !== 'General ⦂' ? lit_html_x`
+      <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> <a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>  ›  ${tagName} </h3>
+      ` : ''}
+      ${this.specUrl && this.allowSpecFileDownload ? lit_html_x`<div><div style="display:flex; justify-content: flex-end; gap:8px; margin-top: 24px; flex-wrap: wrap;">
+              <button class="m-btn m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${e => {
     downloadResource(this.specUrl, 'openapi-spec.json', e);
   }}'>Download OpenAPI spec</button>
-                  <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
+                <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
     viewResource(this.specUrl, e);
   }}'>View OpenAPI spec</button>
-              </div></div>` : ''}
-        <h2 part="section-operation-summary"> ${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2>
+            </div></div>` : ''}
+      </div>
+      <h2 part="section-operation-summary"> ${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2>
         ${path.isWebhook ? lit_html_x`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>` : lit_html_x`
             <div class='mono-font regular-font-size label-operation-container' part="section-operation-webhook-method">
               <div class='label-operation-method-container' style='border-color: var(--${path.method}-border-color); background-color: var(--${path.method}-bg-color);'>
@@ -70030,7 +70044,7 @@ module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$s
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("8b6fecb4b3ffe2376cd0")
+/******/ 		__webpack_require__.h = () => ("2ca490edbc6e640e9148")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

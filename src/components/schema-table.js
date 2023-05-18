@@ -45,7 +45,7 @@ export default class SchemaTable extends LitElement {
       .param-table .tr {
         border-bottom: 1px solid var(--light-border-color);
         display: grid;
-        grid-template-columns: 2fr 1fr 4fr;
+        grid-template-columns: 3fr 2fr 4fr;
         overflow: hidden;
       }
       .param-table .td {
@@ -59,9 +59,17 @@ export default class SchemaTable extends LitElement {
       }
       .table .key-descr p {
         margin: 0px;
+        display: inline;
       }
       .key.deprecated .key-label {
         color: var(--red);
+      }
+      .deprecated-label{
+        color: #ef6660;
+        padding: 1px 5px;
+        font-size: 12px;
+        border: 1px solid #ef6660;
+        border-radius: 4px;
       }
       .key-label {
         background-color: #f8f7fc;
@@ -84,13 +92,12 @@ export default class SchemaTable extends LitElement {
       .collapsed-all-descr .tr:not(.expanded-descr) {
         max-height: calc(var(--font-size-regular) + var(--font-size-regular) + 10px);
       }
-      .collapsed-all-descr .tr:not(.expanded-descr) p {
+      .collapsed-all-descr .tr:not(.expanded-descr) .td p, .collapsed-all-descr .tr:not(.expanded-descr) .key, .collapsed-all-descr .tr:not(.expanded-descr) .key-type {
         text-overflow: ellipsis;
-        display: inline-block;
+        display: inline;
         min-width: 0;
         white-space: nowrap;
         overflow: hidden;
-        width: 98%;
       }
       .obj-toggle {
         padding: 0 2px;
@@ -138,7 +145,7 @@ export default class SchemaTable extends LitElement {
           : ''
         }
         <div class="param-table">
-          <div style='display:grid; grid-template-columns: 2fr 1fr 4fr; overflow: hidden; border-bottom:1px solid var(--light-border-color);'>
+          <div style='display:grid; grid-template-columns: 3fr 2fr 4fr; overflow: hidden; border-bottom:1px solid var(--light-border-color);'>
             <div class='key' style='font-family:var(--font-regular); font-weight:bold;'> Field </div>
             <div class='key-type' style='font-family:var(--font-regular); font-weight:bold;'> Type </div>
             <div class='key-descr' style='font-family:var(--font-regular); font-weight:bold;'> Description </div>
@@ -244,15 +251,15 @@ export default class SchemaTable extends LitElement {
                 ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
                   ? html`<span class="xxx-of-key" style="margin-left:-6px">${keyLabel}</span><span class="${isOneOfLabel ? 'xxx-of-key' : 'xxx-of-descr'}">${keyDescr}</span>`
                   : keyLabel.endsWith('*')
-                    ? html`<span class="key-label" style="display:inline-block; margin-left:-6px;">${data['::deprecated'] ? '✗' : ''} ${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>*</span>`
-                    : html`<span class="key-label" style="display:inline-block; margin-left:-6px;">${data['::deprecated'] ? '✗' : ''} ${keyLabel === '::props' ? '' : keyLabel}</span>`
+                    ? html`<span class="key-label" style="display:inline-block; margin-left:-6px;"><span>${data['::deprecated'] ? '❌' : ''} ${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>*</span></span>`
+                    : html`<span class="key-label" style="display:inline-block; margin-left:-6px;"><span>${data['::deprecated'] ? '❌' : ''} ${keyLabel === '::props' ? '' : keyLabel}</span></span>`
                 }
                 ${data['::type'] === 'xxx-of' && dataType === 'array' ? html`<span style="color:var(--primary-color)">ARRAY</span>` : ''} 
               </div>
-              <div class='td key-type' title="${data['::readwrite'] === 'readonly' ? 'Read-Only' : data['::readwrite'] === 'writeonly' ? 'Write-Only' : ''}">
+              <div class='td key-type' title="${data['::readwrite'] === 'readonly' ? 'Read-Only' : data['::readwrite'] === 'writeonly' ? 'Write-Only' : ''}"><span>
                 ${(data['::type'] || '').includes('xxx-of') ? '' : detailObjType}
                 ${data['::readwrite'] === 'readonly' ? ' 🆁' : data['::readwrite'] === 'writeonly' ? ' 🆆' : ''}
-              </div>
+              </span></div>
               <div class='td key-descr' style='line-height:1.7'>${unsafeHTML(marked(description || ''))}</div>
             </div>`
           : html`
@@ -261,7 +268,7 @@ export default class SchemaTable extends LitElement {
                 <div class='tr'> 
                   <div class='td key'></div> 
                   <div class='td key-type'>
-                    ${arrayType && arrayType !== 'object' ? `${dataType} of ${arrayType}` : dataType}
+                    <span>${arrayType && arrayType !== 'object' ? `${dataType} of ${arrayType}` : dataType}</span>
                   </div> 
                   <div class='td key-descr'></div> 
                 </div>`
@@ -314,27 +321,26 @@ export default class SchemaTable extends LitElement {
       return;
     }
     const dataTypeCss = type.replace(/┃.*/g, '').replace(/[^a-zA-Z0-9+]/g, '').substring(0, 4).toLowerCase();
-    const descrExpander = `${constraint || defaultValue || allowedValues || pattern ? '<span class="descr-expand-toggle">➔</span>' : ''}`;
+    const typeDivider = type.replaceAll('┃', ' | ');
+    const descrExpander = `${schemaDescription.length >= 50 || constraint || defaultValue || allowedValues || pattern ? '<span class="descr-expand-toggle">➔</span>' : ''}`;
     let dataTypeHtml = '';
     if (dataType === 'array') {
       dataTypeHtml = html` 
-        <div class='td key-type ${dataTypeCss}' title="${readOrWrite === 'readonly' ? 'Read-Only' : readOrWriteOnly === 'writeonly' ? 'Write-Only' : ''}">
-          [${type}] ${readOrWrite === 'readonly' ? '🆁' : readOrWrite === 'writeonly' ? '🆆' : ''}
-        </div>`;
+        <div class='td key-type ${dataTypeCss}' title="${readOrWrite === 'readonly' ? 'Read-Only' : readOrWriteOnly === 'writeonly' ? 'Write-Only' : ''}"><span>
+          [${typeDivider}] ${readOrWrite === 'readonly' ? '🆁' : readOrWrite === 'writeonly' ? '🆆' : ''}
+        </span></div>`;
     } else {
       dataTypeHtml = html` 
-        <div class='td key-type ${dataTypeCss}' title="${readOrWriteOnly === '🆁' ? 'Read-Only' : readOrWriteOnly === '🆆' ? 'Write-Only' : ''}">
-          ${type} ${readOrWriteOnly}
-        </div>`;
+        <div class='td key-type ${dataTypeCss}' title="${readOrWriteOnly === '🆁' ? 'Read-Only' : readOrWriteOnly === '🆆' ? 'Write-Only' : ''}"><span>
+          ${typeDivider} ${readOrWriteOnly}
+        </span></div>`;
     }
     return html`
       <div class = "tr primitive" title="${deprecated ? 'Deprecated' : ''}">
         <div class="td key ${deprecated}" style='padding-left:${leftPadding}px'>
-          ${deprecated ? html`<span style='color:var(--red);'>✗</span>` : ''}
           ${keyLabel?.endsWith('*')
             ? html`
-              <span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span>
-              <span style='color:var(--red);'>*</span>`
+              <span><span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>*</span></span>`
             : key.startsWith('::OPTION')
               ? html`<span class='xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
               : html`${keyLabel ? html`<span class="key-label"> ${keyLabel}</span>` : html`<span class="xxx-of-descr">${schemaTitle}</span>`}`
@@ -343,6 +349,7 @@ export default class SchemaTable extends LitElement {
         ${dataTypeHtml}
         <div class='td key-descr'>
           ${html`<span>
+          ${deprecated ? html`<span class="deprecated-label">Deprecated</span>` : ''}
             ${unsafeHTML(marked(dataType === 'array'
               ? `${descrExpander} ${description}`
               : schemaTitle
