@@ -41,6 +41,9 @@ export default css`
     margin-block: 32px 16px; 
     padding-left: 32px;
   }
+  .clear-btn{
+    margin-left: 32px
+  }
 
   @media (max-width: 1280px) {
     .row-api {
@@ -50,6 +53,9 @@ export default css`
     }
     .row-api-right-box{
       padding-left: 0px;
+    }
+    .clear-btn{
+      margin-left: 0px
     }
 
     .row-api-left,
