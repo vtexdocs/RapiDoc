@@ -19646,7 +19646,6 @@ if (!customElements.get('json-tree')) customElements.define('json-tree', JsonTre
   flex-shrink: 1;
   text-overflow: ellipsis;
   overflow: hidden;
-  display: none;
   padding-left: 10px;
 }
 .expanded-descr .key-descr{
@@ -19659,7 +19658,6 @@ if (!customElements.get('json-tree')) customElements.define('json-tree', JsonTre
   font-size: calc(var(--font-size-small) - 2px); 
   font-weight:bold; 
   background-color:var(--primary-color); 
-  color:var(--primary-color-invert); 
   border-radius:2px;
   line-height:calc(var(--font-size-small) + 6px);
   padding:0px 5px; 
@@ -22837,11 +22835,15 @@ class SchemaTable extends lit_element_s {
       }
     }
     if (!data) {
-      return lit_html_x`<div class="null" style="display:inline;">
-        <span style='margin-left:${(schemaLevel + 1) * 16}px'> &nbsp; </span>
+      return lit_html_x`<div class="tr">
+        <div class="td key" style="padding-left:${(schemaLevel + 1) * 10}px">
         <span class="key-label xxx-of-key"> ${key.replace('::OPTION~', '')}</span>
+        </div>
+        <div class="td key-type">
         ${dataType === 'array' ? lit_html_x`<span class='mono-font'> [ ] </span>` : dataType === 'object' ? lit_html_x`<span class='mono-font'> { } </span>` : lit_html_x`<span class='mono-font'> schema undefined </span>`}
-      </div>`;
+        </div>
+        <div class="td key-descr">${unsafe_html_o(marked(description)) || ''}</div>
+        </div>`;
     }
     const newSchemaLevel = (_data$Type = data['::type']) !== null && _data$Type !== void 0 && _data$Type.startsWith('xxx-of') ? schemaLevel : schemaLevel + 1;
     const newIndentLevel = dataType === 'xxx-of-option' || data['::type'] === 'xxx-of-option' || key.startsWith('::OPTION') ? indentLevel : indentLevel + 1;
@@ -23948,6 +23950,7 @@ function componentsTemplate() {
 
 
 
+
 /* eslint-disable indent */
 function overview_template_headingRenderer() {
   const renderer = new marked.Renderer();
@@ -23957,6 +23960,7 @@ function overview_template_headingRenderer() {
 function overviewTemplate() {
   var _this$resolvedSpec, _this$resolvedSpec$in, _this$resolvedSpec$in2;
   this.resolvedSpec.info.description = processPathDescription(this.resolvedSpec.info.description);
+  marked.Renderer.prototype.blockquote = renderBlockquote;
   return lit_html_x`
     <section part="section-overview" class="observe-me ${this.renderStyle === 'view' ? 'section-gap' : 'section-gap--read-mode'}">
       <span part="anchor-endpoint" id="overview"></span>
@@ -70088,7 +70092,7 @@ module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$s
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("45a70e6d0abe0cbf0d87")
+/******/ 		__webpack_require__.h = () => ("aa52d8e34c7da92dc902")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

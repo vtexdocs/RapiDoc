@@ -3,6 +3,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-li
 import { marked } from 'marked';
 import processPathDescription from '../utils/magic-block-utils';
 import { downloadResource, viewResource } from '../utils/common-utils';
+import renderBlockquote from '../utils/renderBlockquote';
 
 /* eslint-disable indent */
 function headingRenderer() {
@@ -13,6 +14,7 @@ function headingRenderer() {
 
 export default function overviewTemplate() {
   this.resolvedSpec.info.description = processPathDescription(this.resolvedSpec.info.description);
+  marked.Renderer.prototype.blockquote = renderBlockquote;
 
   return html`
     <section part="section-overview" class="observe-me ${this.renderStyle === 'view' ? 'section-gap' : 'section-gap--read-mode'}">

@@ -186,9 +186,11 @@ export default class SchemaTable extends LitElement {
       }
     }
     if (!data) {
-      return html`<div class="null" style="display:inline;">
-        <span style='margin-left:${(schemaLevel + 1) * 16}px'> &nbsp; </span>
+      return html`<div class="tr">
+        <div class="td key" style="padding-left:${(schemaLevel + 1) * 10}px">
         <span class="key-label xxx-of-key"> ${key.replace('::OPTION~', '')}</span>
+        </div>
+        <div class="td key-type">
         ${
           dataType === 'array'
             ? html`<span class='mono-font'> [ ] </span>`
@@ -196,7 +198,9 @@ export default class SchemaTable extends LitElement {
               ? html`<span class='mono-font'> { } </span>`
               : html`<span class='mono-font'> schema undefined </span>`
         }
-      </div>`;
+        </div>
+        <div class="td key-descr">${unsafeHTML(marked(description)) || ''}</div>
+        </div>`;
     }
 
     const newSchemaLevel = data['::type']?.startsWith('xxx-of') ? schemaLevel : (schemaLevel + 1);
