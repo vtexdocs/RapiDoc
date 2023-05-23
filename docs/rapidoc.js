@@ -12019,7 +12019,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1016:
+/***/ 6698:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15077,17 +15077,36 @@ var prism_csharp = __webpack_require__(9016);
     margin: 20px 0;
     border-radius: 4px;
     align-items: center;
-    background: #f8f7fc;
-    border: 1px solid #ccced8;
     grid-template-columns: 20px 1fr;
   }
 
-  .m-markdown blockquote:before {
+  .m-markdown .info-blockquote {
+    background: #f8f7fc;
+    border: 1px solid #ccced8;
+  }
+
+  .m-markdown .info-blockquote:before {
     display: inline-block;
     height: 20px;
     width: 20px;
     content: '';
     background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/info.svg')
+      no-repeat 0 0;
+    background-size: 20px 20px;
+    position: absolute;
+  }
+
+  .m-markdown .warning-blockquote {
+    background: #fff2d4;
+    border: 1px solid #ffb100;
+  }
+
+  .m-markdown .warning-blockquote:before {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    content: '';
+    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/warning.svg')
       no-repeat 0 0;
     background-size: 20px 20px;
     position: absolute;
@@ -19627,6 +19646,7 @@ if (!customElements.get('json-tree')) customElements.define('json-tree', JsonTre
   flex-shrink: 1;
   text-overflow: ellipsis;
   overflow: hidden;
+  display: none;
   padding-left: 10px;
 }
 .expanded-descr .key-descr{
@@ -19650,6 +19670,7 @@ if (!customElements.get('json-tree')) customElements.define('json-tree', JsonTre
 .xxx-of-descr {
   font-family: var(--font-regular);
   color: var(--primary-color);
+  font-size: calc(var(--font-size-small) - 1px);
   margin-left: 2px;
 }
 
@@ -23659,9 +23680,31 @@ function processPathDescription(description) {
   const replacedMarkdown = description.replace(magicBlockRegex, replacerBlocks);
   return replacedMarkdown;
 }
+;// CONCATENATED MODULE: ./src/utils/renderBlockquote.js
+function renderBlockquote(text) {
+  const infoMarker = 'ℹ️';
+  const bookMarker = '📘';
+  const warningMarker = '⚠️';
+  if (text.startsWith(`<p>${infoMarker}`)) {
+    // Apply custom styling for the info blockquote
+    return `<blockquote class="info-blockquote">${text.replace(infoMarker, '').trim()}</blockquote>`;
+  }
+  if (text.startsWith(`<p>${bookMarker}`)) {
+    // Apply custom styling for the info blockquote
+    return `<blockquote class="info-blockquote">${text.replace(bookMarker, '').trim()}</blockquote>`;
+  }
+  if (text.startsWith(`<p>${warningMarker} `)) {
+    // Apply custom styling for the warning blockquote
+    return `<blockquote class="warning-blockquote">${text.replace(warningMarker, '').trim()}</blockquote>`;
+  }
+
+  // Default rendering for regular blockquotes
+  return `<blockquote class="info-blockquote">${text}</blockquote>`;
+}
 ;// CONCATENATED MODULE: ./src/templates/expanded-endpoint-template.js
 
  // eslint-disable-line import/extensions
+
 
 
 
@@ -23702,6 +23745,7 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
     nonEmptyApiKeys.push(rapiDocApiKey);
   }
   const docUrl = `https://developers.vtex.com/docs/api-reference/${this.specUrl.split('/')[3]}`;
+  marked.Renderer.prototype.blockquote = renderBlockquote;
   const codeSampleTabPanel = path.xCodeSamples ? codeSamplesTemplate.call(this, path.xCodeSamples) : '';
   path.description = processPathDescription(path.description);
   return lit_html_x`
@@ -70044,7 +70088,7 @@ module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$s
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("2ca490edbc6e640e9148")
+/******/ 		__webpack_require__.h = () => ("45a70e6d0abe0cbf0d87")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
@@ -71063,7 +71107,7 @@ module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$s
 /******/ 	// module cache are used so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	var __webpack_exports__ = __webpack_require__(1016);
+/******/ 	var __webpack_exports__ = __webpack_require__(6698);
 /******/ 	
 /******/ })()
 ;

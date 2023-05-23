@@ -54,6 +54,7 @@ export default css`
   flex-shrink: 1;
   text-overflow: ellipsis;
   overflow: hidden;
+  display: none;
   padding-left: 10px;
 }
 .expanded-descr .key-descr{
@@ -77,6 +78,7 @@ export default css`
 .xxx-of-descr {
   font-family: var(--font-regular);
   color: var(--primary-color);
+  font-size: calc(var(--font-size-small) - 1px);
   margin-left: 2px;
 }
 

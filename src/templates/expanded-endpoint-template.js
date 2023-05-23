@@ -10,6 +10,7 @@ import '../components/api-response';
 import '../components/content-copy-button';
 import processPathDescription from '../utils/magic-block-utils';
 import { joinURLandPath } from '../utils/url';
+import renderBlockquote from '../utils/renderBlockquote';
 
 /* eslint-disable indent */
 function headingRenderer(tagElementId) {
@@ -37,6 +38,7 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
   }
 
   const docUrl = `https://developers.vtex.com/docs/api-reference/${this.specUrl.split('/')[3]}`;
+  marked.Renderer.prototype.blockquote = renderBlockquote;
 
   const codeSampleTabPanel = path.xCodeSamples ? codeSamplesTemplate.call(this, path.xCodeSamples) : '';
   path.description = processPathDescription(path.description);
