@@ -84,17 +84,36 @@ export default css`
     margin: 20px 0;
     border-radius: 4px;
     align-items: center;
-    background: #f8f7fc;
-    border: 1px solid #ccced8;
     grid-template-columns: 20px 1fr;
   }
 
-  .m-markdown blockquote:before {
+  .m-markdown .info-blockquote {
+    background: #f8f7fc;
+    border: 1px solid #ccced8;
+  }
+
+  .m-markdown .info-blockquote:before {
     display: inline-block;
     height: 20px;
     width: 20px;
     content: '';
     background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/info.svg')
+      no-repeat 0 0;
+    background-size: 20px 20px;
+    position: absolute;
+  }
+
+  .m-markdown .warning-blockquote {
+    background: #fff2d4;
+    border: 1px solid #ffb100;
+  }
+
+  .m-markdown .warning-blockquote:before {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    content: '';
+    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/warning.svg')
       no-repeat 0 0;
     background-size: 20px 20px;
     position: absolute;
