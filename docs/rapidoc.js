@@ -15112,6 +15112,22 @@ var prism_csharp = __webpack_require__(9016);
     position: absolute;
   }
 
+  .m-markdown .danger-blockquote {
+    background: #fdefef;
+    border: 1px solid #dc5a41;
+  }
+
+  .m-markdown .danger-blockquote:before {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    content: '';
+    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/danger.svg')
+      no-repeat 0 0;
+    background-size: 20px 20px;
+    position: absolute;
+  }
+
   blockquote p{
     grid-column: 2 / -1;
     margin: 0;
@@ -22792,7 +22808,7 @@ class SchemaTable extends lit_element_s {
       <div class="table ${this.schemaDescriptionExpanded === 'true' ? 'expanded-all-descr' : 'collapsed-all-descr'}" @click="${e => this.handleAllEvents(e)}">
         <div class='toolbar'>
           <div class="toolbar-item schema-root-type ${((_this$data = this.data) === null || _this$data === void 0 ? void 0 : _this$data['::type']) || ''} "> ${((_this$data2 = this.data) === null || _this$data2 === void 0 ? void 0 : _this$data2['::type']) || ''} </div>
-          ${this.allowSchemaDescriptionExpandToggle === 'true' ? lit_html_x`
+          ${this.data && this.allowSchemaDescriptionExpandToggle === 'true' ? lit_html_x`
               <div style="flex:1"></div>
               <div part="schema-multiline-toggle" class='toolbar-item schema-multiline-toggle' > 
                 ${this.schemaDescriptionExpanded === 'true' ? 'Single line description' : 'Multiline description'}
@@ -22800,16 +22816,16 @@ class SchemaTable extends lit_element_s {
             ` : ''}
         </div>
         ${(_this$data3 = this.data) !== null && _this$data3 !== void 0 && _this$data3['::description'] ? lit_html_x`<span part="schema-description" class='m-markdown'> ${unsafe_html_o(marked(this.data['::description'] || ''))}</span>` : ''}
-        <div class="param-table">
+        ${this.data ? lit_html_x`<div class="param-table">
           <div style='display:grid; grid-template-columns: 3fr 2fr 4fr; overflow: hidden; border-bottom:1px solid var(--light-border-color);'>
             <div class='key' style='font-family:var(--font-regular); font-weight:bold;'> Field </div>
             <div class='key-type' style='font-family:var(--font-regular); font-weight:bold;'> Type </div>
             <div class='key-descr' style='font-family:var(--font-regular); font-weight:bold;'> Description </div>
           </div>
-          ${this.data ? lit_html_x`
-              ${this.generateTree(this.data['::type'] === 'array' ? this.data['::props'] : this.data, this.data['::type'], this.data['::array-type'])}` : ''}  
+          ${this.generateTree(this.data['::type'] === 'array' ? this.data['::props'] : this.data, this.data['::type'], this.data['::array-type'])}
         </div>
-      </div>  
+      </div>` : lit_html_x`<p style="font-size: var(--font-size-regular);color: #a1a8b3;">Schema not found</p>`}
+        
     `;
   }
   generateTree(data, dataType = 'object', arrayType = '', key = '', description = '', schemaLevel = 0, indentLevel = 0, readOrWrite = '') {
@@ -23687,6 +23703,7 @@ function renderBlockquote(text) {
   const infoMarker = 'ℹ️';
   const bookMarker = '📘';
   const warningMarker = '⚠️';
+  const dangerMarker = '❗';
   if (text.startsWith(`<p>${infoMarker}`)) {
     // Apply custom styling for the info blockquote
     return `<blockquote class="info-blockquote">${text.replace(infoMarker, '').trim()}</blockquote>`;
@@ -23698,6 +23715,10 @@ function renderBlockquote(text) {
   if (text.startsWith(`<p>${warningMarker} `)) {
     // Apply custom styling for the warning blockquote
     return `<blockquote class="warning-blockquote">${text.replace(warningMarker, '').trim()}</blockquote>`;
+  }
+  if (text.startsWith(`<p>${dangerMarker} `)) {
+    // Apply custom styling for the danger blockquote
+    return `<blockquote class="danger-blockquote">${text.replace(dangerMarker, '').trim()}</blockquote>`;
   }
 
   // Default rendering for regular blockquotes
@@ -70092,7 +70113,7 @@ module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$s
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("aa52d8e34c7da92dc902")
+/******/ 		__webpack_require__.h = () => ("e5ec666a776024491683")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

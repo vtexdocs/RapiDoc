@@ -130,7 +130,7 @@ export default class SchemaTable extends LitElement {
       <div class="table ${this.schemaDescriptionExpanded === 'true' ? 'expanded-all-descr' : 'collapsed-all-descr'}" @click="${(e) => this.handleAllEvents(e)}">
         <div class='toolbar'>
           <div class="toolbar-item schema-root-type ${this.data?.['::type'] || ''} "> ${this.data?.['::type'] || ''} </div>
-          ${this.allowSchemaDescriptionExpandToggle === 'true'
+          ${(this.data && this.allowSchemaDescriptionExpandToggle === 'true')
             ? html`
               <div style="flex:1"></div>
               <div part="schema-multiline-toggle" class='toolbar-item schema-multiline-toggle' > 
@@ -144,23 +144,23 @@ export default class SchemaTable extends LitElement {
           ? html`<span part="schema-description" class='m-markdown'> ${unsafeHTML(marked(this.data['::description'] || ''))}</span>`
           : ''
         }
-        <div class="param-table">
+        ${this.data
+          ? html`<div class="param-table">
           <div style='display:grid; grid-template-columns: 3fr 2fr 4fr; overflow: hidden; border-bottom:1px solid var(--light-border-color);'>
             <div class='key' style='font-family:var(--font-regular); font-weight:bold;'> Field </div>
             <div class='key-type' style='font-family:var(--font-regular); font-weight:bold;'> Type </div>
             <div class='key-descr' style='font-family:var(--font-regular); font-weight:bold;'> Description </div>
           </div>
-          ${this.data
-            ? html`
-              ${this.generateTree(
-                this.data['::type'] === 'array' ? this.data['::props'] : this.data,
-                this.data['::type'],
-                this.data['::array-type'],
-              )}`
-            : ''
-          }  
+          ${this.generateTree(
+            this.data['::type'] === 'array' ? this.data['::props'] : this.data,
+            this.data['::type'],
+            this.data['::array-type'],
+          )}
         </div>
-      </div>  
+      </div>`
+      : html`<p style="font-size: var(--font-size-regular);color: #a1a8b3;">Schema not found</p>`
+      }
+        
     `;
   }
 
