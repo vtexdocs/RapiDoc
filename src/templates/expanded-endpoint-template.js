@@ -59,7 +59,7 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
             `
         : ''
       }
-      <div style="display:flex; justify-content:space-between; flex-wrap: wrap; top:28px; margin-bottom:32px; ">
+      <div style="display:flex; justify-content:space-between; flex-wrap: wrap; top:28px; margin-bottom:24px; ">
       ${(this.renderStyle === 'focused' && tagName !== 'General ⦂') ? html`
       <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> <a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>  ›  ${tagName} </h3>
       ` : ''}
@@ -68,6 +68,10 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
                 <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${(e) => { viewResource(this.specUrl, e); }}'>View OpenAPI spec</button>
             </div></div>` : ''}
       </div>
+      ${this.postmanUrl ? html`<div><div style="display:flex; justify-content: flex-end; gap:8px; margin-bottom:24px; flex-wrap: wrap;">
+              <button class="m-btn m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${(e) => { downloadResource(this.postmanUrl, 'postman-collection.json', e); }}'>Download Postman collection</button>
+                <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${(e) => { viewResource(this.postmanUrl, e); }}'>View Postman collection</button>
+            </div></div>` : ''}
       <h2 part="section-operation-summary"> ${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2>
         ${path.isWebhook
         ? html`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>`
@@ -120,6 +124,7 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
             file-input:file-input, textbox:textbox, textbox-param:textbox-param, textarea:textarea, textarea-param:textarea-param, 
             anchor:anchor, anchor-param-example:anchor-param-example, schema-description:schema-description, schema-multiline-toggle:schema-multiline-toggle"
           spec-url="${this.specUrl}"
+          postman-url="${this.postmanUrl}"
           allow-spec-file-download="${this.allowSpecFileDownload}"
         > </api-request>
 
