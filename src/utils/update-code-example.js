@@ -343,7 +343,7 @@ function buildFetchHeaders(requestPanelEl) {
 }
 
 function decodeCurlyBrackets(url) {
-  url = url.replace(/\/?%7B/gm, '{').replace(/\/?%7D/gm, '}');
+  url = url.replace(/%7B/gm, '{').replace(/%7D/gm, '}');
   return url;
 }
 
