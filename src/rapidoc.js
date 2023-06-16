@@ -61,6 +61,9 @@ export default class RapiDoc extends LitElement {
       sortEndpointsBy: { type: String, attribute: 'sort-endpoints-by' },
       specFile: { type: String, attribute: false },
 
+      // Postman collection
+      postmanUrl: { type : String, attribute: 'postman-url' }, 
+
       // UI Layouts
       layout: { type: String },
       renderStyle: { type: String, attribute: 'render-style' },

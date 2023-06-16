@@ -5,7 +5,6 @@ export default css`
 /* Button */
 .m-btn {
   display: flex;
-  flex-direction: column;
   align-items: center;
   border-radius: var(--border-radius);
   font-weight: 400;
@@ -20,6 +19,10 @@ export default css`
   font-family: var(--font-medium);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+.m-btn-image {
+  flex-direction: row;
+  column-gap: 10px;
 }
 .m-btn-primary {
   background-color: var(--primary-color);
