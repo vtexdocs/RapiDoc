@@ -4,6 +4,8 @@ import { marked } from 'marked';
 import processPathDescription from '../utils/magic-block-utils';
 import { downloadResource, viewResource } from '../utils/common-utils';
 import renderBlockquote from '../utils/renderBlockquote';
+import postmanIcon from '../components/assets/postman-icon';
+import openapiIcon from '../components/assets/openapi-icon';
 
 /* eslint-disable indent */
 function headingRenderer() {
@@ -21,14 +23,28 @@ export default function overviewTemplate() {
       <span part="anchor-endpoint" id="overview"></span>
       ${this.resolvedSpec?.info
         ? html`
-          ${this.specUrl && this.allowSpecFileDownload === 'true'
-            ? html`
-              <div style="display:flex; margin-top:18px; gap:8px; justify-content: flex-end; flex-wrap: wrap;">
-                <button class="m-btn thin-border m-btn-tertiary" part="btn btn-outline" @click='${(e) => { downloadResource(this.specUrl, 'openapi-spec', e); }}'>Download OpenAPI spec</button>
-                <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${(e) => { viewResource(this.specUrl, e); }}'>View OpenAPI spec</button>
-              </div>`
-            : ''
-          }
+          <div style="display: flex; flex-direction:column; row-gap: 20px; margin-bottom: 24px;">
+            ${(this.specUrl && this.allowSpecFileDownload) ? html`<div><div style="display:flex; justify-content: flex-end; gap:8px; flex-wrap: wrap;">
+                  <button class="m-btn m-btn-image m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${(e) => { downloadResource(this.specUrl, 'openapi-spec.json', e); }}'>
+                    ${openapiIcon()}
+                    Download OpenAPI spec
+                  </button>
+                    <button class="m-btn m-btn-image m-btn-secondary thin-border" part="btn btn-outline" @click='${(e) => { viewResource(this.specUrl, e); }}'>
+                      ${openapiIcon()}
+                      View OpenAPI spec
+                    </button>
+                </div></div>` : ''}
+            ${this.postmanUrl ? html`<div><div style="display:flex; justify-content: flex-end; gap:8px; flex-wrap: wrap;">
+                  <button class="m-btn m-btn-image m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${(e) => { downloadResource(this.postmanUrl, 'postman-collection.json', e); }}'>
+                    ${postmanIcon()}
+                    Download Postman collection
+                  </button>
+                    <button class="m-btn m-btn-image m-btn-secondary thin-border" part="btn btn-outline" @click='${(e) => { viewResource(this.postmanUrl, e); }}'>
+                      ${postmanIcon()}
+                      View Postman collection
+                    </button>
+                </div></div>` : ''}
+          </div>
           <div id="api-title" part="section-overview-title" style="font-size:32px">
             ${this.resolvedSpec.info.title}
             ${!this.resolvedSpec.info.version ? '' : html`
