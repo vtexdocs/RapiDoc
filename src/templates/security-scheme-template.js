@@ -404,11 +404,10 @@ export default function securitySchemeTemplate() {
   }
 
   return html`
-  <section id='auth' part="section-auth" class = 'row-api-right-box observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
-    <div class="right-box-title">Header Auth</div>
-
     ${this.resolvedSpec.securitySchemes && this.resolvedSpec.securitySchemes.length > 0
       ? html`
+      <section id='auth' part="section-auth" class = 'row-api-right-box observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
+        <div class="right-box-title">Header Auth</div>
         <div id="auth-table">
           ${this.resolvedSpec.securitySchemes.map((v) => {
             if (!isSecuritySchemeIdValid(this.security, v.securitySchemeId)) return;
@@ -489,15 +488,11 @@ export default function securitySchemeTemplate() {
               : ''
             }
           `})}
-        </div>`
+        </div>
+        <slot name="auth"></slot>
+      </section>`
       : ''
     }
-    <button class='m-btn m-btn-primary' style="margin-top: 16px" @click='${this.onTryClick}' >
-      TEST METHOD
-    </button>
-    <slot name="auth">
-    </slot>
-  </section>
 `;
 }
 
