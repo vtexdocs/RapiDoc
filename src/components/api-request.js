@@ -1053,6 +1053,7 @@ export default class ApiRequest extends LitElement {
       }
     }
     return html`
+      <button class='clear-btn m-btn m-btn-primary' style="margin-bottom: 16px" @click='${this.onTryClick}'>TEST METHOD</button>
       <button class="clear-btn m-btn m-btn-secondary" part="btn btn-outline" @click="${this.clearResponseData}">CLEAR RESPONSE</button>
       <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 24px;">
         ${this.codeExampleTemplate('flex')}

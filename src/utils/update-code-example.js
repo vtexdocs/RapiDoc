@@ -1,5 +1,6 @@
 import HTTPSnippet from 'httpsnippet';
 import { json2xml } from './schema-utils';
+import { isSecuritySchemeIdValid } from './security-utils'
 
 function buildFetchURL(requestPanelEl) {
   let fetchUrl = this.path;
@@ -333,10 +334,12 @@ function buildFetchHeaders(requestPanelEl) {
     headers.push({ name: 'Content-Type', value: requestBodyContainerEl.dataset.selectedRequestBodyType });
   }
 
-  // Add Authentication Header if provided
+  // Add Authentication Header if provided and necessary
   this.resolvedSpec.securitySchemes.forEach((key) => {
-    reqHeaders.append(key.name, key.value);
-    headers.push({ name: key.name, value: key.value });
+    if (isSecuritySchemeIdValid(this.security, key.securitySchemeId)) {
+      reqHeaders.append(key.name, key.value);
+      headers.push({ name: key.name, value: key.value });
+    }
   });
 
   return { reqHeaders, headers };

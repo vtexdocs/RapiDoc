@@ -2,6 +2,7 @@
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-line import/extensions
 import { marked } from 'marked';
+import { isSecuritySchemeIdValid } from '../utils/security-utils';
 import updateCodeExample from '../utils/update-code-example';
 
 const codeVerifier = '731DB1C3F7EA533B85E29492D26AA-1234567890-1234567890';
@@ -396,18 +397,21 @@ function handleApiKeyChange(e, securitySchemeId, apiKey) {
 
 export default function securitySchemeTemplate() {
   if (!this.resolvedSpec) { return ''; }
+  if (this.security && this.security.length === 0) return '';
   const providedApiKeys = this.resolvedSpec.securitySchemes?.filter((v) => (v.finalKeyValue));
   if (!providedApiKeys) {
     return;
   }
-  return html`
-  <section id='auth' part="section-auth" class = 'row-api-right-box observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
-    <div class="right-box-title">Header Auth</div>
 
+  return html`
     ${this.resolvedSpec.securitySchemes && this.resolvedSpec.securitySchemes.length > 0
       ? html`
+      <section id='auth' part="section-auth" class = 'row-api-right-box observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
+        <div class="right-box-title">Header Auth</div>
         <div id="auth-table">
-          ${this.resolvedSpec.securitySchemes.map((v) => html`
+          ${this.resolvedSpec.securitySchemes.map((v) => {
+            if (!isSecuritySchemeIdValid(this.security, v.securitySchemeId)) return;
+            return html`
             <div id="security-scheme-${v.securitySchemeId}" class="right-box-container ${v.type.toLowerCase()}">
               <div class="right-box-label">${v.name}</div>
               ${v.description
@@ -483,16 +487,12 @@ export default function securitySchemeTemplate() {
                 `
               : ''
             }
-          `)}
-        </div>`
+          `})}
+        </div>
+        <slot name="auth"></slot>
+      </section>`
       : ''
     }
-    <button class='m-btn m-btn-primary' style="margin-top: 16px" @click='${this.onTryClick}' >
-      TEST METHOD
-    </button>
-    <slot name="auth">
-    </slot>
-  </section>
 `;
 }
 
