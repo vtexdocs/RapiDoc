@@ -62,7 +62,7 @@ export default class RapiDoc extends LitElement {
       specFile: { type: String, attribute: false },
 
       // Postman collection
-      postmanUrl: { type : String, attribute: 'postman-url' }, 
+      postmanUrl: { type: String, attribute: 'postman-url' },
 
       // UI Layouts
       layout: { type: String },
@@ -497,7 +497,7 @@ export default class RapiDoc extends LitElement {
 
     if (!this.oauthReceiver) { this.oauthReceiver = 'oauth-receiver.html'; }
     if (!this.updateRoute || !'true, false,'.includes(`${this.updateRoute},`)) { this.updateRoute = 'true'; }
-    if (!this.routePrefix) { this.routePrefix = '#'; }
+    if (!this.routePrefix) { this.routePrefix = window.location.href.indexOf('#') > -1 ? '#' : '?endpoint='; }
     if (!this.sortTags || !'true, false,'.includes(`${this.sortTags},`)) { this.sortTags = 'false'; }
     if (!this.generateMissingTags || !'true, false,'.includes(`${this.generateMissingTags},`)) { this.generateMissingTags = 'false'; }
     if (!this.sortEndpointsBy || !'method, path, summary, none,'.includes(`${this.sortEndpointsBy},`)) { this.sortEndpointsBy = 'path'; }
@@ -813,18 +813,17 @@ export default class RapiDoc extends LitElement {
 
     // Remove end of string # or /
     const cleanRouterPrefix = this.routePrefix.replace(/(#|\/)$/, '');
-
     if (!cleanRouterPrefix) {
       return href.split('#')[0];
     }
 
-    const indexOfRoutePrefix = href.lastIndexOf(cleanRouterPrefix);
+    const splitRoute = href.split(cleanRouterPrefix);
 
-    if (indexOfRoutePrefix === -1) {
+    if (splitRoute.length <= 0) {
       return href;
     }
 
-    return href.slice(0, indexOfRoutePrefix);
+    return splitRoute[0];
   }
 
   /**
