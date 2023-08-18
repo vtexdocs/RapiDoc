@@ -407,7 +407,7 @@ export default function securitySchemeTemplate() {
     ${this.resolvedSpec.securitySchemes && this.resolvedSpec.securitySchemes.length > 0
       ? html`
       <section id='auth' part="section-auth" class = 'row-api-right-box observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
-        <div class="right-box-title">Header Auth</div>
+        <div class="right-box-title">Authentication</div>
         <div id="auth-table">
           ${this.resolvedSpec.securitySchemes.map((v) => {
             if (!isSecuritySchemeIdValid(this.security, v.securitySchemeId)) return;
@@ -416,7 +416,7 @@ export default function securitySchemeTemplate() {
               <div class="right-box-label">${v.name}</div>
               ${v.description
                 ? html`
-                  <div class="m-markdown">
+                  <div class="m-markdown-small">
                     ${unsafeHTML(marked(v.description || ''))}
                   </div>`
                 : ''
