@@ -617,7 +617,7 @@ function generateMarkdownForArrayAndObjectDescription(schema, level = 0) {
   let markdown = ((schema.description || schema.title) && (schema.minItems || schema.maxItems)) ? '<span class="descr-expand-toggle">➔</span>' : '';
   if (schema.title) {
     if (schema.description) {
-      markdown = `${markdown} <b>${schema.title}:</b> ${schema.description}<br/>`;
+      markdown = `${markdown} ${schema.description}<br/>`;
     } else {
       markdown = `${markdown} ${schema.title}<br/>`;
     }

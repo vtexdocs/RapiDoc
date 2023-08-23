@@ -104,15 +104,14 @@ export default class SchemaTable extends LitElement {
         border-radius:2px;
         border: 1px solid transparent;
         display: inline-block;
-        margin-left: -10px;
-        color:var(--primary-color);
+        color:var(--vtex-pink);
         cursor:pointer;
         font-size: calc(var(--font-size-small) + 4px);
         font-family: var(--font-mono);
         background-clip: border-box;
       }
       .obj-toggle:hover {
-        border-color: var(--primary-color);
+        border-color: var(--vtex-pink);
       }
       .obj-toggle.expanded::after {
         content: '-';
@@ -220,11 +219,19 @@ export default class SchemaTable extends LitElement {
     let isOneOfLabel = false;
     if (key.startsWith('::ONE~OF') || key.startsWith('::ANY~OF')) {
       keyLabel = key.replace('::', '').replace('~', ' ');
+      description = "Click <code>+</code> to expand or <code>-</code> to hide each valid schema."
       isOneOfLabel = true;
     } else if (key.startsWith('::OPTION')) {
       const parts = key.split('~');
-      keyLabel = parts[1]; // eslint-disable-line prefer-destructuring
-      keyDescr = parts[2]; // eslint-disable-line prefer-destructuring
+      if (parts[2]) {
+        keyLabel = parts[2];
+        keyDescr = '';
+      }
+      else {
+        keyLabel = parts[1];
+        keyDescr = parts[2];
+      }
+      
     } else {
       keyLabel = key;
     }
