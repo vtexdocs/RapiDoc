@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-line import/extensions
 import { marked } from 'marked';
 import { isSecuritySchemeIdValid } from '../utils/security-utils';
@@ -403,10 +403,15 @@ function handleSecuritySchemeChange(e) {
 function selectSecuritySchemeTemplate() {
   return html`
     <div class="right-box-select">
-      <select name="selectSecurityScheme" style="width: 100%;" @change=${(e) => { handleSecuritySchemeChange.call(this, e); }}>
+      <select
+        disabled=${this.resolvedSpec.security.length <= 1 || nothing}
+        name="selectSecurityScheme"
+        style="width: 100%;"
+        @change=${(e) => { handleSecuritySchemeChange.call(this, e); }}
+      >
         ${this.resolvedSpec.security.map((_, id) => {
           return html`
-            <option value=${id} ${id === this.selectedAuthScheme ? 'selected' : ''}>
+            <option value=${id}>
               Header ${id}
             </option>`
         })}
