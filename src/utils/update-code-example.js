@@ -335,11 +335,16 @@ function buildFetchHeaders(requestPanelEl) {
   }
 
   // Add Authentication Header if provided and necessary
-  this.resolvedSpec.securitySchemes.forEach((key) => {
-    if (isSecuritySchemeIdValid(this.security, key.securitySchemeId)) {
-      reqHeaders.append(key.name, key.value);
-      headers.push({ name: key.name, value: key.value });
-    }
+  let securitySchemes = this.security ? this.security : this.resolvedSpec.security;
+  securitySchemes.forEach((scheme, id) => {
+    if (this.selectedAuthScheme !== id) return
+    Object.keys(scheme).map((key) => {
+      const schemeKey = this.resolvedSpec.securitySchemes.find((s) => (s.securitySchemeId === key))
+      if (isSecuritySchemeIdValid(this.security, schemeKey.securitySchemeId)) {
+        reqHeaders.append(schemeKey.name, schemeKey.value);
+        headers.push({ name: schemeKey.name, value: schemeKey.value });
+      }
+    })
   });
 
   return { reqHeaders, headers };

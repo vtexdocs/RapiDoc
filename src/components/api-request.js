@@ -46,6 +46,7 @@ export default class ApiRequest extends LitElement {
     this.activeResponseTab = 'response'; // allowed values: response, headers, curl
     this.selectedRequestBodyType = '';
     this.selectedRequestBodyExample = '';
+    this.selectedAuthScheme = 0;
     this.activeParameterSchemaTabs = {};
     this.showCurlBeforeTry = true;
     this.selectedLanguage = 'shell';
@@ -100,6 +101,7 @@ export default class ApiRequest extends LitElement {
       selectedRequestBodyType: { type: String, attribute: 'selected-request-body-type' }, // internal tracking of selected request-body type
       selectedRequestBodyExample: { type: String, attribute: 'selected-request-body-example' }, // internal tracking of selected request-body example
 
+      selectedAuthScheme: { type: Number },
       selectedLanguage: { type: String },
 
       // open-api file download
