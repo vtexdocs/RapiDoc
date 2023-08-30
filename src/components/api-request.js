@@ -1191,7 +1191,7 @@ export default class ApiRequest extends LitElement {
   async onTryClick(e) {
     const tryBtnEl = e.target ? e.target : e;
 
-    const { fetchUrl, fetchOptions, reqHeaders } = updateCodeExample.call(this, tryBtnEl);
+    const { fetchUrl, fetchOptions, reqHeaders, reqCookie } = updateCodeExample.call(this, tryBtnEl);
     const encodedUrl = `/api/proxy/${encodeURIComponent(fetchUrl)}`;
 
     this.responseUrl = '';
@@ -1225,6 +1225,12 @@ export default class ApiRequest extends LitElement {
       credentials: tempRequest.credentials,
       body: tempRequest.body,
     };
+
+    //fetch uses the cookies in the browser, so we add the needed cookies for the request
+    reqCookie.forEach((cookie) => {
+      document.cookie = `${cookie.name}=${cookie.value}; path=/`
+    })
+
     const fetchRequest = new Request(tempRequest.url, updatedFetchOptions);
     let fetchResponse;
     let responseClone;
@@ -1336,6 +1342,11 @@ export default class ApiRequest extends LitElement {
       }
     }
     this.requestUpdate();
+
+    //now we remove the cookies added
+    reqCookie.forEach((cookie) => {
+      document.cookie = `${cookie.name}=; path=/`
+    })
   }
 
   getRequestPanel(e) {

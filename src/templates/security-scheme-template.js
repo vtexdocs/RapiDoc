@@ -412,7 +412,7 @@ function selectSecuritySchemeTemplate() {
         ${this.resolvedSpec.security.map((_, id) => {
           return html`
             <option value=${id}>
-              Header ${id}
+              Authentication ${id + 1}
             </option>`
         })}
       </select>
@@ -437,7 +437,7 @@ export default function securitySchemeTemplate() {
           <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 24px 0px;">
           ${this.resolvedSpec.security.map((scheme, id) => {
             return html`
-            <div style="display: ${id === this.selectedAuthScheme ? 'block' : 'none'}">
+            ${id === this.selectedAuthScheme ? html`<div>
               ${Object.keys(scheme).map((key) => {
                 const v = this.resolvedSpec.securitySchemes.find((s) => (s.securitySchemeId === key))
                 if (!isSecuritySchemeIdValid(this.security, v.securitySchemeId)) return;
@@ -455,17 +455,13 @@ export default function securitySchemeTemplate() {
                     ${(v.type.toLowerCase() === 'apikey') || (v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'bearer')
                       ? html`
                         <div>
-                          ${v.in !== 'cookie'
-                            ? html`
-                              <input
-                                type="text"
-                                spellcheck="false"
-                                value="${v.value}"
-                                class="${v.type} ${v.securitySchemeId} api-key-input right-box-input"
-                                @input="${(e) => { handleApiKeyChange.call(this, e, v.securitySchemeId, e.target.value); }}"
-                              >`
-                            : html`<span class="gray-text" style="font-size::var(--font-size-small)"> cookies cannot be set from here</span>`
-                          }
+                          <input
+                            type="text"
+                            spellcheck="false"
+                            value="${v.value}"
+                            class="${v.type} ${v.securitySchemeId} api-key-input right-box-input"
+                            @input="${(e) => { handleApiKeyChange.call(this, e, v.securitySchemeId, e.target.value); }}"
+                          >
                         </div>`
                       : ''
                     }
@@ -519,7 +515,8 @@ export default function securitySchemeTemplate() {
                   }
                 `})
               }
-            </div>
+              </div>` : ''
+            }
             `
           })}
         </div>
