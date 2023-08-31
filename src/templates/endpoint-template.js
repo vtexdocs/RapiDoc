@@ -171,7 +171,7 @@ function endpointBodyTemplate(path) {
           <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
         </div>
       </div>
-      ${path.description ? html`<div part="section-endpoint-body-description" class="path-description"> ${unsafeHTML(path.description)}</div>` : ''}
+      ${path.description ? html`<div class="m-markdown"> ${unsafeHTML(marked(path.description))}</div>` : ''}
       <slot name="${path.elementId}"></slot>
       ${pathSecurityTemplate.call(this, path.security)}
       ${codeSampleTabPanel}
@@ -272,7 +272,7 @@ export default function endpointTemplate(showExpandCollapse = true, showTags = t
                 return true;
                 }).map((path) => html`
                 <section part="section-endpoint" id='${path.elementId}' class='m-endpoint regular-font ${path.method} ${pathsExpanded || path.expanded ? 'expanded' : 'collapsed'}'>
-                  <!--${endpointHeadTemplate.call(this, path, pathsExpanded)}-->
+                  ${endpointHeadTemplate.call(this, path, pathsExpanded)}
                   ${pathsExpanded || path.expanded ? endpointBodyTemplate.call(this, path) : ''}
                 </section>`)
               }
