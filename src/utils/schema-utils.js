@@ -679,7 +679,8 @@ export function schemaInObjectNotation(schema, obj, level = 0, suffix = '') {
       }
     });
     obj = objWithAllProps;
-  } else if (schema.anyOf || schema.oneOf) {
+  }
+  if (schema.anyOf || schema.oneOf) {
     obj['::description'] = schema.description || '';
     // 1. First iterate the regular properties
     if (schema.type === 'object' || schema.properties) {
@@ -823,7 +824,7 @@ export function schemaInObjectNotation(schema, obj, level = 0, suffix = '') {
       obj['::array-type'] = schema.items.items.type;
     }
     obj['::props'] = schemaInObjectNotation(schema.items, {}, (level + 1));
-  } else {
+  } else if (!schema.allOf) {
     const typeObj = getTypeInfo(schema);
     if (typeObj?.html) {
       return `${typeObj.html}`;
