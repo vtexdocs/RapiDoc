@@ -400,6 +400,23 @@ function handleSecuritySchemeChange(e) {
   this.selectedAuthScheme = newSelectedAuthScheme;
 }
 
+function getSchemeTypes(scheme) {
+  let authTypes = '';
+  const keys = Object.keys(scheme);
+  const keyCount = keys.length;
+  const v = this.resolvedSpec.securitySchemes.find((s) => (s.securitySchemeId === keys[0]));
+
+  if (v.type === 'apiKey') {
+    authTypes += v.in.charAt(0).toUpperCase() + v.in.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else if (v.type === 'http') {
+    authTypes += v.scheme.charAt(0).toUpperCase() + v.scheme.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else if (v.type) {
+    authTypes += v.type.charAt(0).toUpperCase() + v.type.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else authTypes += 'Authentication';
+
+  return authTypes;
+}
+
 function selectSecuritySchemeTemplate() {
   return html`
     <div class="right-box-select">
@@ -409,10 +426,10 @@ function selectSecuritySchemeTemplate() {
         style="width: 100%;"
         @change=${(e) => { handleSecuritySchemeChange.call(this, e); }}
       >
-        ${this.resolvedSpec.security.map((_, id) => {
+        ${this.resolvedSpec.security.map((scheme, id) => {
           return html`
             <option value=${id}>
-              Authentication ${id + 1}
+              ${id + 1}. ${getSchemeTypes.call(this, scheme)}
             </option>`
         })}
       </select>
