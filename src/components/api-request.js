@@ -46,6 +46,7 @@ export default class ApiRequest extends LitElement {
     this.activeResponseTab = 'response'; // allowed values: response, headers, curl
     this.selectedRequestBodyType = '';
     this.selectedRequestBodyExample = '';
+    this.selectedAuthScheme = 0;
     this.activeParameterSchemaTabs = {};
     this.showCurlBeforeTry = true;
     this.selectedLanguage = 'shell';
@@ -100,6 +101,7 @@ export default class ApiRequest extends LitElement {
       selectedRequestBodyType: { type: String, attribute: 'selected-request-body-type' }, // internal tracking of selected request-body type
       selectedRequestBodyExample: { type: String, attribute: 'selected-request-body-example' }, // internal tracking of selected request-body example
 
+      selectedAuthScheme: { type: Number },
       selectedLanguage: { type: String },
 
       // open-api file download
@@ -1189,7 +1191,7 @@ export default class ApiRequest extends LitElement {
   async onTryClick(e) {
     const tryBtnEl = e.target ? e.target : e;
 
-    const { fetchUrl, fetchOptions, reqHeaders } = updateCodeExample.call(this, tryBtnEl);
+    const { fetchUrl, fetchOptions, reqHeaders, reqCookie } = updateCodeExample.call(this, tryBtnEl);
     const encodedUrl = `/api/proxy/${encodeURIComponent(fetchUrl)}`;
 
     this.responseUrl = '';
@@ -1223,6 +1225,12 @@ export default class ApiRequest extends LitElement {
       credentials: tempRequest.credentials,
       body: tempRequest.body,
     };
+
+    //fetch uses the cookies in the browser, so we add the needed cookies for the request
+    reqCookie.forEach((cookie) => {
+      document.cookie = `${cookie.name}=${cookie.value}; path=/`
+    })
+
     const fetchRequest = new Request(tempRequest.url, updatedFetchOptions);
     let fetchResponse;
     let responseClone;
@@ -1334,6 +1342,11 @@ export default class ApiRequest extends LitElement {
       }
     }
     this.requestUpdate();
+
+    //now we remove the cookies added
+    reqCookie.forEach((cookie) => {
+      document.cookie = `${cookie.name}=; path=/`
+    })
   }
 
   getRequestPanel(e) {

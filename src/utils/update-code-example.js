@@ -294,6 +294,7 @@ function buildFetchHeaders(requestPanelEl) {
   let acceptValue = '';
   let contentTypeValue = '';
 
+  const reqCookieHeader = [];
   const reqHeaders = new Headers();
   const headers = [];
 
@@ -335,14 +336,43 @@ function buildFetchHeaders(requestPanelEl) {
   }
 
   // Add Authentication Header if provided and necessary
-  this.resolvedSpec.securitySchemes.forEach((key) => {
-    if (isSecuritySchemeIdValid(this.security, key.securitySchemeId)) {
-      reqHeaders.append(key.name, key.value);
-      headers.push({ name: key.name, value: key.value });
+  let securitySchemes = this.security ? this.security : this.resolvedSpec.security;
+  securitySchemes.forEach((scheme, id) => {
+    if (this.selectedAuthScheme !== id) return
+    Object.keys(scheme).map((key) => {
+      const schemeKey = this.resolvedSpec.securitySchemes.find((s) => (s.securitySchemeId === key))
+      if (!isSecuritySchemeIdValid(this.security, schemeKey.securitySchemeId)) return
+      if (schemeKey.in !== 'cookie') {
+        reqHeaders.append(schemeKey.name, schemeKey.value);
+        headers.push({ name: schemeKey.name, value: schemeKey.value });
+      }
+      if (schemeKey.in === 'cookie') {
+        reqCookieHeader.push({ name: schemeKey.name, value: schemeKey.value }); 
+      }
+    })
+
+    // add cookie header
+    if (reqCookieHeader.length > 0) {
+      const cookie = reqCookieHeader.map((el) => `${el.name}=${el.value}`);
+      headers.push({ name: 'Cookie', value: cookie.join('; path=/')})
     }
   });
 
-  return { reqHeaders, headers };
+  return { reqHeaders, headers, reqCookieHeader };
+}
+
+function buildFetchCookies(requestPanelEl) {
+  const cookies = [];
+
+  const cookieParamEls = [...requestPanelEl.querySelectorAll("[data-ptype='cookie']")];
+
+  cookieParamEls.forEach((el) => {
+    if (!el.value) return;
+    
+    cookies.push({ name: el.dataset.pname, value: el.value });
+  });
+  
+  return { cookies }
 }
 
 function decodeCurlyBrackets(url) {
@@ -355,7 +385,8 @@ export default function updateCodeExample(tryBtnEl) {
 
   const { fetchUrl, queryString } = buildFetchURL.call(this, requestPanelEl);
   const { fetchOptions, postData } = buildFetchOptions.call(this, requestPanelEl);
-  const { reqHeaders, headers } = buildFetchHeaders.call(this, requestPanelEl);
+  const { reqHeaders, headers, reqCookieHeader } = buildFetchHeaders.call(this, requestPanelEl);
+  const { cookies } = buildFetchCookies.call(this, requestPanelEl);
 
   const snippet = new HTTPSnippet({
     method: this.method,
@@ -363,6 +394,7 @@ export default function updateCodeExample(tryBtnEl) {
     queryString,
     headers,
     postData,
+    cookies
   });
 
   snippet.requests[0].url = decodeCurlyBrackets(snippet.requests[0].url);
@@ -373,5 +405,5 @@ export default function updateCodeExample(tryBtnEl) {
 
   this.codeExample = output;
 
-  return { fetchUrl, fetchOptions, reqHeaders };
+  return { fetchUrl, fetchOptions, reqHeaders, reqCookie: cookies.concat(reqCookieHeader) };
 }

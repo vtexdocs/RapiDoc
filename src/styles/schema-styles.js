@@ -63,12 +63,13 @@ export default css`
 }
 
 .xxx-of-key {
-  font-size: calc(var(--font-size-small) - 2px); 
+  font-family: var(--font-mono);
+  font-size: 12px; 
   font-weight:bold; 
-  background-color:var(--primary-color); 
-  border-radius:2px;
+  background-color:#f8f7fc; 
+  border-radius:4px;
   line-height:calc(var(--font-size-small) + 6px);
-  padding:0px 5px; 
+  padding: 0.2em 0.4em;
   margin-bottom:1px; 
   display:inline-block;
 }

@@ -617,7 +617,7 @@ function generateMarkdownForArrayAndObjectDescription(schema, level = 0) {
   let markdown = ((schema.description || schema.title) && (schema.minItems || schema.maxItems)) ? '<span class="descr-expand-toggle">➔</span>' : '';
   if (schema.title) {
     if (schema.description) {
-      markdown = `${markdown} <b>${schema.title}:</b> ${schema.description}<br/>`;
+      markdown = `${markdown} ${schema.description}<br/>`;
     } else {
       markdown = `${markdown} ${schema.title}<br/>`;
     }
@@ -679,7 +679,8 @@ export function schemaInObjectNotation(schema, obj, level = 0, suffix = '') {
       }
     });
     obj = objWithAllProps;
-  } else if (schema.anyOf || schema.oneOf) {
+  }
+  if (schema.anyOf || schema.oneOf) {
     obj['::description'] = schema.description || '';
     // 1. First iterate the regular properties
     if (schema.type === 'object' || schema.properties) {
@@ -823,7 +824,7 @@ export function schemaInObjectNotation(schema, obj, level = 0, suffix = '') {
       obj['::array-type'] = schema.items.items.type;
     }
     obj['::props'] = schemaInObjectNotation(schema.items, {}, (level + 1));
-  } else {
+  } else if (!schema.allOf) {
     const typeObj = getTypeInfo(schema);
     if (typeObj?.html) {
       return `${typeObj.html}`;

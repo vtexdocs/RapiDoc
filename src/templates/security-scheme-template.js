@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-line import/extensions
 import { marked } from 'marked';
 import { isSecuritySchemeIdValid } from '../utils/security-utils';
@@ -395,9 +395,50 @@ function handleApiKeyChange(e, securitySchemeId, apiKey) {
   updateCodeExample.call(this, requestPanelEl);
 }
 
+function handleSecuritySchemeChange(e) {
+  const newSelectedAuthScheme = parseInt(e.target.value);
+  this.selectedAuthScheme = newSelectedAuthScheme;
+}
+
+function getSchemeTypes(scheme) {
+  let authTypes = '';
+  const keys = Object.keys(scheme);
+  const keyCount = keys.length;
+  const v = this.resolvedSpec.securitySchemes.find((s) => (s.securitySchemeId === keys[0]));
+
+  if (v.type === 'apiKey') {
+    authTypes += v.in.charAt(0).toUpperCase() + v.in.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else if (v.type === 'http') {
+    authTypes += v.scheme.charAt(0).toUpperCase() + v.scheme.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else if (v.type) {
+    authTypes += v.type.charAt(0).toUpperCase() + v.type.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else authTypes += 'Authentication';
+
+  return authTypes;
+}
+
+function selectSecuritySchemeTemplate() {
+  return html`
+    <div class="right-box-select">
+      <select
+        disabled=${this.resolvedSpec.security.length <= 1 || nothing}
+        name="selectSecurityScheme"
+        style="width: 100%;"
+        @change=${(e) => { handleSecuritySchemeChange.call(this, e); }}
+      >
+        ${this.resolvedSpec.security.map((scheme, id) => {
+          return html`
+            <option value=${id}>
+              ${id + 1}. ${getSchemeTypes.call(this, scheme)}
+            </option>`
+        })}
+      </select>
+    </div>`
+}
+
 export default function securitySchemeTemplate() {
   if (!this.resolvedSpec) { return ''; }
-  if (this.security && this.security.length === 0) return '';
+  if (this.security && this.security.length === 0) return ''; // If security is explicitly defined as [], it indicates that an authentation header is not required
   const providedApiKeys = this.resolvedSpec.securitySchemes?.filter((v) => (v.finalKeyValue));
   if (!providedApiKeys) {
     return;
@@ -407,87 +448,94 @@ export default function securitySchemeTemplate() {
     ${this.resolvedSpec.securitySchemes && this.resolvedSpec.securitySchemes.length > 0
       ? html`
       <section id='auth' part="section-auth" class = 'row-api-right-box observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
-        <div class="right-box-title">Header Auth</div>
-        <div id="auth-table">
-          ${this.resolvedSpec.securitySchemes.map((v) => {
-            if (!isSecuritySchemeIdValid(this.security, v.securitySchemeId)) return;
+        <div class="right-box-title">Authentication</div>
+        <div id="auth-table" class="right-box-content">
+          ${selectSecuritySchemeTemplate.call(this)}
+          <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 24px 0px;">
+          ${this.resolvedSpec.security.map((scheme, id) => {
             return html`
-            <div id="security-scheme-${v.securitySchemeId}" class="right-box-container ${v.type.toLowerCase()}">
-              <div class="right-box-label">${v.name}</div>
-              ${v.description
-                ? html`
-                  <div class="m-markdown">
-                    ${unsafeHTML(marked(v.description || ''))}
-                  </div>`
-                : ''
-              }
-
-              ${(v.type.toLowerCase() === 'apikey') || (v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'bearer')
-                ? html`
-                  <div>
-                    ${v.in !== 'cookie'
+            ${id === this.selectedAuthScheme ? html`<div>
+              ${Object.keys(scheme).map((key) => {
+                const v = this.resolvedSpec.securitySchemes.find((s) => (s.securitySchemeId === key))
+                if (!isSecuritySchemeIdValid(this.security, v.securitySchemeId)) return;
+                return html`
+                  <div id="security-scheme-${v.securitySchemeId}" class="right-box-container ${v.type.toLowerCase()}">
+                    <div class="right-box-label">${v.name}</div>
+                    ${v.description
                       ? html`
-                        <input
-                          type="text"
-                          spellcheck="false"
-                          value="${v.value}"
-                          class="${v.type} ${v.securitySchemeId} api-key-input right-box-input"
-                          @input="${(e) => { handleApiKeyChange.call(this, e, v.securitySchemeId, e.target.value); }}"
-                        >`
-                      : html`<span class="gray-text" style="font-size::var(--font-size-small)"> cookies cannot be set from here</span>`
+                        <div class="m-markdown-small">
+                          ${unsafeHTML(marked(v.description || ''))}
+                        </div>`
+                      : ''
                     }
-                  </div>`
-                : ''
-              }
-              ${v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'basic'
-                ? html`
-                  <div style="margin-bottom:5px">
-                    Send <code>Authorization</code> in <code>header</code> containing the word <code>Basic</code> followed by a space and a base64 encoded string of <code>username:password</code>.
+
+                    ${(v.type.toLowerCase() === 'apikey') || (v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'bearer')
+                      ? html`
+                        <div>
+                          <input
+                            type="text"
+                            spellcheck="false"
+                            value="${v.value}"
+                            class="${v.type} ${v.securitySchemeId} api-key-input right-box-input"
+                            @input="${(e) => { handleApiKeyChange.call(this, e, v.securitySchemeId, e.target.value); }}"
+                          >
+                        </div>`
+                      : ''
+                    }
+                    ${v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'basic'
+                      ? html`
+                        <div style="margin-bottom:5px">
+                          Send <code>Authorization</code> in <code>header</code> containing the word <code>Basic</code> followed by a space and a base64 encoded string of <code>username:password</code>.
+                        </div>
+                        <div>
+                          <input
+                            type="text"
+                            value="${v.user}"
+                            spellcheck="false"
+                            placeholder="username"
+                            class="${v.type} ${v.securitySchemeId} api-key-user"
+                            style="width:100px"
+                            @change = ${(e) => {
+                              const requestPanelEl = this.getRequestPanel(e);
+                              updateCodeExample.call(this, requestPanelEl);
+                            }}
+                          >
+                          <input
+                            type="password"
+                            spellcheck="false"
+                            placeholder="password"
+                            value="${v.password}"
+                            class="${v.type} ${v.securitySchemeId} api-key-password"
+                            style="width:100px; margin:0 5px;"
+                            @change = ${(e) => {
+                              const requestPanelEl = this.getRequestPanel(e);
+                              updateCodeExample.call(this, requestPanelEl);
+                            }}
+                          >
+                          <button class="m-btn thin-border"
+                            @click="${(e) => { onApiKeyChange.call(this, v.securitySchemeId, e); }}"
+                            part="btn btn-outline"
+                          >
+                            ${v.finalKeyValue ? 'UPDATE' : 'SET'}
+                          </button>
+                        </div>`
+                      : ''
+                    }
                   </div>
-                  <div>
-                    <input
-                      type="text"
-                      value="${v.user}"
-                      spellcheck="false"
-                      placeholder="username"
-                      class="${v.type} ${v.securitySchemeId} api-key-user"
-                      style="width:100px"
-                      @change = ${(e) => {
-                        const requestPanelEl = this.getRequestPanel(e);
-                        updateCodeExample.call(this, requestPanelEl);
-                      }}
-                    >
-                    <input
-                      type="password"
-                      spellcheck="false"
-                      placeholder="password"
-                      value="${v.password}"
-                      class="${v.type} ${v.securitySchemeId} api-key-password"
-                      style="width:100px; margin:0 5px;"
-                      @change = ${(e) => {
-                        const requestPanelEl = this.getRequestPanel(e);
-                        updateCodeExample.call(this, requestPanelEl);
-                      }}
-                    >
-                    <button class="m-btn thin-border"
-                      @click="${(e) => { onApiKeyChange.call(this, v.securitySchemeId, e); }}"
-                      part="btn btn-outline"
-                    >
-                      ${v.finalKeyValue ? 'UPDATE' : 'SET'}
-                    </button>
-                  </div>`
-                : ''
+                  ${v.type.toLowerCase() === 'oauth2'
+                    ? html`
+                      <div>
+                        ${Object.keys(v.flows).map((f) => oAuthFlowTemplate.call(this, f, v['x-client-id'], v['x-client-secret'], v.securitySchemeId, v.flows[f], v['x-default-scopes'], v['x-receive-token-in']))}
+                      </div>
+                      `
+                    : ''
+                  }
+                `})
               }
-            </div>
-            ${v.type.toLowerCase() === 'oauth2'
-              ? html`
-                <div>
-                  ${Object.keys(v.flows).map((f) => oAuthFlowTemplate.call(this, f, v['x-client-id'], v['x-client-secret'], v.securitySchemeId, v.flows[f], v['x-default-scopes'], v['x-receive-token-in']))}
-                </div>
-                `
-              : ''
+              </div>` : ''
             }
-          `})}
+            `
+          })}
         </div>
         <slot name="auth"></slot>
       </section>`

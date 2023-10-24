@@ -96,6 +96,7 @@ export default css`
 
 .right-box-container {
   margin-top: 16px;
+  padding-inline: 16px;
 }
 
 .right-box-label {
@@ -108,6 +109,18 @@ export default css`
 .right-box-input {
   width: 100%;
   height: 44px;
+}
+
+.right-box-content {
+  border: 1px solid rgb(204, 206, 216);
+  border-radius: 4px;
+  padding-block: 24px;
+  margin-top: 24px;
+}
+
+.right-box-select {
+  padding-inline: 16px;
+  width: 100%;
 }
 
 .server-template {

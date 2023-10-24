@@ -104,15 +104,20 @@ export default class SchemaTable extends LitElement {
         border-radius:2px;
         border: 1px solid transparent;
         display: inline-block;
-        margin-left: -16px;
-        color:var(--primary-color);
+        color:var(--vtex-pink);
         cursor:pointer;
         font-size: calc(var(--font-size-small) + 4px);
         font-family: var(--font-mono);
         background-clip: border-box;
       }
       .obj-toggle:hover {
-        border-color: var(--primary-color);
+        border-color: var(--vtex-pink);
+      }
+      .obj-toggle.expanded::after {
+        content: '-';
+      }
+      .obj-toggle.collapsed::after  {
+        content: '+';
       }
       .tr.expanded + .object-body {
         display:block;
@@ -214,11 +219,19 @@ export default class SchemaTable extends LitElement {
     let isOneOfLabel = false;
     if (key.startsWith('::ONE~OF') || key.startsWith('::ANY~OF')) {
       keyLabel = key.replace('::', '').replace('~', ' ');
+      description = "Click <code>+</code> to expand or <code>-</code> to hide each valid schema."
       isOneOfLabel = true;
     } else if (key.startsWith('::OPTION')) {
       const parts = key.split('~');
-      keyLabel = parts[1]; // eslint-disable-line prefer-destructuring
-      keyDescr = parts[2]; // eslint-disable-line prefer-destructuring
+      if (parts[2]) {
+        keyLabel = parts[2];
+        keyDescr = '';
+      }
+      else {
+        keyLabel = parts[1];
+        keyDescr = parts[2];
+      }
+      
     } else {
       keyLabel = key;
     }
@@ -247,9 +260,7 @@ export default class SchemaTable extends LitElement {
               <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style='padding-left:${leftPadding}px'>
                 ${(keyLabel || keyDescr)
                   ? html`
-                    <span class='obj-toggle ${newSchemaLevel < this.schemaExpandLevel ? 'expanded' : 'collapsed'}' data-obj='${keyLabel}'>
-                      ${schemaLevel < this.schemaExpandLevel ? '-' : '+'}
-                    </span>`
+                    <span class='obj-toggle ${newSchemaLevel < this.schemaExpandLevel ? 'expanded' : 'collapsed'}' data-obj='${keyLabel}'/>`
                   : ''
                 }
                 ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
@@ -374,27 +385,22 @@ export default class SchemaTable extends LitElement {
   handleAllEvents(e) {
     if (e.target.classList.contains('obj-toggle')) {
       this.toggleObjectExpand(e);
-    } else if (e.target.classList.contains('schema-multiline-toggle')) {
-      this.schemaDescriptionExpanded = (this.schemaDescriptionExpanded === 'true' ? 'false' : 'true');
-    } else if (e.target.classList.contains('descr-expand-toggle')) {
-      const trEl = e.target.closest('.tr');
-      if (trEl) {
-        trEl.classList.toggle('expanded-descr');
-        trEl.style.maxHeight = trEl.scrollHeight;
-      }
     }
   }
 
   toggleObjectExpand(e) {
-    const rowEl = e.target.closest('.tr');
+    const toggleEl = e.target;
+    const rowEl = toggleEl.closest('.tr');
     if (rowEl.classList.contains('expanded')) {
       rowEl.classList.add('collapsed');
       rowEl.classList.remove('expanded');
-      e.target.innerText = '+';
+      toggleEl.classList.add('collapsed');
+      toggleEl.classList.remove('expanded');
     } else {
       rowEl.classList.remove('collapsed');
       rowEl.classList.add('expanded');
-      e.target.innerText = '-';
+      toggleEl.classList.add('expanded');
+      toggleEl.classList.remove('collapsed');
     }
   }
 }

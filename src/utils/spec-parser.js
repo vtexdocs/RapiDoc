@@ -97,7 +97,12 @@ export default async function ProcessSpec(
 
   // Security Scheme
   const securitySchemes = [];
+  let security = [];
+  
   if (jsonParsedSpec.components?.securitySchemes) {
+    if (jsonParsedSpec.security) security = jsonParsedSpec.security
+    else security = [jsonParsedSpec.components?.securitySchemes]
+
     const securitySchemeSet = new Set();
     Object.entries(jsonParsedSpec.components.securitySchemes).forEach((kv) => {
       if (!securitySchemeSet.has(kv[0])) {
@@ -189,6 +194,7 @@ export default async function ProcessSpec(
     externalDocs: jsonParsedSpec.externalDocs,
     securitySchemes,
     servers,
+    security,
   };
   return parsedSpec;
 }
