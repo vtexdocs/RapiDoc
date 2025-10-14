@@ -7,10 +7,12 @@ customize their theme. Simply add your css to this file and yarn build.
 
 export default css`
 .code-container {
-  tab-size: 4;
+  tab-size: 2;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
 }
-.code-container > code {
-  font-size: 14px;
+.code-container * {
+  font-size: 12px !important;
   line-height: 20px;
 }
 
@@ -30,7 +32,7 @@ export default css`
   font-size: 18px;
   font-weight: 400;
   line-height: 18px;
-  color: #4A4A4A;
+  color: #4a4a4a;
 }
 
 .label-operation-container {
@@ -88,15 +90,15 @@ export default css`
 }
 
 .right-box-title {
-  color: #4A4A4A;
-  font-size: 18px;
-  line-height: 20px;
-  font-weight: 400;
+  color: #6b7785;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .right-box-container {
-  margin-top: 16px;
-  padding-inline: 16px;
+  margin-top: 12px;
+  padding-inline: 12px;
 }
 
 .right-box-label {
@@ -108,18 +110,18 @@ export default css`
 
 .right-box-input {
   width: 100%;
-  height: 44px;
+  height: 28px;
 }
 
 .right-box-content {
-  border: 1px solid rgb(204, 206, 216);
+  border: 1px solid #e7e9ee;
   border-radius: 4px;
-  padding-block: 24px;
-  margin-top: 24px;
+  padding-block: 10px;
+  margin-top: 8px;
 }
 
 .right-box-select {
-  padding-inline: 16px;
+  padding-inline: 8px;
   width: 100%;
 }
 
@@ -154,8 +156,7 @@ export default css`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-
-  padding: 16px 0px;
+  padding: 8px 0px;
   gap: 5px;
 }
 
@@ -248,9 +249,9 @@ export default css`
   border: 1px solid rgb(59, 59, 59);
 }
 
-.data-example{
-  background: #FFF3F6;
-  border: 1px solid #FFE0EF;
+.data-example {
+  background: #fff3f6;
+  border: 1px solid #ffe0ef;
   border-radius: 4px;
   font-family: var(--font-mono);
   font-size: var(--font-size-small);
@@ -258,13 +259,14 @@ export default css`
   padding: 0.2em 0.4em;
 }
 
-.data-example:hover{
+.data-example:hover {
   border: 1px solid #ffb5cb;
 }
 
 .language-show-more:active {
   border-color: rgb(59, 59, 59);
-  box-shadow: rgb(255 255 255) 0px 0px 0px 1px, rgb(185 185 185) 0px 0px 0px 3px;
+  box-shadow: rgb(255 255 255) 0px 0px 0px 1px,
+    rgb(185 185 185) 0px 0px 0px 3px;
 }
 
 .more-languages-dropdown {
@@ -281,6 +283,6 @@ export default css`
   
   z-index: 1;
 
-  transition: visibility 0.3s linear,opacity 0.3s linear;
+  transition: visibility 0.3s linear, opacity 0.3s linear;
 }
 `;

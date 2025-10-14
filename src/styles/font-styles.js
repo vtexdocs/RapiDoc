@@ -31,7 +31,7 @@ export default css`
   .regular-font-size { font-size: var(--font-size-regular); }
   .small-font-size { font-size: var(--font-size-small); }
   .upper { font-size: 14px; text-transform: uppercase; }
-  .operation-tag { font-size: 16px; line-height: 18px; color: #6b7785; }
+  .operation-tag { font-size: 14px; line-height: 16px; color: #6b7785; margin-top: 0px; padding-top: 0px }
   .primary-text{ color: var(--primary-color); }
   .bold-text { font-weight:bold; }
   .gray-text { color: var(--light-fg); }
@@ -100,7 +100,6 @@ export default css`
     background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/info.svg')
       no-repeat 0 0;
     background-size: 20px 20px;
-    position: absolute;
   }
 
   .m-markdown .warning-blockquote {
@@ -116,7 +115,6 @@ export default css`
     background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/warning.svg')
       no-repeat 0 0;
     background-size: 20px 20px;
-    position: absolute;
   }
 
   .m-markdown .danger-blockquote {
@@ -132,7 +130,6 @@ export default css`
     background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/danger.svg')
       no-repeat 0 0;
     background-size: 20px 20px;
-    position: absolute;
   }
 
   blockquote p{
@@ -173,7 +170,7 @@ export default css`
   }
 
   .m-markdown code span {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .m-markdown-small code {

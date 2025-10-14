@@ -451,7 +451,7 @@ export default function securitySchemeTemplate() {
         <div class="right-box-title">Authentication</div>
         <div id="auth-table" class="right-box-content">
           ${selectSecuritySchemeTemplate.call(this)}
-          <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 24px 0px;">
+          <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 12px 0px;">
           ${this.resolvedSpec.security.map((scheme, id) => {
             return html`
             ${id === this.selectedAuthScheme ? html`<div>

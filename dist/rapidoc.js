@@ -22322,7 +22322,7 @@ class ApiRequest extends lit_element_s {
       <button class="clear-btn m-btn m-btn-secondary" part="btn btn-outline" @click="${this.clearResponseData}">CLEAR RESPONSE</button>
       <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 24px;">
         ${this.codeExampleTemplate('flex')}
-        <div style="background: #F8F7FC; padding-inline: 32px;padding-block: 16px">
+        <div style="background: #F8F7FC; padding-inline: 14px;">
           ${this.responseMessage ? lit_html_x`
                 <div class="row" style="width:100%; height:max-content; background:#E7E9EE; border-radius:2px;padding-inline:4px;margin-bottom:4px">
                   <div style="min-width:8px;min-height:8px;width:8px;height:8px;border-radius:50%;${this.responseBlobUrl || this.responseText ? 'border: 1px solid #79A479;background: #E6F2E6;' : 'border: 1px solid #DC4C43;background: #F0E6E4;'}"></div>
@@ -25885,7 +25885,7 @@ class RapiDoc extends lit_element_s {
       }
       .expanded-endpoint-body { 
         position: relative;
-        padding: 6px 0px; 
+        padding: 0px; 
       }
       .expanded-endpoint-body .tag-description {
         background: var(--code-bg);
@@ -25986,7 +25986,7 @@ class RapiDoc extends lit_element_s {
           padding: 24px 8px; 
         }
         .section-gap--read-mode { 
-          padding: 24px 8px; 
+          padding: 0px 80px;
         }
         .endpoint-body {
           position: relative;
@@ -26007,10 +26007,10 @@ class RapiDoc extends lit_element_s {
           display:flex;
         }
         .section-gap--focused-mode { 
-          padding: 12px 80px 12px 80px; 
+          padding: 0px 0px 12px 80px; 
         }
         .section-gap--read-mode { 
-          padding: 24px 80px 12px 80px; 
+          padding: 0px 80px;
         }
       }`, custom_styles];
   }

@@ -9,10 +9,7 @@ import '../components/api-request';
 import '../components/api-response';
 import '../components/content-copy-button';
 import processPathDescription from '../utils/magic-block-utils';
-import { joinURLandPath } from '../utils/url';
 import renderBlockquote from '../utils/renderBlockquote';
-import postmanIcon from '../components/assets/postman-icon';
-import openapiIcon from '../components/assets/openapi-icon';
 
 /* eslint-disable indent */
 function headingRenderer(tagElementId) {
@@ -39,7 +36,6 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
     nonEmptyApiKeys.push(rapiDocApiKey);
   }
 
-  const docUrl = `https://developers.vtex.com/docs/api-reference/${this.specUrl.split('/')[3]}`;
   marked.Renderer.prototype.blockquote = renderBlockquote;
 
   const codeSampleTabPanel = path.xCodeSamples ? codeSamplesTemplate.call(this, path.xCodeSamples) : '';
@@ -60,51 +56,9 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
             </div>
             `
         : ''
-      }
-      <div style="display:flex; justify-content:space-between; flex-wrap: wrap; top:28px; ">
-      ${(this.renderStyle === 'focused' && tagName !== 'General ⦂') ? html`
-      <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> <a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>  ›  ${tagName} </h3>
-      ` : ''}
-      </div>
-      <div style="display: flex; flex-direction:column; row-gap: 20px; margin-bottom: 24px;">
-        ${(this.specUrl && this.allowSpecFileDownload) ? html`<div><div style="display:flex; justify-content: flex-end; gap:8px; flex-wrap: wrap;">
-                <button class="m-btn m-btn-image m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${(e) => { downloadResource(this.specUrl, 'openapi-spec.json', e); }}'>
-                  ${openapiIcon()}
-                  Download OpenAPI spec
-                </button>
-                  <button class="m-btn m-btn-image m-btn-secondary thin-border" part="btn btn-outline" @click='${(e) => { viewResource(this.specUrl, e); }}'>
-                    ${openapiIcon()}
-                    View OpenAPI spec
-                  </button>
-              </div></div>` : ''}
-        ${this.postmanUrl ? html`<div><div style="display:flex; justify-content: flex-end; gap:8px; flex-wrap: wrap;">
-                <button class="m-btn m-btn-image m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${(e) => { downloadResource(this.postmanUrl, 'postman-collection.json', e); }}'>
-                  ${postmanIcon()}
-                  Download Postman collection
-                </button>
-                  <button class="m-btn m-btn-image m-btn-secondary thin-border" part="btn btn-outline" @click='${(e) => { viewResource(this.postmanUrl, e); }}'>
-                    ${postmanIcon()}
-                    View Postman collection
-                  </button>
-              </div></div>` : ''}
-      </div>
-      <h2 part="section-operation-summary"> ${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2>
-        ${path.isWebhook
-        ? html`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>`
-        : html`
-            <div class='mono-font regular-font-size label-operation-container' part="section-operation-webhook-method">
-              <div class='label-operation-method-container' style='border-color: var(--${path.method}-border-color); background-color: var(--${path.method}-bg-color);'>
-                <span part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span>
-              </div>
-              <div class='label-operation-path-container'>
-                <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
-              </div>
-            </div>
-          `
-      }
+      }        
         <slot name="${path.elementId}"></slot>`
     }
-      ${path.description ? html`<div class="m-markdown"> ${unsafeHTML(marked(path.description))}</div>` : ''}
       <!-- ${pathSecurityTemplate.call(this, path.security)} -->
       ${codeSampleTabPanel}
       <div class='expanded-req-resp-container'>
@@ -112,9 +66,14 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
           class = "${this.renderStyle}-mode"
           style = "width:100%;"
           schema-short-summary = "${path.shortSummary}"
+          short-summary = "${path.shortSummary}"
+          tag-name = "${tagName}"
           webhook = "${path.isWebhook}"
           method = "${path.method}"
           path = "${path.path}"
+          path-description = "${path.description}"
+          .responses = "${path.responses}"
+          default-schema-tab = "${this.defaultSchemaTab}"
           .security = "${path.security}"
           .parameters = "${path.parameters}"
           .request_body = "${path.requestBody}"
@@ -145,24 +104,6 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
         > </api-request>
 
         ${path.callbacks ? callbackTemplate.call(this, path.callbacks) : ''}
-
-        <api-response
-          class = "${this.renderStyle}-mode"
-          style = "width:100%;"
-          webhook = "${path.isWebhook}"
-          .responses = "${path.responses}"
-          render-style = "${this.renderStyle}"
-          schema-style = "${this.schemaStyle}"
-          active-schema-tab = "${this.defaultSchemaTab}"
-          schema-expand-level = "${this.schemaExpandLevel}"
-          schema-description-expanded = "${this.schemaDescriptionExpanded}"
-          allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
-          schema-hide-read-only = "${this.schemaHideReadOnly === 'never' ? 'false' : path.isWebhook ? 'true' : 'false'}"
-          schema-hide-write-only = "${this.schemaHideWriteOnly === 'never' ? 'false' : path.isWebhook ? 'false' : 'true'}"
-          selected-status = "${Object.keys(path.responses || {})[0] || ''}"
-          exportparts = "btn:btn, btn-response-status:btn-response-status, btn-selected-response-status:btn-selected-response-status, btn-fill:btn-fill, btn-copy:btn-copy,
-          schema-description:schema-description, schema-multiline-toggle:schema-multiline-toggle"
-        > </api-response>
       </div>
     </div>
   `;

@@ -95,11 +95,6 @@ export class BaseUrl extends LitElement {
                 </div>
                 <slot></slot>
             </div>
-            ${
-                this.showToast
-                ? html`<toast-component tone="positive" message="Copied to clipboard"></toast-component>`
-                : ''
-            }
         `;
     }
 
@@ -137,9 +132,9 @@ export class BaseUrl extends LitElement {
             }
 
             .container {
-                height: 42px;
+                height: 28px;
                 font-size:14px;
-                border: 1px solid var(--border-color);
+                border: 1px solid #e7e9ee;
                 border-radius: 4px;
                 margin: 4px 0px;
                 position: relative;
