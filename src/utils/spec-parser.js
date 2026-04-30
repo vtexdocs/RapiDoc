@@ -18,8 +18,20 @@ export default async function ProcessSpec(
   let specMeta;
   try {
     this.requestUpdate(); // important to show the initial loader
-    if (spec) specMeta = JSON.parse(spec);
-    else {
+    if (spec) {
+      const parsed = JSON.parse(spec);
+      try {
+        const api = await SwaggerParser.dereference(parsed);
+        specMeta = await SwaggerParser.parse(api);
+      } catch (derefErr) {
+        console.info(
+          'RapiDoc: %c Inline spec $ref dereference failed; using raw JSON. %o ',
+          'color:orangered',
+          derefErr,
+        );
+        specMeta = parsed;
+      }
+    } else {
       const api = await SwaggerParser.dereference(specUrl);
       specMeta = await SwaggerParser.parse(api);
     }

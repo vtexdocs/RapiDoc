@@ -65,9 +65,12 @@ export class BaseUrl extends LitElement {
     }
 
     parseURL() {
-        if (!this.variables) return this.url;
+        const pathPart = this.path == null ? '' : String(this.path);
+        if (!this.variables) {
+            return joinURLandPath(this.url ?? '', pathPart);
+        }
 
-        let { url } = this;
+        let url = this.url ?? '';
         const spanVar = '<span class="variable">{var}</span>';
 
         for (const [key, value] of Object.entries(this.variables)) {
@@ -75,7 +78,7 @@ export class BaseUrl extends LitElement {
             url = url.replace(regex, spanVar.replace('{var}', value.value));
         }
 
-        return joinURLandPath(url, this.path);
+        return joinURLandPath(url, pathPart);
     }
 
     render() {

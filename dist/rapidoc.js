@@ -16091,13 +16091,13 @@ pre[class*="language-"] {
   overflow: hidden;
   color:var(--nav-text-color);
   background-color: var(--nav-bg-color);
-  background-blend-mode: multiply;
   line-height: calc(var(--font-size-small) + 4px);
   display:none;
   position:relative;
   flex-direction:column;
   flex-wrap:nowrap;
   word-break:break-word;
+  transition: width 0.2s ease, min-width 0.2s ease, max-width 0.2s ease;
 }
 ::slotted([slot=nav-logo]){
   padding:16px 16px 0 16px;
@@ -16108,6 +16108,8 @@ pre[class*="language-"] {
   overflow-y: overlay;
   scrollbar-width: thin;
   scrollbar-color: var(--nav-hover-bg-color) transparent;
+  flex: 1;
+  min-height: 0;
 }
 
 .nav-bar-tag {
@@ -16175,12 +16177,12 @@ pre[class*="language-"] {
 }
 
 .nav-bar-tag {
-  font-size: var(--font-size-regular);
+  font-size: calc(var(--font-size-small) + 4px);
   color: var(--nav-accent-color);
   border-left:4px solid transparent;
   font-weight:bold;
   padding: 15px 15px 15px 10px;
-  text-transform: capitalize;
+  text-transform: none;
 }
 
 .nav-bar-components,
@@ -16560,6 +16562,75 @@ customize their theme. Simply add your css to this file and yarn build.
 
   transition: visibility 0.3s linear,opacity 0.3s linear;
 }
+
+.spec-resource-actions-wrap {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+.spec-resource-actions__row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.spec-resource-actions__download,
+.spec-resource-actions__view {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-regular);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg);
+  line-height: 1.2;
+}
+
+.spec-resource-actions__download {
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.spec-resource-actions__download:hover {
+  color: var(--primary-color);
+}
+
+.spec-resource-actions__view {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #e9e9f0;
+  cursor: pointer;
+}
+
+.spec-resource-actions__view:hover {
+  background: #dcdce8;
+}
+
+.spec-resource-actions__download > div,
+.spec-resource-actions__view > div {
+  display: flex;
+  align-items: center;
+}
+
+.read-mode-tag-section .title.tag {
+  font-size: calc(var(--font-size-small) + 10px);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--fg);
+}
 `);
 ;// CONCATENATED MODULE: ./src/utils/common-utils.js
 /* provided dependency */ var common_utils_console = __webpack_require__(5108);
@@ -16734,6 +16805,20 @@ function viewResource(url) {
     a.remove();
   }
 }
+function downloadTextAsFile(text, fileName) {
+  if (!text) return;
+  const blob = new Blob([text], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  downloadResource(url, fileName);
+  setTimeout(() => URL.revokeObjectURL(url), 2500);
+}
+function viewTextInNewTab(text) {
+  if (!text) return;
+  const blob = new Blob([text], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, '_blank', 'noopener,noreferrer');
+  if (!win) URL.revokeObjectURL(url);else setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
 // EXTERNAL MODULE: ./node_modules/swagger-parser/index.js
 var swagger_parser = __webpack_require__(9682);
 var swagger_parser_default = /*#__PURE__*/__webpack_require__.n(swagger_parser);
@@ -16750,7 +16835,16 @@ async function ProcessSpec(specUrl, spec, generateMissingTags = false, sortTags 
   try {
     var _specMeta, _specMeta2;
     this.requestUpdate(); // important to show the initial loader
-    if (spec) specMeta = JSON.parse(spec);else {
+    if (spec) {
+      const parsed = JSON.parse(spec);
+      try {
+        const api = await swagger_parser_default().dereference(parsed);
+        specMeta = await swagger_parser_default().parse(api);
+      } catch (derefErr) {
+        spec_parser_console.info('RapiDoc: %c Inline spec $ref dereference failed; using raw JSON. %o ', 'color:orangered', derefErr);
+        specMeta = parsed;
+      }
+    } else {
       const api = await swagger_parser_default().dereference(specUrl);
       specMeta = await swagger_parser_default().parse(api);
     }
@@ -17199,10 +17293,10 @@ function getTypeInfo(schema) {
   let constrain = '';
   // let examples;
 
-  if (schema.$ref) {
+  if (schema.$ref && !schema.type) {
     const n = schema.$ref.lastIndexOf('/');
     const schemaNode = schema.$ref.substring(n + 1);
-    dataType = `{recursive: ${schemaNode}} `;
+    dataType = schemaNode;
   } else if (schema.type) {
     dataType = Array.isArray(schema.type) ? schema.type.join(schema.length === 2 ? ' or ' : '┃') : schema.type;
     if (schema.format || schema.enum || schema.const) {
@@ -17232,8 +17326,9 @@ function getTypeInfo(schema) {
     arrayType: '',
     html: ''
   };
-  if (info.type === '{recursive}') {
-    info.description = schema.$ref.substring(schema.$ref.lastIndexOf('/') + 1);
+  if (schema.$ref && !schema.type) {
+    const refName = schema.$ref.substring(schema.$ref.lastIndexOf('/') + 1);
+    info.description = info.description || refName;
   } else if (info.type === '{missing-type-info}' || info.type === 'any') {
     info.description = info.description || '';
   }
@@ -20354,8 +20449,10 @@ class Breadcrumbs extends lit_element_s {
 if (!customElements.get('bread-crumbs')) customElements.define('bread-crumbs', Breadcrumbs);
 ;// CONCATENATED MODULE: ./src/utils/url.js
 function joinURLandPath(url, path) {
-  if (url.length > 0 && path.length > 0 && url.slice(-1) === path.charAt(0)) return url.slice(0, -1) + path;
-  return url + path;
+  const u = url == null ? '' : String(url);
+  const p = path == null ? '' : String(path);
+  if (u.length > 0 && p.length > 0 && u.slice(-1) === p.charAt(0)) return u.slice(0, -1) + p;
+  return u + p;
 }
 function parseURL(variables, url, path) {
   if (!variables) return url;
@@ -20660,16 +20757,17 @@ class BaseUrl extends lit_element_s {
     this.copied = false;
   }
   parseURL() {
-    if (!this.variables) return this.url;
-    let {
-      url
-    } = this;
+    const pathPart = this.path == null ? '' : String(this.path);
+    if (!this.variables) {
+      return joinURLandPath(this.url ?? '', pathPart);
+    }
+    let url = this.url ?? '';
     const spanVar = '<span class="variable">{var}</span>';
     for (const [key, value] of Object.entries(this.variables)) {
       const regex = new RegExp(`{${key}}`, 'g');
       url = url.replace(regex, spanVar.replace('{var}', value.value));
     }
-    return joinURLandPath(url, this.path);
+    return joinURLandPath(url, pathPart);
   }
   render() {
     return lit_html_x`
@@ -21816,10 +21914,10 @@ class ApiRequest extends lit_element_s {
                                 <schema-tree
                                   class = 'json'
                                   style = 'display: block'
-                                  .data = '${schemaAsObj}'
+                                  .data=${schemaAsObj}
                                   schema-expand-level = "${this.schemaExpandLevel}"
                                   schema-description-expanded = "${this.schemaDescriptionExpanded}"
-                                  allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}",
+                                  allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
                                   schema-hide-read-only = "${this.schemaHideReadOnly.includes(this.method)}"
                                   schema-hide-write-only = "${this.schemaHideWriteOnly.includes(this.method)}"
                                   exportparts = "btn:btn, btn-fill:btn-fill, btn-outline:btn-outline, btn-try:btn-try, btn-clear:btn-clear, btn-clear-resp:btn-clear-resp,
@@ -22036,7 +22134,7 @@ class ApiRequest extends lit_element_s {
             <schema-table
               class = '${reqBody.mimeType.substring(reqBody.mimeType.indexOf('/') + 1)}'
               style = 'display: ${this.selectedRequestBodyType === reqBody.mimeType ? 'block' : 'none'};'
-              .data = '${schemaAsObj}'
+              .data=${schemaAsObj}
               schema-expand-level = "${this.schemaExpandLevel}"
               schema-description-expanded = "${this.schemaDescriptionExpanded}"
               allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
@@ -22051,7 +22149,7 @@ class ApiRequest extends lit_element_s {
             <schema-tree
               class = "${reqBody.mimeType.substring(reqBody.mimeType.indexOf('/') + 1)}"
               style = "display: ${this.selectedRequestBodyType === reqBody.mimeType ? 'block' : 'none'};"
-              .data = "${schemaAsObj}"
+              .data=${schemaAsObj}
               schema-expand-level = "${this.schemaExpandLevel}"
               schema-description-expanded = "${this.schemaDescriptionExpanded}"
               allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
@@ -22149,10 +22247,10 @@ class ApiRequest extends lit_element_s {
       ${lit_html_x`
         <div class="tab-content col" data-tab = 'schema' style="display:${this.activeSchemaTab !== 'example' ? 'block' : 'none'}; padding-left:5px; width:100%;"> 
           <schema-tree
-            .data = '${formdataPartSchema}'
+            .data=${formdataPartSchema}
             schema-expand-level = "${this.schemaExpandLevel}"
             schema-description-expanded = "${this.schemaDescriptionExpanded}"
-            allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}",
+            allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
           > </schema-tree>
         </div>`}
       </div>
@@ -23397,7 +23495,7 @@ class ApiResponse extends lit_element_s {
               <json-tree 
                 style= 'background: rgb(248, 247, 252); border-radius: 4px; border: 1px solid rgb(231, 233, 238); padding: 16px;'
                 render-style = '${this.renderStyle}'
-                .data="${mimeRespDetails.examples[0].exampleValue}"
+                .data=${mimeRespDetails.examples[0].exampleValue}
                 class = 'example-panel ${this.renderStyle === 'read' ? 'border pad-8-16' : 'pad-top-8'}'
                 exportparts = "btn:btn, btn-fill:btn-fill, btn-copy:btn-copy" 
               ></json-tree>` : lit_html_x`
@@ -23418,7 +23516,7 @@ class ApiResponse extends lit_element_s {
                 ${v.exampleFormat === 'json' ? lit_html_x`
                     <json-tree 
                       render-style = '${this.renderStyle}'
-                      .data = '${v.exampleValue}'
+                      .data=${v.exampleValue}
                       exportparts = "btn:btn, btn-fill:btn-fill, btn-copy:btn-copy" 
                     ></json-tree>` : lit_html_x`<pre>${v.exampleValue}</pre>`}
               </div>  
@@ -23436,7 +23534,7 @@ class ApiResponse extends lit_element_s {
     return lit_html_x`
       ${this.schemaStyle === 'table' ? lit_html_x`
           <schema-table
-            .data = "${mimeRespDetails.schemaTree}"
+            .data=${mimeRespDetails.schemaTree}
             schema-expand-level = "${this.schemaExpandLevel}"
             schema-description-expanded = "${this.schemaDescriptionExpanded}"
             allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
@@ -23445,7 +23543,7 @@ class ApiResponse extends lit_element_s {
             exportparts = "schema-description:schema-description, schema-multiline-toggle:schema-multiline-toggle"
           > </schema-table> ` : lit_html_x`
           <schema-tree
-            .data = '${mimeRespDetails.schemaTree}'
+            .data=${mimeRespDetails.schemaTree}
             schema-expand-level = "${this.schemaExpandLevel}"
             schema-description-expanded = "${this.schemaDescriptionExpanded}"
             allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
@@ -23494,11 +23592,11 @@ class ContentCopyButton extends lit_element_s {
     }
   }
   onButtonClick() {
-    navigator.clipboard.writeText(this.content);
+    navigator.clipboard.writeText(this.content ?? '');
     this.copied = true;
   }
   onTextClick() {
-    navigator.clipboard.writeText(this.content);
+    navigator.clipboard.writeText(this.content ?? '');
     this.showToast = true;
   }
   onMouseover() {
@@ -23511,7 +23609,7 @@ class ContentCopyButton extends lit_element_s {
   render() {
     return lit_html_x`
                 <div @mouseover="${this.onMouseover}" @mouseleave="${this.onMouseLeave}" class="content-copy-container">
-                    <span @click="${this.onTextClick}" part="label-operation-path">${this.content}</span>
+                    <span @click="${this.onTextClick}" part="label-operation-path">${this.content ?? ''}</span>
                     <button @click="${this.onButtonClick}" style=${this.showButton ? 'opacity: 1;' : 'opacity: 0.2;'}>
                         <div class="svg-container">
                             ${this.copied ? checkSymbol() : copySymbol()}
@@ -23767,7 +23865,9 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
   if (rapiDocApiKey) {
     nonEmptyApiKeys.push(rapiDocApiKey);
   }
-  const docUrl = `https://developers.vtex.com/docs/api-reference/${this.specUrl.split('/')[3]}`;
+  const specUrlStr = typeof this.specUrl === 'string' ? this.specUrl : '';
+  const docSlug = specUrlStr ? specUrlStr.split('/')[3] : '';
+  const docUrl = docSlug ? `https://developers.vtex.com/docs/api-reference/${docSlug}` : '';
   marked.Renderer.prototype.blockquote = renderBlockquote;
   const codeSampleTabPanel = path.xCodeSamples ? codeSamplesTemplate.call(this, path.xCodeSamples) : '';
   path.description = processPathDescription(path.description);
@@ -23784,16 +23884,8 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
             ` : ''}
       <div style="display:flex; justify-content:space-between; flex-wrap: wrap; top:28px; margin-bottom:32px; ">
       ${this.renderStyle === 'focused' && tagName !== 'General ⦂' ? lit_html_x`
-      <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> <a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>  ›  ${tagName} </h3>
+      <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> ${docUrl ? lit_html_x`<a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>` : lit_html_x`<span style="color: #6b7785">${this.resolvedSpec.info.title}</span>`}  ›  ${tagName} </h3>
       ` : ''}
-      ${this.specUrl && this.allowSpecFileDownload ? lit_html_x`<div><div style="display:flex; justify-content: flex-end; gap:8px; margin-top: 24px; flex-wrap: wrap;">
-              <button class="m-btn m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${e => {
-    downloadResource(this.specUrl, 'openapi-spec.json', e);
-  }}'>Download OpenAPI spec</button>
-                <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
-    viewResource(this.specUrl, e);
-  }}'>View OpenAPI spec</button>
-            </div></div>` : ''}
       </div>
       <h2 part="section-operation-summary"> ${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2>
         ${path.isWebhook ? lit_html_x`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>` : lit_html_x`
@@ -23802,7 +23894,7 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
                 <span part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span>
               </div>
               <div class='label-operation-path-container'>
-                <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
+                <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath((this.selectedServer && (this.selectedServer.url || this.selectedServer.computedUrl)) || '', path.path || '')}'></content-copy-button>
               </div>
             </div>
           `}
@@ -23875,7 +23967,7 @@ function expandedEndpointTemplate() {
   }
   return lit_html_x`
   ${this.resolvedSpec.tags.map(tag => lit_html_x`
-    <section id="${tag.elementId}" part="section-tag" class="regular-font section-gap--read-mode observe-me" style="border-top:1px solid var(--primary-color);">
+    <section id="${tag.elementId}" part="section-tag" class="regular-font section-gap--read-mode observe-me read-mode-tag-section">
       <div class="title tag" part="section-tag-title label-tag-title">${tag.name}</div>
       <slot name="${tag.elementId}"></slot>
       <div class="regular-font-size">
@@ -23951,7 +24043,7 @@ function componentsTemplate() {
   }
   return lit_html_x`
   ${this.resolvedSpec.components.map(component => lit_html_x`
-    <div id="cmp--${component.name.toLowerCase()}" class='regular-font section-gap--read-mode observe-me' style="border-top:1px solid var(--primary-color);">
+    <div id="cmp--${component.name.toLowerCase()}" class='regular-font section-gap--read-mode observe-me read-mode-tag-section'>
       <div class="title tag">${component.name}</div>
       <div class="regular-font-size">
         ${unsafe_html_o(`<div class='m-markdown regular-font'>${marked(component.description ? component.description : '')}</div>`)}
@@ -23986,14 +24078,29 @@ function overviewTemplate() {
     <section part="section-overview" class="observe-me ${this.renderStyle === 'view' ? 'section-gap' : 'section-gap--read-mode'}">
       <span part="anchor-endpoint" id="overview"></span>
       ${(_this$resolvedSpec = this.resolvedSpec) !== null && _this$resolvedSpec !== void 0 && _this$resolvedSpec.info ? lit_html_x`
-          ${this.specUrl && this.allowSpecFileDownload === 'true' ? lit_html_x`
-              <div style="display:flex; margin-top:18px; gap:8px; justify-content: flex-end; flex-wrap: wrap;">
-                <button class="m-btn thin-border m-btn-tertiary" part="btn btn-outline" @click='${e => {
-    downloadResource(this.specUrl, 'openapi-spec', e);
-  }}'>Download OpenAPI spec</button>
-                <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
-    viewResource(this.specUrl, e);
-  }}'>View OpenAPI spec</button>
+          ${(this.allowSpecFileDownload !== 'false' && (this.specUrl || typeof this.spec === 'string' && this.spec.trim())) || this.postmanUrl ? lit_html_x`<div class="spec-resource-actions-wrap" part="section-spec-resources">
+          ${this.allowSpecFileDownload !== 'false' && (this.specUrl || typeof this.spec === 'string' && this.spec.trim()) ? lit_html_x`<div class="spec-resource-actions__row">
+                <button type="button" class="spec-resource-actions__download" part="btn-download-openapi" aria-label="Download OpenAPI specification" @click="${e => {
+    if (this.specUrl) downloadResource(this.specUrl, 'openapi-spec.json', e);else {
+      const s = typeof this.spec === 'string' ? this.spec.trim() : '';
+      if (s) downloadTextAsFile(s, 'openapi-spec.json');
+    }
+  }}"><span style="display:flex;align-items:center;line-height:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 15v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="spec-resource-actions__label">Download</span></button>
+                <button type="button" class="spec-resource-actions__view" part="btn-view-openapi" aria-label="View OpenAPI specification" @click="${e => {
+    if (this.specUrl) viewResource(this.specUrl, e);else {
+      const s = typeof this.spec === 'string' ? this.spec.trim() : '';
+      if (s) viewTextInNewTab(s);
+    }
+  }}"><span style="display:flex;align-items:center;line-height:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 15v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="spec-resource-actions__label">View</span></button>
+              </div>` : ''}
+          ${this.postmanUrl ? lit_html_x`<div class="spec-resource-actions__row">
+                <button type="button" class="spec-resource-actions__download" part="btn-download-postman" aria-label="Download Postman collection" @click="${e => {
+    downloadResource(this.postmanUrl, 'postman-collection.json', e);
+  }}"><span style="display:flex;align-items:center;line-height:0"><svg width="18" height="18" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="128" cy="128" r="120" fill="#FF6C37"/><path d="M180 88L96 172l-28-28" stroke="#fff" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="spec-resource-actions__label">Download</span></button>
+                <button type="button" class="spec-resource-actions__view" part="btn-view-postman" aria-label="View Postman collection" @click="${e => {
+    viewResource(this.postmanUrl, e);
+  }}"><span style="display:flex;align-items:center;line-height:0"><svg width="18" height="18" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="128" cy="128" r="120" fill="#FF6C37"/><path d="M180 88L96 172l-28-28" stroke="#fff" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="spec-resource-actions__label">View</span></button>
+              </div>` : ''}
               </div>` : ''}
           <div id="api-title" part="section-overview-title" style="font-size:32px">
             ${this.resolvedSpec.info.title}
@@ -24090,6 +24197,9 @@ function navbarTemplate() {
   }
   return lit_html_x`
   <nav class='nav-bar ${this.renderStyle}' part='section-navbar'>
+    <div class='nav-sidebar-toggle-row' part='section-nav-sidebar-toggle'>
+      <button type='button' class='nav-sidebar-toggle' part='btn-nav-sidebar-toggle' aria-label='${this.navSidebarCollapsed ? 'Expand' : 'Collapse'} navigation' aria-expanded='${!this.navSidebarCollapsed}' @click='${this.toggleNavSidebar}'>${this.navSidebarCollapsed ? '»' : '«'}</button>
+    </div>
     <slot name='nav-logo' class='logo'></slot>
     ${this.allowSearch === 'false' && this.allowAdvancedSearch === 'false' ? '' : lit_html_x`
         <div style='display:flex; flex-direction:row; justify-content:center; align-items:stretch; padding:8px 24px 12px 24px; ${this.allowAdvancedSearch === 'false' ? 'border-bottom: 1px solid var(--nav-hover-bg-color)' : ''}' part='section-navbar-search'>
@@ -24103,7 +24213,6 @@ function navbarTemplate() {
                   @change = '${this.onSearchChange}'
                   spellcheck = 'false'
                 >
-                <div style='margin: 6px 5px 0 -24px; font-size:var(--font-size-regular); cursor:pointer;'>&#x21a9;</div>
               </div>  
               ${this.matchPaths ? lit_html_x`
                   <button @click = '${this.onClearSearch}' class='m-btn thin-border' style='margin-left:5px; color:var(--nav-text-color); width:75px; padding:6px 8px;' part='btn btn-outline btn-clear-filter'>
@@ -24142,23 +24251,19 @@ function navbarTemplate() {
     
       ${this.allowServerSelection === 'false' ? '' : lit_html_x`<div class='nav-bar-info ${this.navActiveItemMarker}' id='link-servers' data-action='navigate' data-content-id='servers' tabindex='0' part='section-navbar-item section-navbar-servers'> API Servers </div>`}
       ${this.allowAuthentication === 'false' || !this.resolvedSpec.securitySchemes ? '' : lit_html_x`<div class='nav-bar-info ${this.navActiveItemMarker}' id='link-auth' data-action='navigate' data-content-id='auth' tabindex='0' part='section-navbar-item section-navbar-auth'> Authentication </div>`}
-
-      <div id='link-operations-top' class='nav-bar-section operations' data-action='navigate' data-content-id='${this.renderStyle === 'focused' ? '' : 'operations-top'}' part='section-navbar-item section-navbar-operations-top'>
-        <div style='font-size:16px; display:flex; margin-left:10px;'>
-          ${this.renderStyle === 'focused' ? lit_html_x`
-              <div class='nav-bar-expand-all'
-                data-action='expand-all'
-                tabindex='0' 
-                title='Expand all'
-              >▸</div>
-              <div class='nav-bar-collapse-all'
-                data-action='collapse-all'
-                tabindex='0' 
-                title='Collapse all'
-              >▸</div>` : ''}  
-        </div>
-        <div class='nav-bar-section-title'> OPERATIONS </div>
-      </div>
+      ${'focused' === this.renderStyle ? lit_html_x`
+      <div style='font-size:16px; display:flex; margin-left:10px; margin-bottom:4px;'>
+        <div class='nav-bar-expand-all'
+          data-action='expand-all'
+          tabindex='0'
+          title='Expand all'
+        >▸</div>
+        <div class='nav-bar-collapse-all'
+          data-action='collapse-all'
+          tabindex='0'
+          title='Collapse all'
+        >▸</div>
+      </div>` : ''}
 
       <!-- TAGS AND PATHS-->
       ${this.resolvedSpec.tags.filter(tag => tag.paths.filter(path => pathIsInSearch(this.matchPaths, path, this.matchType)).length).map(tag => {
@@ -24501,7 +24606,7 @@ function endpointBodyTemplate(path) {
           <span class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span>
         </div>
         <div class='label-operation-path-container'>
-          <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
+          <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath((this.selectedServer && (this.selectedServer.url || this.selectedServer.computedUrl)) || '', path.path || '')}'></content-copy-button>
         </div>
       </div>
       ${path.description ? lit_html_x`<div part="section-endpoint-body-description" class="path-description"> ${unsafe_html_o(path.description)}</div>` : ''}
@@ -24626,25 +24731,6 @@ function endpointTemplate(showExpandCollapse = true, showTags = true, pathsExpan
   `)}`;
 }
 /* eslint-enable indent */
-;// CONCATENATED MODULE: ./src/templates/logo-template.js
-
-
-/* eslint-disable indent */
-function logoTemplate(style) {
-  return lit_html_x`
-  <div style=${style}>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="1 0 511 512">
-      <path d="M351 411a202 202 0 01-350 0 203 203 0 01333-24 203 203 0 0117 24zm0 0" fill="#adc165"/>
-      <path d="M334 387a202 202 0 01-216-69 202 202 0 01216 69zm78 32H85a8 8 0 01-8-8 8 8 0 018-8h327a8 8 0 017 8 8 8 0 01-7 8zm0 0" fill="#99aa52"/>
-      <path d="M374 338l-5 30a202 202 0 01-248-248 203 203 0 01253 218zm0 0" fill="#ffc73b"/>
-      <path d="M374 338a202 202 0 01-100-197 203 203 0 01100 197zm38 81l-6-2-231-231a8 8 0 0111-11l231 230a8 8 0 01-5 14zm0 0" fill="#efb025"/>
-      <path d="M311 175c0 75 40 140 101 175a202 202 0 000-350 202 202 0 00-101 175zm0 0" fill="#ff903e"/>
-      <path d="M412 419a8 8 0 01-8-8V85a8 8 0 0115 0v326a8 8 0 01-7 8zm0 0" fill="#e87425"/>
-    </svg>
-  </div>    
-`;
-}
-/* eslint-enable indent */
 ;// CONCATENATED MODULE: ./src/templates/header-template.js
 
 
@@ -24654,10 +24740,7 @@ function headerTemplate() {
   return lit_html_x`
   <header class="row main-header regular-font" part="section-header" style="padding:8px 4px 8px 4px;min-height:48px;">
     <div class="only-large-screen-flex" style="align-items: center;">
-      <slot name="logo" class="logo" part="section-logo">
-        ${logoTemplate('height:36px;width:36px;margin-left:5px')}
-        <!-- m-logo style="height:36px;width:36px;margin-left:5px"></m-logo -->
-      </slot>  
+      <slot name="logo" class="logo" part="section-logo"></slot>
       <div class="header-title" part="label-header-title">${this.headingText}</div>
     </div>  
     <div style="margin: 0px 8px;display:flex;flex:1">
@@ -25362,7 +25445,7 @@ function mainBodyTemplate(isMini = false, showExpandCollapse = true, showTags = 
     <!-- Advanced Search -->
     ${this.allowAdvancedSearch === 'false' ? '' : searchByPropertiesModalTemplate.call(this)}
 
-    <div id='the-main-body' class='body ${this.cssClasses}' dir='${this.pageDirection}' >
+    <div id='the-main-body' class='body ${this.cssClasses}${this.navSidebarCollapsed ? ' nav-sidebar-collapsed' : ''}' dir='${this.pageDirection}' >
       <!-- Side Nav -->
       ${(this.renderStyle === 'read' || this.renderStyle === 'focused') && this.showSideNav === 'true' && this.resolvedSpec ? navbarTemplate.call(this) : ''}
 
@@ -25447,6 +25530,7 @@ class RapiDoc extends lit_element_s {
     this.intersectionObserver = new IntersectionObserver((entries) => { this.onIntersect(entries); }, intersectionObserverOptions);
     */
     this.isIntersectionObserverActive = false;
+    this.navSidebarCollapsed = false;
   }
   static get properties() {
     return {
@@ -25467,6 +25551,10 @@ class RapiDoc extends lit_element_s {
       routePrefix: {
         type: String,
         attribute: 'route-prefix'
+      },
+      routeHistoryTarget: {
+        type: String,
+        attribute: 'route-history-target'
       },
       specUrl: {
         type: String,
@@ -25748,6 +25836,10 @@ class RapiDoc extends lit_element_s {
       },
       advancedSearchMatches: {
         type: Object
+      },
+      navSidebarCollapsed: {
+        type: Boolean,
+        attribute: false
       }
     };
   }
@@ -25759,6 +25851,8 @@ class RapiDoc extends lit_element_s {
         min-width:360px;
         width:100%;
         height:100%;
+        min-height: 0;
+        flex: 1 1 auto;
         margin:0;
         padding:0;
         overflow: hidden;
@@ -25771,17 +25865,23 @@ class RapiDoc extends lit_element_s {
       :where(input[type="text"], input[type="password"], select, textarea):focus-visible { border-color: var(--primary-color); }
     .body {
         display:flex;
-        height:100%;
+        min-height: 0;
         width:100%;
         overflow:hidden;
         max-width: 2087px;
+        align-items: stretch;
+      }
+      #the-main-body.body {
+        flex: 1 1 0%;
+        min-height: 0;
       }
       .main-content { 
         margin:0;
         padding: 0; 
         display:block;
-        flex:1;
-        height:100%;
+        flex: 1 1 0%;
+        min-width: 0;
+        min-height: 0;
         overflow-y: auto;
         overflow-x: hidden;
         scrollbar-width: thin;
@@ -25843,16 +25943,16 @@ class RapiDoc extends lit_element_s {
       }
 
       .logo {
-        height:36px;
-        width:36px;
-        margin-left:5px; 
+        margin-left: 5px;
+        display: flex;
+        align-items: center;
       }
       .only-large-screen-flex,
       .only-large-screen{
         display:none;
       }
       .tag.title {
-        text-transform: uppercase;
+        text-transform: none;
       }
       .main-header {
         background-color:var(--header-bg);
@@ -25902,6 +26002,58 @@ class RapiDoc extends lit_element_s {
         border-top: 2px solid var(--border-color);
         margin: 24px 0;
         width:100%;
+      }
+      /* Top rule inset like .divider (content width); absolute so it stays above section padding */
+      .read-mode-tag-section {
+        border-top: none;
+        margin-top: 0;
+        position: relative;
+      }
+      .read-mode-tag-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: var(--border-color);
+      }
+      .nav-sidebar-toggle-row {
+        display: flex;
+        justify-content: flex-end;
+        flex-shrink: 0;
+        padding: 6px 8px 4px 6px;
+      }
+      .nav-sidebar-toggle {
+        border: 1px solid var(--border-color);
+        background: var(--bg);
+        color: var(--fg);
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        padding: 4px 8px;
+        font-family: var(--font-regular);
+      }
+      .nav-sidebar-toggle:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+      }
+      .body.nav-sidebar-collapsed .nav-bar {
+        width: 44px !important;
+        min-width: 44px !important;
+        max-width: 44px !important;
+        overflow: hidden;
+      }
+      .body.nav-sidebar-collapsed .nav-scroll {
+        display: none;
+      }
+      .body.nav-sidebar-collapsed .nav-sidebar-toggle-row {
+        justify-content: center;
+        padding: 12px 0;
+      }
+      .body.nav-sidebar-collapsed .nav-sidebar-toggle {
+        padding: 6px 4px;
       }
 
       .tooltip {
@@ -25970,8 +26122,13 @@ class RapiDoc extends lit_element_s {
 
       @media only screen and (min-width: 768px) {
         .nav-bar {
-          width: 260px;
+          width: 220px;
           display:flex;
+          align-self: stretch;
+          min-height: 0;
+          flex-shrink: 0;
+          box-sizing: border-box;
+          flex-direction: column;
         }
         .only-large-screen{
           display:block;
@@ -25988,6 +26145,10 @@ class RapiDoc extends lit_element_s {
         .section-gap--read-mode { 
           padding: 24px 8px; 
         }
+        .read-mode-tag-section::before {
+          left: 8px;
+          right: 8px;
+        }
         .endpoint-body {
           position: relative;
           padding:36px 0 48px 0;
@@ -26003,7 +26164,7 @@ class RapiDoc extends lit_element_s {
 
       @media only screen and (min-width: 1024px) {
         .nav-bar {
-          width: ${r(this.fontSize === 'default' ? '300px' : this.fontSize === 'large' ? '315px' : '330px')};
+          width: ${r(this.fontSize === 'default' ? '240px' : this.fontSize === 'large' ? '252px' : '264px')};
           display:flex;
         }
         .section-gap--focused-mode { 
@@ -26011,6 +26172,10 @@ class RapiDoc extends lit_element_s {
         }
         .section-gap--read-mode { 
           padding: 24px 80px 12px 80px; 
+        }
+        .read-mode-tag-section::before {
+          left: 80px;
+          right: 80px;
         }
       }`, custom_styles];
   }
@@ -26120,6 +26285,9 @@ class RapiDoc extends lit_element_s {
     if (!this.updateRoute || !'true, false,'.includes(`${this.updateRoute},`)) {
       this.updateRoute = 'true';
     }
+    if (!this.routeHistoryTarget || !'window, top,'.includes(`${this.routeHistoryTarget},`)) {
+      this.routeHistoryTarget = 'window';
+    }
     if (!this.routePrefix) {
       this.routePrefix = '#';
     }
@@ -26137,6 +26305,9 @@ class RapiDoc extends lit_element_s {
     }
     if (!this.navItemSpacing || !'compact, relaxed, default,'.includes(`${this.navItemSpacing},`)) {
       this.navItemSpacing = 'default';
+    }
+    if (this.showMethodInNavBar === 'true') {
+      this.showMethodInNavBar = 'as-colored-text';
     }
     if (!this.showMethodInNavBar || !'false, as-plain-text, as-colored-text, as-colored-block,'.includes(`${this.showMethodInNavBar},`)) {
       this.showMethodInNavBar = 'false';
@@ -26353,6 +26524,9 @@ class RapiDoc extends lit_element_s {
       v.expanded = true;
     }));
   }
+  toggleNavSidebar() {
+    this.navSidebarCollapsed = !this.navSidebarCollapsed;
+  }
   onShowSearchModalClicked() {
     this.showAdvancedSearchDialog = true;
   }
@@ -26474,9 +26648,38 @@ class RapiDoc extends lit_element_s {
     const elementId = window.location.href.replace(baseURL + this.routePrefix, '');
     return elementId;
   }
+  queryParamNameFromRoutePrefix() {
+    const p = this.routePrefix;
+    if (typeof p !== 'string' || !p.startsWith('?')) return null;
+    const eq = p.indexOf('=');
+    if (eq <= 1) return null;
+    return p.substring(1, eq);
+  }
   replaceHistoryState(hashId) {
     const baseURL = this.getComponentBaseURL();
-    window.history.replaceState(null, null, `${baseURL}${this.routePrefix || '#'}${hashId}`);
+    const id = hashId == null ? '' : String(hashId);
+    window.history.replaceState(null, null, `${baseURL}${this.routePrefix || '#'}${id}`);
+    if (this.routeHistoryTarget !== 'top') return;
+    if (typeof window === 'undefined' || !window.top || window.top === window) return;
+    try {
+      const topUrl = new URL(window.top.location.href);
+      const param = this.queryParamNameFromRoutePrefix();
+      if (param) {
+        if (!id || id === 'overview') {
+          topUrl.searchParams.delete(param);
+        } else {
+          topUrl.searchParams.set(param, id);
+        }
+        window.top.history.replaceState(null, '', topUrl.toString());
+        return;
+      }
+      if (this.routePrefix === '#') {
+        topUrl.hash = !id || id === 'overview' ? '' : `#${id}`;
+        window.top.history.replaceState(null, '', topUrl.toString());
+      }
+    } catch (e) {
+      /* cross-origin top */
+    }
   }
   expandAndGotoOperation(elementId, scrollToElement = true) {
     if (!this.resolvedSpec) {
@@ -27399,7 +27602,7 @@ function jsonSchemaViewerTemplate(isMini = false) {
     <!-- Header -->
     ${this.showHeader === 'false' ? '' : headerTemplate.call(this)}
     
-    <div id='the-main-body' class="body ${this.cssClasses}" dir= ${this.pageDirection}>
+    <div id='the-main-body' class="body ${this.cssClasses}${this.navSidebarCollapsed ? ' nav-sidebar-collapsed' : ''}" dir= ${this.pageDirection}>
 
       <!-- Side Nav -->
       ${jsonSchemaNavTemplate.call(this)}

@@ -43,6 +43,7 @@ export default class RapiDoc extends LitElement {
     this.intersectionObserver = new IntersectionObserver((entries) => { this.onIntersect(entries); }, intersectionObserverOptions);
     */
     this.isIntersectionObserverActive = false;
+    this.navSidebarCollapsed = false;
   }
 
   static get properties() {
@@ -54,6 +55,8 @@ export default class RapiDoc extends LitElement {
       // Spec
       updateRoute: { type: String, attribute: 'update-route' },
       routePrefix: { type: String, attribute: 'route-prefix' },
+      /** When `top`, also `history.replaceState` on `window.top` for iframe embeds (same-origin). */
+      routeHistoryTarget: { type: String, attribute: 'route-history-target' },
       specUrl: { type: String, attribute: 'spec-url' },
       spec: { type: String, attribute: 'spec' },
       sortTags: { type: String, attribute: 'sort-tags' },
@@ -144,6 +147,8 @@ export default class RapiDoc extends LitElement {
       focusedElementId: { type: String }, // updating the focusedElementId will automatically render appropriate section in focused mode
       showAdvancedSearchDialog: { type: Boolean },
       advancedSearchMatches: { type: Object },
+      /** User toggled sidebar narrow strip (read mode). */
+      navSidebarCollapsed: { type: Boolean, attribute: false },
     };
   }
 
@@ -165,6 +170,8 @@ export default class RapiDoc extends LitElement {
         min-width:360px;
         width:100%;
         height:100%;
+        min-height: 0;
+        flex: 1 1 auto;
         margin:0;
         padding:0;
         overflow: hidden;
@@ -177,17 +184,24 @@ export default class RapiDoc extends LitElement {
       :where(input[type="text"], input[type="password"], select, textarea):focus-visible { border-color: var(--primary-color); }
     .body {
         display:flex;
-        height:100%;
+        min-height: 0;
         width:100%;
         overflow:hidden;
         max-width: 2087px;
+        align-items: stretch;
+      }
+      /* Fill :host column; flex-basis 0 so .main-content can shrink and scroll internally. */
+      #the-main-body.body {
+        flex: 1 1 0%;
+        min-height: 0;
       }
       .main-content { 
         margin:0;
         padding: 0; 
         display:block;
-        flex:1;
-        height:100%;
+        flex: 1 1 0%;
+        min-width: 0;
+        min-height: 0;
         overflow-y: auto;
         overflow-x: hidden;
         scrollbar-width: thin;
@@ -249,16 +263,16 @@ export default class RapiDoc extends LitElement {
       }
 
       .logo {
-        height:36px;
-        width:36px;
-        margin-left:5px; 
+        margin-left: 5px;
+        display: flex;
+        align-items: center;
       }
       .only-large-screen-flex,
       .only-large-screen{
         display:none;
       }
       .tag.title {
-        text-transform: uppercase;
+        text-transform: none;
       }
       .main-header {
         background-color:var(--header-bg);
@@ -308,6 +322,58 @@ export default class RapiDoc extends LitElement {
         border-top: 2px solid var(--border-color);
         margin: 24px 0;
         width:100%;
+      }
+      /* Top rule inset like .divider (content width); absolute so it stays above section padding */
+      .read-mode-tag-section {
+        border-top: none;
+        margin-top: 0;
+        position: relative;
+      }
+      .read-mode-tag-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: var(--border-color);
+      }
+      .nav-sidebar-toggle-row {
+        display: flex;
+        justify-content: flex-end;
+        flex-shrink: 0;
+        padding: 6px 8px 4px 6px;
+      }
+      .nav-sidebar-toggle {
+        border: 1px solid var(--border-color);
+        background: var(--bg);
+        color: var(--fg);
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        padding: 4px 8px;
+        font-family: var(--font-regular);
+      }
+      .nav-sidebar-toggle:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+      }
+      .body.nav-sidebar-collapsed .nav-bar {
+        width: 44px !important;
+        min-width: 44px !important;
+        max-width: 44px !important;
+        overflow: hidden;
+      }
+      .body.nav-sidebar-collapsed .nav-scroll {
+        display: none;
+      }
+      .body.nav-sidebar-collapsed .nav-sidebar-toggle-row {
+        justify-content: center;
+        padding: 12px 0;
+      }
+      .body.nav-sidebar-collapsed .nav-sidebar-toggle {
+        padding: 6px 4px;
       }
 
       .tooltip {
@@ -376,8 +442,13 @@ export default class RapiDoc extends LitElement {
 
       @media only screen and (min-width: 768px) {
         .nav-bar {
-          width: 260px;
+          width: 220px;
           display:flex;
+          align-self: stretch;
+          min-height: 0;
+          flex-shrink: 0;
+          box-sizing: border-box;
+          flex-direction: column;
         }
         .only-large-screen{
           display:block;
@@ -394,6 +465,10 @@ export default class RapiDoc extends LitElement {
         .section-gap--read-mode { 
           padding: 24px 8px; 
         }
+        .read-mode-tag-section::before {
+          left: 8px;
+          right: 8px;
+        }
         .endpoint-body {
           position: relative;
           padding:36px 0 48px 0;
@@ -409,7 +484,7 @@ export default class RapiDoc extends LitElement {
 
       @media only screen and (min-width: 1024px) {
         .nav-bar {
-          width: ${unsafeCSS(this.fontSize === 'default' ? '300px' : this.fontSize === 'large' ? '315px' : '330px')};
+          width: ${unsafeCSS(this.fontSize === 'default' ? '240px' : this.fontSize === 'large' ? '252px' : '264px')};
           display:flex;
         }
         .section-gap--focused-mode { 
@@ -417,6 +492,10 @@ export default class RapiDoc extends LitElement {
         }
         .section-gap--read-mode { 
           padding: 24px 80px 12px 80px; 
+        }
+        .read-mode-tag-section::before {
+          left: 80px;
+          right: 80px;
         }
       }`,
       CustomStyles,
@@ -498,12 +577,16 @@ export default class RapiDoc extends LitElement {
     if (!this.oauthReceiver) { this.oauthReceiver = 'oauth-receiver.html'; }
     if (!this.updateRoute || !'true, false,'.includes(`${this.updateRoute},`)) { this.updateRoute = 'true'; }
     if (!this.routePrefix) { this.routePrefix = window.location.href.indexOf('#') > -1 ? '#' : '?endpoint='; }
+    if (!this.routeHistoryTarget || !'window, top,'.includes(`${this.routeHistoryTarget},`)) {
+      this.routeHistoryTarget = 'window';
+    }
     if (!this.sortTags || !'true, false,'.includes(`${this.sortTags},`)) { this.sortTags = 'false'; }
     if (!this.generateMissingTags || !'true, false,'.includes(`${this.generateMissingTags},`)) { this.generateMissingTags = 'false'; }
     if (!this.sortEndpointsBy || !'method, path, summary, none,'.includes(`${this.sortEndpointsBy},`)) { this.sortEndpointsBy = 'path'; }
 
     if (!this.onNavTagClick || !'expand-collapse, show-description,'.includes(`${this.onNavTagClick},`)) { this.onNavTagClick = 'expand-collapse'; }
     if (!this.navItemSpacing || !'compact, relaxed, default,'.includes(`${this.navItemSpacing},`)) { this.navItemSpacing = 'default'; }
+    if (this.showMethodInNavBar === 'true') { this.showMethodInNavBar = 'as-colored-text'; }
     if (!this.showMethodInNavBar || !'false, as-plain-text, as-colored-text, as-colored-block,'.includes(`${this.showMethodInNavBar},`)) { this.showMethodInNavBar = 'false'; }
     if (!this.usePathInNavBar || !'true, false,'.includes(`${this.usePathInNavBar},`)) { this.usePathInNavBar = 'false'; }
     if (!this.navActiveItemMarker || !'left-bar, colored-block'.includes(`${this.navActiveItemMarker},`)) { this.navActiveItemMarker = 'left-bar'; }
@@ -704,6 +787,10 @@ export default class RapiDoc extends LitElement {
     }));
   }
 
+  toggleNavSidebar() {
+    this.navSidebarCollapsed = !this.navSidebarCollapsed;
+  }
+
   onShowSearchModalClicked() {
     this.showAdvancedSearchDialog = true;
   }
@@ -835,9 +922,41 @@ export default class RapiDoc extends LitElement {
     return elementId;
   }
 
+  /** Query param name when `routePrefix` is like `?endpoint=`. */
+  queryParamNameFromRoutePrefix() {
+    const p = this.routePrefix;
+    if (typeof p !== 'string' || !p.startsWith('?')) return null;
+    const eq = p.indexOf('=');
+    if (eq <= 1) return null;
+    return p.substring(1, eq);
+  }
+
   replaceHistoryState(hashId) {
     const baseURL = this.getComponentBaseURL();
-    window.history.replaceState(null, null, `${baseURL}${this.routePrefix || '#'}${hashId}`);
+    const id = hashId == null ? '' : String(hashId);
+    window.history.replaceState(null, null, `${baseURL}${this.routePrefix || '#'}${id}`);
+
+    if (this.routeHistoryTarget !== 'top') return;
+    if (typeof window === 'undefined' || !window.top || window.top === window) return;
+    try {
+      const topUrl = new URL(window.top.location.href);
+      const param = this.queryParamNameFromRoutePrefix();
+      if (param) {
+        if (!id || id === 'overview') {
+          topUrl.searchParams.delete(param);
+        } else {
+          topUrl.searchParams.set(param, id);
+        }
+        window.top.history.replaceState(null, '', topUrl.toString());
+        return;
+      }
+      if (this.routePrefix === '#') {
+        topUrl.hash = !id || id === 'overview' ? '' : `#${id}`;
+        window.top.history.replaceState(null, '', topUrl.toString());
+      }
+    } catch {
+      /* cross-origin top or invalid URL */
+    }
   }
 
   expandAndGotoOperation(elementId, scrollToElement = true) {

@@ -283,4 +283,75 @@ export default css`
 
   transition: visibility 0.3s linear,opacity 0.3s linear;
 }
+
+/* VTEX Developers–style OpenAPI / Postman download + view rows */
+.spec-resource-actions-wrap {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+.spec-resource-actions__row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.spec-resource-actions__download,
+.spec-resource-actions__view {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-regular);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg);
+  line-height: 1.2;
+}
+
+.spec-resource-actions__download {
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.spec-resource-actions__download:hover {
+  color: var(--primary-color);
+}
+
+.spec-resource-actions__view {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #e9e9f0;
+  cursor: pointer;
+}
+
+.spec-resource-actions__view:hover {
+  background: #dcdce8;
+}
+
+.spec-resource-actions__download > div,
+.spec-resource-actions__view > div {
+  display: flex;
+  align-items: center;
+}
+
+/* OpenAPI tag headings: smaller than #api-title (~32px); nav uses smaller .nav-bar-tag too */
+.read-mode-tag-section .title.tag {
+  font-size: calc(var(--font-size-small) + 10px);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--fg);
+}
 `;

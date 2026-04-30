@@ -500,7 +500,7 @@ export default class ApiRequest extends LitElement {
                                 <schema-tree
                                   class = 'json'
                                   style = 'display: block'
-                                  .data = '${schemaAsObj}'
+                                  .data=${schemaAsObj}
                                   schema-expand-level = "${this.schemaExpandLevel}"
                                   schema-description-expanded = "${this.schemaDescriptionExpanded}"
                                   allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}",
@@ -748,7 +748,7 @@ export default class ApiRequest extends LitElement {
             <schema-table
               class = '${reqBody.mimeType.substring(reqBody.mimeType.indexOf('/') + 1)}'
               style = 'display: ${this.selectedRequestBodyType === reqBody.mimeType ? 'block' : 'none'};'
-              .data = '${schemaAsObj}'
+              .data=${schemaAsObj}
               schema-expand-level = "${this.schemaExpandLevel}"
               schema-description-expanded = "${this.schemaDescriptionExpanded}"
               allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
@@ -763,7 +763,7 @@ export default class ApiRequest extends LitElement {
             <schema-tree
               class = "${reqBody.mimeType.substring(reqBody.mimeType.indexOf('/') + 1)}"
               style = "display: ${this.selectedRequestBodyType === reqBody.mimeType ? 'block' : 'none'};"
-              .data = "${schemaAsObj}"
+              .data=${schemaAsObj}
               schema-expand-level = "${this.schemaExpandLevel}"
               schema-description-expanded = "${this.schemaDescriptionExpanded}"
               allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
@@ -860,10 +860,10 @@ export default class ApiRequest extends LitElement {
       ${html`
         <div class="tab-content col" data-tab = 'schema' style="display:${this.activeSchemaTab !== 'example' ? 'block' : 'none'}; padding-left:5px; width:100%;"> 
           <schema-tree
-            .data = '${formdataPartSchema}'
+            .data=${formdataPartSchema}
             schema-expand-level = "${this.schemaExpandLevel}"
             schema-description-expanded = "${this.schemaDescriptionExpanded}"
-            allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}",
+            allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
           > </schema-tree>
         </div>`
       }

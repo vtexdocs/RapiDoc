@@ -1,6 +1,8 @@
 export function joinURLandPath(url, path) {
-  if (url.length > 0 && path.length > 0 && url.slice(-1) === path.charAt(0)) return url.slice(0, -1) + path;
-  return url + path;
+  const u = url == null ? '' : String(url);
+  const p = path == null ? '' : String(path);
+  if (u.length > 0 && p.length > 0 && u.slice(-1) === p.charAt(0)) return u.slice(0, -1) + p;
+  return u + p;
 }
 
 export function parseURL(variables, url, path) {

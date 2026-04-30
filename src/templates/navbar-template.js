@@ -63,6 +63,18 @@ export default function navbarTemplate() {
   }
   return html`
   <nav class='nav-bar ${this.renderStyle}' part='section-navbar'>
+    <div class='nav-sidebar-toggle-row' part='section-nav-sidebar-toggle'>
+      <button
+        type='button'
+        class='nav-sidebar-toggle'
+        part='btn-nav-sidebar-toggle'
+        aria-label='${this.navSidebarCollapsed ? 'Expand' : 'Collapse'} navigation'
+        aria-expanded='${!this.navSidebarCollapsed}'
+        @click='${this.toggleNavSidebar}'
+      >
+        ${this.navSidebarCollapsed ? '»' : '«'}
+      </button>
+    </div>
     <slot name='nav-logo' class='logo'></slot>
     ${(this.allowSearch === 'false' && this.allowAdvancedSearch === 'false')
       ? ''
@@ -80,7 +92,6 @@ export default function navbarTemplate() {
                   @change = '${this.onSearchChange}'
                   spellcheck = 'false'
                 >
-                <div style='margin: 6px 5px 0 -24px; font-size:var(--font-size-regular); cursor:pointer;'>&#x21a9;</div>
               </div>  
               ${this.matchPaths
                 ? html`
@@ -143,26 +154,22 @@ export default function navbarTemplate() {
         ? ''
         : html`<div class='nav-bar-info ${this.navActiveItemMarker}' id='link-auth' data-action='navigate' data-content-id='auth' tabindex='0' part='section-navbar-item section-navbar-auth'> Authentication </div>`
       }
-
-      <div id='link-operations-top' class='nav-bar-section operations' data-action='navigate' data-content-id='${this.renderStyle === 'focused' ? '' : 'operations-top'}' part='section-navbar-item section-navbar-operations-top'>
-        <div style='font-size:16px; display:flex; margin-left:10px;'>
-          ${this.renderStyle === 'focused'
-            ? html`
-              <div class='nav-bar-expand-all'
-                data-action='expand-all'
-                tabindex='0' 
-                title='Expand all'
-              >▸</div>
-              <div class='nav-bar-collapse-all'
-                data-action='collapse-all'
-                tabindex='0' 
-                title='Collapse all'
-              >▸</div>`
-            : ''
-          }  
-        </div>
-        <div class='nav-bar-section-title'> OPERATIONS </div>
-      </div>
+      ${this.renderStyle === 'focused'
+        ? html`
+      <div style='font-size:16px; display:flex; margin-left:10px; margin-bottom:4px;'>
+        <div class='nav-bar-expand-all'
+          data-action='expand-all'
+          tabindex='0'
+          title='Expand all'
+        >▸</div>
+        <div class='nav-bar-collapse-all'
+          data-action='collapse-all'
+          tabindex='0'
+          title='Collapse all'
+        >▸</div>
+      </div>`
+        : ''
+      }
 
       <!-- TAGS AND PATHS-->
       ${this.resolvedSpec.tags

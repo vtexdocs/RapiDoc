@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-line import/extensions
 import { marked } from 'marked';
-import { rapidocApiKey, downloadResource, viewResource } from '../utils/common-utils';
+import { rapidocApiKey } from '../utils/common-utils';
 import { pathSecurityTemplate } from './security-scheme-template';
 import codeSamplesTemplate from './code-samples-template';
 import callbackTemplate from './callback-template';
@@ -11,8 +11,6 @@ import '../components/content-copy-button';
 import processPathDescription from '../utils/magic-block-utils';
 import { joinURLandPath } from '../utils/url';
 import renderBlockquote from '../utils/renderBlockquote';
-import postmanIcon from '../components/assets/postman-icon';
-import openapiIcon from '../components/assets/openapi-icon';
 
 /* eslint-disable indent */
 function headingRenderer(tagElementId) {
@@ -39,7 +37,9 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
     nonEmptyApiKeys.push(rapiDocApiKey);
   }
 
-  const docUrl = `https://developers.vtex.com/docs/api-reference/${this.specUrl.split('/')[3]}`;
+  const specUrlStr = typeof this.specUrl === 'string' ? this.specUrl : '';
+  const docSlug = specUrlStr ? specUrlStr.split('/')[3] : '';
+  const docUrl = docSlug ? `https://developers.vtex.com/docs/api-reference/${docSlug}` : '';
   marked.Renderer.prototype.blockquote = renderBlockquote;
 
   const codeSampleTabPanel = path.xCodeSamples ? codeSamplesTemplate.call(this, path.xCodeSamples) : '';
@@ -63,30 +63,12 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
       }
       <div style="display:flex; justify-content:space-between; flex-wrap: wrap; top:28px; ">
       ${(this.renderStyle === 'focused' && tagName !== 'General ⦂') ? html`
-      <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> <a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>  ›  ${tagName} </h3>
+      <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> ${
+        docUrl
+          ? html`<a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>`
+          : html`<span style="color: #6b7785">${this.resolvedSpec.info.title}</span>`
+      }  ›  ${tagName} </h3>
       ` : ''}
-      </div>
-      <div style="display: flex; flex-direction:column; row-gap: 20px; margin-bottom: 24px;">
-        ${(this.specUrl && this.allowSpecFileDownload) ? html`<div><div style="display:flex; justify-content: flex-end; gap:8px; flex-wrap: wrap;">
-                <button class="m-btn m-btn-image m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${(e) => { downloadResource(this.specUrl, 'openapi-spec.json', e); }}'>
-                  ${openapiIcon()}
-                  Download OpenAPI spec
-                </button>
-                  <button class="m-btn m-btn-image m-btn-secondary thin-border" part="btn btn-outline" @click='${(e) => { viewResource(this.specUrl, e); }}'>
-                    ${openapiIcon()}
-                    View OpenAPI spec
-                  </button>
-              </div></div>` : ''}
-        ${this.postmanUrl ? html`<div><div style="display:flex; justify-content: flex-end; gap:8px; flex-wrap: wrap;">
-                <button class="m-btn m-btn-image m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${(e) => { downloadResource(this.postmanUrl, 'postman-collection.json', e); }}'>
-                  ${postmanIcon()}
-                  Download Postman collection
-                </button>
-                  <button class="m-btn m-btn-image m-btn-secondary thin-border" part="btn btn-outline" @click='${(e) => { viewResource(this.postmanUrl, e); }}'>
-                    ${postmanIcon()}
-                    View Postman collection
-                  </button>
-              </div></div>` : ''}
       </div>
       <h2 part="section-operation-summary"> ${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2>
         ${path.isWebhook
@@ -97,7 +79,7 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
                 <span part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span>
               </div>
               <div class='label-operation-path-container'>
-                <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
+                <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath((this.selectedServer && (this.selectedServer.url || this.selectedServer.computedUrl)) || '', path.path || '')}'></content-copy-button>
               </div>
             </div>
           `
@@ -172,7 +154,7 @@ export default function expandedEndpointTemplate() {
   if (!this.resolvedSpec) { return ''; }
   return html`
   ${this.resolvedSpec.tags.map((tag) => html`
-    <section id="${tag.elementId}" part="section-tag" class="regular-font section-gap--read-mode observe-me" style="border-top:1px solid var(--primary-color);">
+    <section id="${tag.elementId}" part="section-tag" class="regular-font section-gap--read-mode observe-me read-mode-tag-section">
       <div class="title tag" part="section-tag-title label-tag-title">${tag.name}</div>
       <slot name="${tag.elementId}"></slot>
       <div class="regular-font-size">

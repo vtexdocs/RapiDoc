@@ -38,12 +38,12 @@ export class ContentCopyButton extends LitElement {
     }
 
     onButtonClick() {
-        navigator.clipboard.writeText(this.content);
+        navigator.clipboard.writeText(this.content ?? '');
         this.copied = true;
     }
 
     onTextClick() {
-        navigator.clipboard.writeText(this.content);
+        navigator.clipboard.writeText(this.content ?? '');
         this.showToast = true;
     }
 
@@ -59,7 +59,7 @@ export class ContentCopyButton extends LitElement {
     render() {
         return html`
                 <div @mouseover="${this.onMouseover}" @mouseleave="${this.onMouseLeave}" class="content-copy-container">
-                    <span @click="${this.onTextClick}" part="label-operation-path">${this.content}</span>
+                    <span @click="${this.onTextClick}" part="label-operation-path">${this.content ?? ''}</span>
                     <button @click="${this.onButtonClick}" style=${this.showButton ? 'opacity: 1;' : 'opacity: 0.2;'}>
                         <div class="svg-container">
                             ${

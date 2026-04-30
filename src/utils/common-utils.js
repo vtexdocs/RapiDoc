@@ -166,6 +166,15 @@ export function downloadResource(url, fileName) {
   }
 }
 
+/** Download raw text (e.g. inline OpenAPI JSON) as a file. */
+export function downloadTextAsFile(text, fileName) {
+  if (!text) return;
+  const blob = new Blob([text], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  downloadResource(url, fileName);
+  setTimeout(() => URL.revokeObjectURL(url), 2500);
+}
+
 export function viewResource(url) {
   if (url) {
     const a = document.createElement('a');
@@ -176,4 +185,14 @@ export function viewResource(url) {
     a.click();
     a.remove();
   }
+}
+
+/** Open raw text in a new tab (e.g. formatted JSON preview for inline specs). */
+export function viewTextInNewTab(text) {
+  if (!text) return;
+  const blob = new Blob([text], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, '_blank', 'noopener,noreferrer');
+  if (!win) URL.revokeObjectURL(url);
+  else setTimeout(() => URL.revokeObjectURL(url), 60000);
 }

@@ -1,15 +1,11 @@
 import { html } from 'lit';
-import logoTemplate from './logo-template';
 
 /* eslint-disable indent */
 export default function headerTemplate() {
   return html`
   <header class="row main-header regular-font" part="section-header" style="padding:8px 4px 8px 4px;min-height:48px;">
     <div class="only-large-screen-flex" style="align-items: center;">
-      <slot name="logo" class="logo" part="section-logo">
-        ${logoTemplate('height:36px;width:36px;margin-left:5px')}
-        <!-- m-logo style="height:36px;width:36px;margin-left:5px"></m-logo -->
-      </slot>  
+      <slot name="logo" class="logo" part="section-logo"></slot>
       <div class="header-title" part="label-header-title">${this.headingText}</div>
     </div>  
     <div style="margin: 0px 8px;display:flex;flex:1">

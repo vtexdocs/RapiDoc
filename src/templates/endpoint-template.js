@@ -168,7 +168,7 @@ function endpointBodyTemplate(path) {
           <span class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span>
         </div>
         <div class='label-operation-path-container'>
-          <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
+          <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath((this.selectedServer && (this.selectedServer.url || this.selectedServer.computedUrl)) || '', path.path || '')}'></content-copy-button>
         </div>
       </div>
       ${path.description ? html`<div class="m-markdown"> ${unsafeHTML(marked(path.description))}</div>` : ''}

@@ -155,7 +155,7 @@ export default function jsonSchemaViewerTemplate(isMini = false) {
     <!-- Header -->
     ${this.showHeader === 'false' ? '' : headerTemplate.call(this)}
     
-    <div id='the-main-body' class="body ${this.cssClasses}" dir= ${this.pageDirection}>
+    <div id='the-main-body' class="body ${this.cssClasses}${this.navSidebarCollapsed ? ' nav-sidebar-collapsed' : ''}" dir= ${this.pageDirection}>
 
       <!-- Side Nav -->
       ${jsonSchemaNavTemplate.call(this)}

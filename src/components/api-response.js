@@ -391,7 +391,7 @@ export default class ApiResponse extends LitElement {
               <json-tree 
                 style= 'background: rgb(248, 247, 252); border-radius: 4px; border: 1px solid rgb(231, 233, 238); padding: 16px;'
                 render-style = '${this.renderStyle}'
-                .data="${mimeRespDetails.examples[0].exampleValue}"
+                .data=${mimeRespDetails.examples[0].exampleValue}
                 class = 'example-panel ${this.renderStyle === 'read' ? 'border pad-8-16' : 'pad-top-8'}'
                 exportparts = "btn:btn, btn-fill:btn-fill, btn-copy:btn-copy" 
               ></json-tree>`
@@ -416,7 +416,7 @@ export default class ApiResponse extends LitElement {
                   ? html`
                     <json-tree 
                       render-style = '${this.renderStyle}'
-                      .data = '${v.exampleValue}'
+                      .data=${v.exampleValue}
                       exportparts = "btn:btn, btn-fill:btn-fill, btn-copy:btn-copy" 
                     ></json-tree>`
                   : html`<pre>${v.exampleValue}</pre>`
@@ -439,7 +439,7 @@ export default class ApiResponse extends LitElement {
       ${this.schemaStyle === 'table'
         ? html`
           <schema-table
-            .data = "${mimeRespDetails.schemaTree}"
+            .data=${mimeRespDetails.schemaTree}
             schema-expand-level = "${this.schemaExpandLevel}"
             schema-description-expanded = "${this.schemaDescriptionExpanded}"
             allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
@@ -449,7 +449,7 @@ export default class ApiResponse extends LitElement {
           > </schema-table> `
         : html`
           <schema-tree
-            .data = '${mimeRespDetails.schemaTree}'
+            .data=${mimeRespDetails.schemaTree}
             schema-expand-level = "${this.schemaExpandLevel}"
             schema-description-expanded = "${this.schemaDescriptionExpanded}"
             allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"

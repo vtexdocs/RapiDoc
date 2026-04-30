@@ -31,10 +31,11 @@ export function getTypeInfo(schema) {
   let constrain = '';
   // let examples;
 
-  if (schema.$ref) {
+  if (schema.$ref && !schema.type) {
     const n = schema.$ref.lastIndexOf('/');
     const schemaNode = schema.$ref.substring(n + 1);
-    dataType = `{recursive: ${schemaNode}} `;
+    /** Unresolved $ref (e.g. inline spec without dereference) — avoid fake “recursive” label. */
+    dataType = schemaNode;
   } else if (schema.type) {
     dataType = Array.isArray(schema.type) ? schema.type.join(schema.length === 2 ? ' or ' : '┃') : schema.type;
     if (schema.format || schema.enum || schema.const) {
@@ -66,8 +67,9 @@ export function getTypeInfo(schema) {
     html: '',
   };
 
-  if (info.type === '{recursive}') {
-    info.description = schema.$ref.substring(schema.$ref.lastIndexOf('/') + 1);
+  if (schema.$ref && !schema.type) {
+    const refName = schema.$ref.substring(schema.$ref.lastIndexOf('/') + 1);
+    info.description = info.description || refName;
   } else if (info.type === '{missing-type-info}' || info.type === 'any') {
     info.description = info.description || '';
   }

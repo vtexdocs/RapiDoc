@@ -21,13 +21,13 @@ export default css`
   overflow: hidden;
   color:var(--nav-text-color);
   background-color: var(--nav-bg-color);
-  background-blend-mode: multiply;
   line-height: calc(var(--font-size-small) + 4px);
   display:none;
   position:relative;
   flex-direction:column;
   flex-wrap:nowrap;
   word-break:break-word;
+  transition: width 0.2s ease, min-width 0.2s ease, max-width 0.2s ease;
 }
 ::slotted([slot=nav-logo]){
   padding:16px 16px 0 16px;
@@ -38,6 +38,8 @@ export default css`
   overflow-y: overlay;
   scrollbar-width: thin;
   scrollbar-color: var(--nav-hover-bg-color) transparent;
+  flex: 1;
+  min-height: 0;
 }
 
 .nav-bar-tag {
@@ -105,12 +107,12 @@ export default css`
 }
 
 .nav-bar-tag {
-  font-size: var(--font-size-regular);
+  font-size: calc(var(--font-size-small) + 4px);
   color: var(--nav-accent-color);
   border-left:4px solid transparent;
   font-weight:bold;
   padding: 15px 15px 15px 10px;
-  text-transform: capitalize;
+  text-transform: none;
 }
 
 .nav-bar-components,
