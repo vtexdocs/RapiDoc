@@ -827,12 +827,24 @@ export default class RapiDoc extends LitElement {
   }
 
   /**
-   * From the URL return the ID of the element whether it is in the hash or if used a router prefix without a hash
+   * From the URL return the ID of the element whether it is in the hash or if used a router prefix without a hash.
+   *
+   * Bugfix: when the URL contains no hash AND no `?endpoint=` query, the
+   * `replace()` below returned the full href unchanged (because the
+   * `baseURL + routePrefix` substring was not present). That caused
+   * `scrollToPath(fullURL)` to set `focusedElementId` to a value that
+   * matches no path, forcing the focused template to fall back to the
+   * default (first) endpoint. Detect that the prefix actually exists in
+   * the URL before returning a non-empty id.
    */
   getElementIDFromURL() {
+    const { href } = window.location;
     const baseURL = this.getComponentBaseURL();
-    const elementId = window.location.href.replace(baseURL + this.routePrefix, '');
-    return elementId;
+    const prefix = `${baseURL}${this.routePrefix}`;
+    if (!href.startsWith(prefix) || href === baseURL) {
+      return '';
+    }
+    return href.slice(prefix.length);
   }
 
   replaceHistoryState(hashId) {
