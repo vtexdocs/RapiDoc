@@ -12019,7 +12019,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 6698:
+/***/ 2915:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15080,20 +15080,15 @@ var prism_csharp = __webpack_require__(9016);
     grid-template-columns: 20px 1fr;
   }
 
+  .m-markdown .callout-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    grid-row: 1;
+  }
+
   .m-markdown .info-blockquote {
     background: #f8f7fc;
     border: 1px solid #ccced8;
-  }
-
-  .m-markdown .info-blockquote:before {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    content: '';
-    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/info.svg')
-      no-repeat 0 0;
-    background-size: 20px 20px;
-    position: absolute;
   }
 
   .m-markdown .warning-blockquote {
@@ -15101,31 +15096,9 @@ var prism_csharp = __webpack_require__(9016);
     border: 1px solid #ffb100;
   }
 
-  .m-markdown .warning-blockquote:before {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    content: '';
-    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/warning.svg')
-      no-repeat 0 0;
-    background-size: 20px 20px;
-    position: absolute;
-  }
-
   .m-markdown .danger-blockquote {
     background: #fdefef;
     border: 1px solid #dc5a41;
-  }
-
-  .m-markdown .danger-blockquote:before {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    content: '';
-    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/danger.svg')
-      no-repeat 0 0;
-    background-size: 20px 20px;
-    position: absolute;
   }
 
   blockquote p{
@@ -15273,7 +15246,6 @@ var prism_csharp = __webpack_require__(9016);
 /* Button */
 .m-btn {
   display: flex;
-  flex-direction: column;
   align-items: center;
   border-radius: var(--border-radius);
   font-weight: 400;
@@ -15288,6 +15260,10 @@ var prism_csharp = __webpack_require__(9016);
   font-family: var(--font-medium);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+.m-btn-image {
+  flex-direction: row;
+  column-gap: 10px;
 }
 .m-btn-primary {
   background-color: var(--primary-color);
@@ -16296,8 +16272,7 @@ customize their theme. Simply add your css to this file and yarn build.
 
 /* harmony default export */ const custom_styles = (i`
 .code-container {
-  padding-inline: 32px;
-  padding-top: 16px;
+  tab-size: 4;
 }
 .code-container > code {
   font-size: 14px;
@@ -16386,6 +16361,7 @@ customize their theme. Simply add your css to this file and yarn build.
 
 .right-box-container {
   margin-top: 16px;
+  padding-inline: 16px;
 }
 
 .right-box-label {
@@ -16398,6 +16374,18 @@ customize their theme. Simply add your css to this file and yarn build.
 .right-box-input {
   width: 100%;
   height: 44px;
+}
+
+.right-box-content {
+  border: 1px solid rgb(204, 206, 216);
+  border-radius: 4px;
+  padding-block: 24px;
+  margin-top: 24px;
+}
+
+.right-box-select {
+  padding-inline: 16px;
+  width: 100%;
 }
 
 .server-template {
@@ -16813,7 +16801,10 @@ async function ProcessSpec(specUrl, spec, generateMissingTags = false, sortTags 
 
   // Security Scheme
   const securitySchemes = [];
+  let security = [];
   if ((_jsonParsedSpec$compo = jsonParsedSpec.components) !== null && _jsonParsedSpec$compo !== void 0 && _jsonParsedSpec$compo.securitySchemes) {
+    var _jsonParsedSpec$compo2;
+    if (jsonParsedSpec.security) security = jsonParsedSpec.security;else security = [(_jsonParsedSpec$compo2 = jsonParsedSpec.components) === null || _jsonParsedSpec$compo2 === void 0 ? void 0 : _jsonParsedSpec$compo2.securitySchemes];
     const securitySchemeSet = new Set();
     Object.entries(jsonParsedSpec.components.securitySchemes).forEach(kv => {
       if (!securitySchemeSet.has(kv[0])) {
@@ -16918,7 +16909,8 @@ async function ProcessSpec(specUrl, spec, generateMissingTags = false, sortTags 
     components,
     externalDocs: jsonParsedSpec.externalDocs,
     securitySchemes,
-    servers
+    servers,
+    security
   };
   return parsedSpec;
 }
@@ -17162,6 +17154,13 @@ const directive_t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,EL
 
 //# sourceMappingURL=unsafe-html.js.map
 
+;// CONCATENATED MODULE: ./src/utils/security-utils.js
+function isSecuritySchemeIdValid(security, securitySchemeId) {
+  if (!security) return true;
+  return security.some(securityObject => {
+    return securityObject.hasOwnProperty(securitySchemeId) && Array.isArray(securityObject[securitySchemeId]) && securityObject[securitySchemeId].length === 0;
+  });
+}
 // EXTERNAL MODULE: ./node_modules/httpsnippet/src/index.js
 var src = __webpack_require__(212);
 var src_default = /*#__PURE__*/__webpack_require__.n(src);
@@ -17649,15 +17648,15 @@ function schemaToSampleObj(schema, config = {}) {
         prop2:
           type: string
           minLength: 10
-       The aboove Schem should generate the following 2 examples
-       Example-1
+        The aboove Schem should generate the following 2 examples
+        Example-1
       {
         prop1: 'string',
         prop2: 'AAAAAAAAAA',       <-- min-length 10
         option1_PropA: 'string',
         option1_PropB: 'string'
       }
-       Example-2
+        Example-2
       {
         prop1: 'string',
         prop2: 'AAAAAAAAAA',       <-- min-length 10
@@ -17811,7 +17810,7 @@ function generateMarkdownForArrayAndObjectDescription(schema, level = 0) {
   let markdown = (schema.description || schema.title) && (schema.minItems || schema.maxItems) ? '<span class="descr-expand-toggle">➔</span>' : '';
   if (schema.title) {
     if (schema.description) {
-      markdown = `${markdown} <b>${schema.title}:</b> ${schema.description}<br/>`;
+      markdown = `${markdown} ${schema.description}<br/>`;
     } else {
       markdown = `${markdown} ${schema.title}<br/>`;
     }
@@ -17873,7 +17872,8 @@ function schemaInObjectNotation(schema, obj, level = 0, suffix = '') {
       }
     });
     obj = objWithAllProps;
-  } else if (schema.anyOf || schema.oneOf) {
+  }
+  if (schema.anyOf || schema.oneOf) {
     obj['::description'] = schema.description || '';
     // 1. First iterate the regular properties
     if (schema.type === 'object' || schema.properties) {
@@ -18023,7 +18023,7 @@ function schemaInObjectNotation(schema, obj, level = 0, suffix = '') {
       obj['::array-type'] = schema.items.items.type;
     }
     obj['::props'] = schemaInObjectNotation(schema.items, {}, level + 1);
-  } else {
+  } else if (!schema.allOf) {
     const typeObj = getTypeInfo(schema);
     if (typeObj !== null && typeObj !== void 0 && typeObj.html) {
       return `${typeObj.html}`;
@@ -18216,6 +18216,7 @@ function getSchemaFromParam(param) {
 }
 ;// CONCATENATED MODULE: ./src/utils/update-code-example.js
 /* provided dependency */ var update_code_example_console = __webpack_require__(5108);
+
 
 
 function buildFetchURL(requestPanelEl) {
@@ -18527,6 +18528,7 @@ function buildFetchHeaders(requestPanelEl) {
   var _this$closest;
   let acceptValue = '';
   let contentTypeValue = '';
+  const reqCookieHeader = [];
   const reqHeaders = new Headers();
   const headers = [];
   const requestBodyContainerEl = requestPanelEl.querySelector('.request-body-container');
@@ -18580,21 +18582,59 @@ function buildFetchHeaders(requestPanelEl) {
     });
   }
 
-  // Add Authentication Header if provided
-  this.resolvedSpec.securitySchemes.forEach(key => {
-    reqHeaders.append(key.name, key.value);
-    headers.push({
-      name: key.name,
-      value: key.value
+  // Add Authentication Header if provided and necessary
+  let securitySchemes = this.security ? this.security : this.resolvedSpec.security;
+  securitySchemes.forEach((scheme, id) => {
+    if (this.selectedAuthScheme !== id) return;
+    Object.keys(scheme).map(key => {
+      const schemeKey = this.resolvedSpec.securitySchemes.find(s => s.securitySchemeId === key);
+      if (!isSecuritySchemeIdValid(this.security, schemeKey.securitySchemeId)) return;
+      if (schemeKey.in !== 'cookie') {
+        reqHeaders.append(schemeKey.name, schemeKey.value);
+        headers.push({
+          name: schemeKey.name,
+          value: schemeKey.value
+        });
+      }
+      if (schemeKey.in === 'cookie') {
+        reqCookieHeader.push({
+          name: schemeKey.name,
+          value: schemeKey.value
+        });
+      }
     });
+
+    // add cookie header
+    if (reqCookieHeader.length > 0) {
+      const cookie = reqCookieHeader.map(el => `${el.name}=${el.value}`);
+      headers.push({
+        name: 'Cookie',
+        value: cookie.join('; path=/')
+      });
+    }
   });
   return {
     reqHeaders,
-    headers
+    headers,
+    reqCookieHeader
+  };
+}
+function buildFetchCookies(requestPanelEl) {
+  const cookies = [];
+  const cookieParamEls = [...requestPanelEl.querySelectorAll("[data-ptype='cookie']")];
+  cookieParamEls.forEach(el => {
+    if (!el.value) return;
+    cookies.push({
+      name: el.dataset.pname,
+      value: el.value
+    });
+  });
+  return {
+    cookies
   };
 }
 function decodeCurlyBrackets(url) {
-  url = url.replace(/\/?%7B/gm, '{').replace(/\/?%7D/gm, '}');
+  url = url.replace(/%7B/gm, '{').replace(/%7D/gm, '}');
   return url;
 }
 function updateCodeExample(tryBtnEl) {
@@ -18609,14 +18649,19 @@ function updateCodeExample(tryBtnEl) {
   } = buildFetchOptions.call(this, requestPanelEl);
   const {
     reqHeaders,
-    headers
+    headers,
+    reqCookieHeader
   } = buildFetchHeaders.call(this, requestPanelEl);
+  const {
+    cookies
+  } = buildFetchCookies.call(this, requestPanelEl);
   const snippet = new (src_default())({
     method: this.method,
     url: fetchUrl,
     queryString,
     headers,
-    postData
+    postData,
+    cookies
   });
   snippet.requests[0].url = decodeCurlyBrackets(snippet.requests[0].url);
   snippet.requests[0].fullUrl = decodeCurlyBrackets(snippet.requests[0].fullUrl);
@@ -18628,7 +18673,8 @@ function updateCodeExample(tryBtnEl) {
   return {
     fetchUrl,
     fetchOptions,
-    reqHeaders
+    reqHeaders,
+    reqCookie: cookies.concat(reqCookieHeader)
   };
 }
 ;// CONCATENATED MODULE: ./src/templates/security-scheme-template.js
@@ -18637,6 +18683,7 @@ function updateCodeExample(tryBtnEl) {
 /* eslint-disable arrow-body-style */
 
  // eslint-disable-line import/extensions
+
 
 
 const codeVerifier = '731DB1C3F7EA533B85E29492D26AA-1234567890-1234567890';
@@ -19005,94 +19052,139 @@ function handleApiKeyChange(e, securitySchemeId, apiKey) {
   const requestPanelEl = this.getRequestPanel(e);
   updateCodeExample.call(this, requestPanelEl);
 }
+function handleSecuritySchemeChange(e) {
+  const newSelectedAuthScheme = parseInt(e.target.value);
+  this.selectedAuthScheme = newSelectedAuthScheme;
+}
+function getSchemeTypes(scheme) {
+  let authTypes = '';
+  const keys = Object.keys(scheme);
+  const keyCount = keys.length;
+  const v = this.resolvedSpec.securitySchemes.find(s => s.securitySchemeId === keys[0]);
+  if (v.type === 'apiKey') {
+    authTypes += v.in.charAt(0).toUpperCase() + v.in.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else if (v.type === 'http') {
+    authTypes += v.scheme.charAt(0).toUpperCase() + v.scheme.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else if (v.type) {
+    authTypes += v.type.charAt(0).toUpperCase() + v.type.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else authTypes += 'Authentication';
+  return authTypes;
+}
+function selectSecuritySchemeTemplate() {
+  return lit_html_x`
+    <div class="right-box-select">
+      <select
+        disabled=${this.resolvedSpec.security.length <= 1 || A}
+        name="selectSecurityScheme"
+        style="width: 100%;"
+        @change=${e => {
+    handleSecuritySchemeChange.call(this, e);
+  }}
+      >
+        ${this.resolvedSpec.security.map((scheme, id) => {
+    return lit_html_x`
+            <option value=${id}>
+              ${id + 1}. ${getSchemeTypes.call(this, scheme)}
+            </option>`;
+  })}
+      </select>
+    </div>`;
+}
 function securitySchemeTemplate() {
   var _this$resolvedSpec$se4;
   if (!this.resolvedSpec) {
     return '';
   }
+  if (this.security && this.security.length === 0) return ''; // If security is explicitly defined as [], it indicates that an authentation header is not required
   const providedApiKeys = (_this$resolvedSpec$se4 = this.resolvedSpec.securitySchemes) === null || _this$resolvedSpec$se4 === void 0 ? void 0 : _this$resolvedSpec$se4.filter(v => v.finalKeyValue);
   if (!providedApiKeys) {
     return;
   }
   return lit_html_x`
-  <section id='auth' part="section-auth" class = 'row-api-right-box observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
-    <div class="right-box-title">Header Auth</div>
-
     ${this.resolvedSpec.securitySchemes && this.resolvedSpec.securitySchemes.length > 0 ? lit_html_x`
-        <div id="auth-table">
-          ${this.resolvedSpec.securitySchemes.map(v => lit_html_x`
-            <div id="security-scheme-${v.securitySchemeId}" class="right-box-container ${v.type.toLowerCase()}">
-              <div class="right-box-label">${v.name}</div>
-              ${v.description ? lit_html_x`
-                  <div class="m-markdown">
-                    ${unsafe_html_o(marked(v.description || ''))}
-                  </div>` : ''}
+      <section id='auth' part="section-auth" class = 'row-api-right-box observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
+        <div class="right-box-title">Authentication</div>
+        <div id="auth-table" class="right-box-content">
+          ${selectSecuritySchemeTemplate.call(this)}
+          <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 24px 0px;">
+          ${this.resolvedSpec.security.map((scheme, id) => {
+    return lit_html_x`
+            ${id === this.selectedAuthScheme ? lit_html_x`<div>
+              ${Object.keys(scheme).map(key => {
+      const v = this.resolvedSpec.securitySchemes.find(s => s.securitySchemeId === key);
+      if (!isSecuritySchemeIdValid(this.security, v.securitySchemeId)) return;
+      return lit_html_x`
+                  <div id="security-scheme-${v.securitySchemeId}" class="right-box-container ${v.type.toLowerCase()}">
+                    <div class="right-box-label">${v.name}</div>
+                    ${v.description ? lit_html_x`
+                        <div class="m-markdown-small">
+                          ${unsafe_html_o(marked(v.description || ''))}
+                        </div>` : ''}
 
-              ${v.type.toLowerCase() === 'apikey' || v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'bearer' ? lit_html_x`
-                  <div>
-                    ${v.in !== 'cookie' ? lit_html_x`
-                        <input
-                          type="text"
-                          spellcheck="false"
-                          value="${v.value}"
-                          class="${v.type} ${v.securitySchemeId} api-key-input right-box-input"
-                          @input="${e => {
-    handleApiKeyChange.call(this, e, v.securitySchemeId, e.target.value);
-  }}"
-                        >` : lit_html_x`<span class="gray-text" style="font-size::var(--font-size-small)"> cookies cannot be set from here</span>`}
-                  </div>` : ''}
-              ${v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'basic' ? lit_html_x`
-                  <div style="margin-bottom:5px">
-                    Send <code>Authorization</code> in <code>header</code> containing the word <code>Basic</code> followed by a space and a base64 encoded string of <code>username:password</code>.
+                    ${v.type.toLowerCase() === 'apikey' || v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'bearer' ? lit_html_x`
+                        <div>
+                          <input
+                            type="text"
+                            spellcheck="false"
+                            value="${v.value}"
+                            class="${v.type} ${v.securitySchemeId} api-key-input right-box-input"
+                            @input="${e => {
+        handleApiKeyChange.call(this, e, v.securitySchemeId, e.target.value);
+      }}"
+                          >
+                        </div>` : ''}
+                    ${v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'basic' ? lit_html_x`
+                        <div style="margin-bottom:5px">
+                          Send <code>Authorization</code> in <code>header</code> containing the word <code>Basic</code> followed by a space and a base64 encoded string of <code>username:password</code>.
+                        </div>
+                        <div>
+                          <input
+                            type="text"
+                            value="${v.user}"
+                            spellcheck="false"
+                            placeholder="username"
+                            class="${v.type} ${v.securitySchemeId} api-key-user"
+                            style="width:100px"
+                            @change = ${e => {
+        const requestPanelEl = this.getRequestPanel(e);
+        updateCodeExample.call(this, requestPanelEl);
+      }}
+                          >
+                          <input
+                            type="password"
+                            spellcheck="false"
+                            placeholder="password"
+                            value="${v.password}"
+                            class="${v.type} ${v.securitySchemeId} api-key-password"
+                            style="width:100px; margin:0 5px;"
+                            @change = ${e => {
+        const requestPanelEl = this.getRequestPanel(e);
+        updateCodeExample.call(this, requestPanelEl);
+      }}
+                          >
+                          <button class="m-btn thin-border"
+                            @click="${e => {
+        onApiKeyChange.call(this, v.securitySchemeId, e);
+      }}"
+                            part="btn btn-outline"
+                          >
+                            ${v.finalKeyValue ? 'UPDATE' : 'SET'}
+                          </button>
+                        </div>` : ''}
                   </div>
-                  <div>
-                    <input
-                      type="text"
-                      value="${v.user}"
-                      spellcheck="false"
-                      placeholder="username"
-                      class="${v.type} ${v.securitySchemeId} api-key-user"
-                      style="width:100px"
-                      @change = ${e => {
-    const requestPanelEl = this.getRequestPanel(e);
-    updateCodeExample.call(this, requestPanelEl);
-  }}
-                    >
-                    <input
-                      type="password"
-                      spellcheck="false"
-                      placeholder="password"
-                      value="${v.password}"
-                      class="${v.type} ${v.securitySchemeId} api-key-password"
-                      style="width:100px; margin:0 5px;"
-                      @change = ${e => {
-    const requestPanelEl = this.getRequestPanel(e);
-    updateCodeExample.call(this, requestPanelEl);
-  }}
-                    >
-                    <button class="m-btn thin-border"
-                      @click="${e => {
-    onApiKeyChange.call(this, v.securitySchemeId, e);
-  }}"
-                      part="btn btn-outline"
-                    >
-                      ${v.finalKeyValue ? 'UPDATE' : 'SET'}
-                    </button>
-                  </div>` : ''}
-            </div>
-            ${v.type.toLowerCase() === 'oauth2' ? lit_html_x`
-                <div>
-                  ${Object.keys(v.flows).map(f => oAuthFlowTemplate.call(this, f, v['x-client-id'], v['x-client-secret'], v.securitySchemeId, v.flows[f], v['x-default-scopes'], v['x-receive-token-in']))}
-                </div>
-                ` : ''}
-          `)}
-        </div>` : ''}
-    <button class='m-btn m-btn-primary' style="margin-top: 16px" @click='${this.onTryClick}' >
-      TEST METHOD
-    </button>
-    <slot name="auth">
-    </slot>
-  </section>
+                  ${v.type.toLowerCase() === 'oauth2' ? lit_html_x`
+                      <div>
+                        ${Object.keys(v.flows).map(f => oAuthFlowTemplate.call(this, f, v['x-client-id'], v['x-client-secret'], v.securitySchemeId, v.flows[f], v['x-default-scopes'], v['x-receive-token-in']))}
+                      </div>
+                      ` : ''}
+                `;
+    })}
+              </div>` : ''}
+            `;
+  })}
+        </div>
+        <slot name="auth"></slot>
+      </section>` : ''}
 `;
 }
 function pathSecurityTemplate(pathSecurity) {
@@ -19671,12 +19763,13 @@ if (!customElements.get('json-tree')) customElements.define('json-tree', JsonTre
 }
 
 .xxx-of-key {
-  font-size: calc(var(--font-size-small) - 2px); 
+  font-family: var(--font-mono);
+  font-size: 12px; 
   font-weight:bold; 
-  background-color:var(--primary-color); 
-  border-radius:2px;
+  background-color:#f8f7fc; 
+  border-radius:4px;
   line-height:calc(var(--font-size-small) + 6px);
-  padding:0px 5px; 
+  padding: 0.2em 0.4em;
   margin-bottom:1px; 
   display:inline-block;
 }
@@ -21306,6 +21399,7 @@ class ApiRequest extends lit_element_s {
     this.activeResponseTab = 'response'; // allowed values: response, headers, curl
     this.selectedRequestBodyType = '';
     this.selectedRequestBodyExample = '';
+    this.selectedAuthScheme = 0;
     this.activeParameterSchemaTabs = {};
     this.showCurlBeforeTry = true;
     this.selectedLanguage = 'shell';
@@ -21455,6 +21549,9 @@ class ApiRequest extends lit_element_s {
       },
       // internal tracking of selected request-body example
 
+      selectedAuthScheme: {
+        type: Number
+      },
       selectedLanguage: {
         type: String
       },
@@ -22319,6 +22416,7 @@ class ApiRequest extends lit_element_s {
       }
     }
     return lit_html_x`
+      <button class='clear-btn m-btn m-btn-primary' style="margin-bottom: 16px" @click='${this.onTryClick}'>TEST METHOD</button>
       <button class="clear-btn m-btn m-btn-secondary" part="btn btn-outline" @click="${this.clearResponseData}">CLEAR RESPONSE</button>
       <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 24px;">
         ${this.codeExampleTemplate('flex')}
@@ -22435,7 +22533,8 @@ class ApiRequest extends lit_element_s {
     const {
       fetchUrl,
       fetchOptions,
-      reqHeaders
+      reqHeaders,
+      reqCookie
     } = updateCodeExample.call(this, tryBtnEl);
     const encodedUrl = `/api/proxy/${encodeURIComponent(fetchUrl)}`;
     this.responseUrl = '';
@@ -22473,6 +22572,11 @@ class ApiRequest extends lit_element_s {
       credentials: tempRequest.credentials,
       body: tempRequest.body
     };
+
+    //fetch uses the cookies in the browser, so we add the needed cookies for the request
+    reqCookie.forEach(cookie => {
+      document.cookie = `${cookie.name}=${cookie.value}; path=/`;
+    });
     const fetchRequest = new Request(tempRequest.url, updatedFetchOptions);
     let fetchResponse;
     let responseClone;
@@ -22589,6 +22693,11 @@ class ApiRequest extends lit_element_s {
       }
     }
     this.requestUpdate();
+
+    //now we remove the cookies added
+    reqCookie.forEach(cookie => {
+      document.cookie = `${cookie.name}=; path=/`;
+    });
   }
   getRequestPanel(e) {
     return e.target.closest('.request-panel');
@@ -22783,15 +22892,20 @@ class SchemaTable extends lit_element_s {
         border-radius:2px;
         border: 1px solid transparent;
         display: inline-block;
-        margin-left: -16px;
-        color:var(--primary-color);
+        color:var(--vtex-pink);
         cursor:pointer;
         font-size: calc(var(--font-size-small) + 4px);
         font-family: var(--font-mono);
         background-clip: border-box;
       }
       .obj-toggle:hover {
-        border-color: var(--primary-color);
+        border-color: var(--vtex-pink);
+      }
+      .obj-toggle.expanded::after {
+        content: '-';
+      }
+      .obj-toggle.collapsed::after  {
+        content: '+';
       }
       .tr.expanded + .object-body {
         display:block;
@@ -22872,11 +22986,17 @@ class SchemaTable extends lit_element_s {
     let isOneOfLabel = false;
     if (key.startsWith('::ONE~OF') || key.startsWith('::ANY~OF')) {
       keyLabel = key.replace('::', '').replace('~', ' ');
+      description = "Click <code>+</code> to expand or <code>-</code> to hide each valid schema.";
       isOneOfLabel = true;
     } else if (key.startsWith('::OPTION')) {
       const parts = key.split('~');
-      keyLabel = parts[1]; // eslint-disable-line prefer-destructuring
-      keyDescr = parts[2]; // eslint-disable-line prefer-destructuring
+      if (parts[2]) {
+        keyLabel = parts[2];
+        keyDescr = '';
+      } else {
+        keyLabel = parts[1];
+        keyDescr = parts[2];
+      }
     } else {
       keyLabel = key;
     }
@@ -22901,9 +23021,7 @@ class SchemaTable extends lit_element_s {
             <div class='tr ${newSchemaLevel <= this.schemaExpandLevel ? 'expanded' : 'collapsed'} ${data['::type']}' data-obj='${keyLabel}' title="${data['::deprecated'] ? 'Deprecated' : ''}">
               <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style='padding-left:${leftPadding}px'>
                 ${keyLabel || keyDescr ? lit_html_x`
-                    <span class='obj-toggle ${newSchemaLevel < this.schemaExpandLevel ? 'expanded' : 'collapsed'}' data-obj='${keyLabel}'>
-                      ${schemaLevel < this.schemaExpandLevel ? '-' : '+'}
-                    </span>` : ''}
+                    <span class='obj-toggle ${newSchemaLevel < this.schemaExpandLevel ? 'expanded' : 'collapsed'}' data-obj='${keyLabel}'/>` : ''}
                 ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION') ? lit_html_x`<span class="xxx-of-key" style="margin-left:-6px">${keyLabel}</span><span class="${isOneOfLabel ? 'xxx-of-key' : 'xxx-of-descr'}">${keyDescr}</span>` : keyLabel.endsWith('*') ? lit_html_x`<span class="key-label" style="display:inline-block; margin-left:-6px;"><span>${data['::deprecated'] ? '❌' : ''} ${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>*</span></span>` : lit_html_x`<span class="key-label" style="display:inline-block; margin-left:-6px;"><span>${data['::deprecated'] ? '❌' : ''} ${keyLabel === '::props' ? '' : keyLabel}</span></span>`}
                 ${data['::type'] === 'xxx-of' && dataType === 'array' ? lit_html_x`<span style="color:var(--primary-color)">ARRAY</span>` : ''} 
               </div>
@@ -22983,26 +23101,21 @@ class SchemaTable extends lit_element_s {
   handleAllEvents(e) {
     if (e.target.classList.contains('obj-toggle')) {
       this.toggleObjectExpand(e);
-    } else if (e.target.classList.contains('schema-multiline-toggle')) {
-      this.schemaDescriptionExpanded = this.schemaDescriptionExpanded === 'true' ? 'false' : 'true';
-    } else if (e.target.classList.contains('descr-expand-toggle')) {
-      const trEl = e.target.closest('.tr');
-      if (trEl) {
-        trEl.classList.toggle('expanded-descr');
-        trEl.style.maxHeight = trEl.scrollHeight;
-      }
     }
   }
   toggleObjectExpand(e) {
-    const rowEl = e.target.closest('.tr');
+    const toggleEl = e.target;
+    const rowEl = toggleEl.closest('.tr');
     if (rowEl.classList.contains('expanded')) {
       rowEl.classList.add('collapsed');
       rowEl.classList.remove('expanded');
-      e.target.innerText = '+';
+      toggleEl.classList.add('collapsed');
+      toggleEl.classList.remove('expanded');
     } else {
       rowEl.classList.remove('collapsed');
       rowEl.classList.add('expanded');
-      e.target.innerText = '-';
+      toggleEl.classList.add('expanded');
+      toggleEl.classList.remove('collapsed');
     }
   }
 }
@@ -23699,6 +23812,16 @@ function processPathDescription(description) {
   return replacedMarkdown;
 }
 ;// CONCATENATED MODULE: ./src/utils/renderBlockquote.js
+const calloutColors = {
+  info: '#8C929D',
+  warning: '#FFB100',
+  danger: '#DC5A41'
+};
+function calloutIcon(type) {
+  const fill = calloutColors[type] || calloutColors.info;
+  const glyph = type === 'info' ? '<rect x="9.1" y="5" width="1.8" height="1.8" rx="0.9" fill="white"/><rect x="9.1" y="8.2" width="1.8" height="6.8" rx="0.9" fill="white"/>' : '<rect x="9.1" y="5" width="1.8" height="7" rx="0.9" fill="white"/><rect x="9.1" y="13.5" width="1.8" height="1.8" rx="0.9" fill="white"/>';
+  return `<svg class="callout-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="${fill}"/>${glyph}</svg>`;
+}
 function renderBlockquote(text) {
   const infoMarker = 'ℹ️';
   const bookMarker = '📘';
@@ -23706,27 +23829,190 @@ function renderBlockquote(text) {
   const dangerMarker = '❗';
   if (text.startsWith(`<p>${infoMarker}`)) {
     // Apply custom styling for the info blockquote
-    return `<blockquote class="info-blockquote">${text.replace(infoMarker, '').trim()}</blockquote>`;
+    return `<blockquote class="info-blockquote">${calloutIcon('info')}${text.replace(infoMarker, '').trim()}</blockquote>`;
   }
   if (text.startsWith(`<p>${bookMarker}`)) {
     // Apply custom styling for the info blockquote
-    return `<blockquote class="info-blockquote">${text.replace(bookMarker, '').trim()}</blockquote>`;
+    return `<blockquote class="info-blockquote">${calloutIcon('info')}${text.replace(bookMarker, '').trim()}</blockquote>`;
   }
   if (text.startsWith(`<p>${warningMarker} `)) {
     // Apply custom styling for the warning blockquote
-    return `<blockquote class="warning-blockquote">${text.replace(warningMarker, '').trim()}</blockquote>`;
+    return `<blockquote class="warning-blockquote">${calloutIcon('warning')}${text.replace(warningMarker, '').trim()}</blockquote>`;
   }
   if (text.startsWith(`<p>${dangerMarker} `)) {
     // Apply custom styling for the danger blockquote
-    return `<blockquote class="danger-blockquote">${text.replace(dangerMarker, '').trim()}</blockquote>`;
+    return `<blockquote class="danger-blockquote">${calloutIcon('danger')}${text.replace(dangerMarker, '').trim()}</blockquote>`;
   }
 
   // Default rendering for regular blockquotes
-  return `<blockquote class="info-blockquote">${text}</blockquote>`;
+  return `<blockquote class="info-blockquote">${calloutIcon('info')}${text}</blockquote>`;
+}
+;// CONCATENATED MODULE: ./src/components/assets/postman-icon.js
+/* eslint-disable max-len */
+
+
+/* eslint-disable indent */
+function postmanIcon(dimensions) {
+  var _dimensions$width, _dimensions$height;
+  const width = (_dimensions$width = dimensions === null || dimensions === void 0 ? void 0 : dimensions.width) !== null && _dimensions$width !== void 0 ? _dimensions$width : 16;
+  const height = (_dimensions$height = dimensions === null || dimensions === void 0 ? void 0 : dimensions.height) !== null && _dimensions$height !== void 0 ? _dimensions$height : 16;
+  return lit_html_x`
+    <div>
+      <svg
+        width=${width}
+        height=${height}
+        viewBox="0 0 256 256"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        preserveAspectRatio="xMidYMid"
+      >
+        <g>
+          <path
+            d="M254.953118,144.253071 C263.911504,74.1217108 214.38443,10.0052669 144.381048,1.04688158 C74.3776647,-7.9115038 10.0052669,41.6155696 1.04688158,111.618952 C-7.9115038,181.622335 41.6155696,245.866756 111.618952,254.953118 C181.750312,263.911504 245.866756,214.38443 254.953118,144.253071 Z"
+            fill="#FF6C37"
+          ></path>
+          <g transform="translate(50.181225, 45.198924)">
+            <path
+              d="M124.018448,36.9853339 L70.012182,90.9916 L54.7829269,75.7623449 C107.893354,22.6519173 113.140409,27.2590869 124.018448,36.9853339 L124.018448,36.9853339 Z"
+              fill="#FFFFFF"
+            ></path>
+            <path
+              d="M70.012182,92.2713693 C69.6282512,92.2713693 69.3722974,92.1433924 69.1163435,91.8874385 L53.7591114,76.6581834 C53.2472037,76.1462757 53.2472037,75.3784141 53.7591114,74.8665063 C107.765378,20.8602402 113.396363,25.9793176 124.78631,36.2174723 C125.042264,36.4734262 125.170241,36.72938 125.170241,37.1133108 C125.170241,37.4972416 125.042264,37.7531955 124.78631,38.0091494 L70.7800436,91.8874385 C70.6520667,92.1433924 70.2681359,92.2713693 70.012182,92.2713693 Z M56.574604,75.7623449 L70.012182,89.1999229 L122.098794,37.1133108 C112.628501,28.6668332 106.229654,26.1072945 56.574604,75.7623449 L56.574604,75.7623449 Z"
+              fill="#FF6C37"
+            ></path>
+            <path
+              d="M85.497391,106.476809 L70.7800436,91.7594616 L124.78631,37.7531955 C139.247703,52.342566 117.619601,76.0182987 85.497391,106.476809 Z"
+              fill="#FFFFFF"
+            ></path>
+            <path
+              d="M85.497391,107.756578 C85.1134602,107.756578 84.8575064,107.628601 84.6015525,107.372648 L69.8842051,92.6553001 C69.6282512,92.3993463 69.6282512,92.1433924 69.6282512,91.7594616 C69.6282512,91.3755308 69.7562282,91.1195769 70.012182,90.8636231 L124.018448,36.857357 C124.530356,36.3454492 125.298217,36.3454492 125.810125,36.857357 C129.137525,39.9288034 130.929203,44.2800191 130.801226,48.7592118 C130.545272,62.9646515 114.420178,81.0093992 86.5212065,107.372648 C86.1372757,107.628601 85.7533449,107.756578 85.497391,107.756578 L85.497391,107.756578 Z M72.5717207,91.7594616 C80.7622445,100.077962 84.2176217,103.405363 85.497391,104.685132 C106.997516,84.2088225 127.857756,63.2206053 127.985733,48.7592118 C128.11371,45.4318115 126.833941,42.1044113 124.658333,39.5448726 L72.5717207,91.7594616 Z"
+              fill="#FF6C37"
+            ></path>
+            <path
+              d="M55.0388808,76.1462757 L65.9169201,87.024315 C66.172874,87.2802689 66.172874,87.5362228 65.9169201,87.7921767 C65.7889432,87.9201536 65.7889432,87.9201536 65.6609663,87.9201536 L43.1370259,92.7832771 C41.9852335,92.911254 40.961418,92.1433924 40.7054642,90.9916 C40.5774872,90.3517153 40.8334411,89.7118307 41.2173719,89.3278999 L54.2710192,76.2742526 C54.526973,76.0182987 54.9109038,75.8903218 55.0388808,76.1462757 Z"
+              fill="#FFFFFF"
+            ></path>
+            <path
+              d="M42.7530951,94.0630464 C40.8334411,94.0630464 39.4256948,92.5273232 39.4256948,90.6076692 C39.4256948,89.7118307 39.8096256,88.8159921 40.4495103,88.1761075 L53.5031576,75.1224602 C54.2710192,74.4825755 55.2948346,74.4825755 56.0626962,75.1224602 L66.9407356,86.0004996 C67.7085972,86.6403842 67.7085972,87.7921767 66.9407356,88.5600383 C66.6847817,88.8159921 66.4288279,88.9439691 66.0448971,89.071946 L43.5209567,93.9350695 C43.2650028,93.9350695 43.009049,94.0630464 42.7530951,94.0630464 L42.7530951,94.0630464 Z M54.65495,77.5540219 L42.1132104,90.0957615 C41.8572566,90.3517153 41.7292796,90.7356461 41.9852335,91.1195769 C42.1132104,91.5035077 42.4971412,91.6314847 42.881072,91.5035077 L63.9972661,86.8963381 L54.65495,77.5540219 Z"
+              fill="#FF6C37"
+            ></path>
+            <path
+              d="M152.557304,7.03873136 C144.366781,-0.895838537 131.185156,-0.639884669 123.250587,7.67861603 C115.316017,15.9971167 115.57197,29.050764 123.890471,36.9853339 C130.673249,43.5121575 140.911403,44.6639499 148.97395,39.8008264 L134.38458,25.211456 L152.557304,7.03873136 Z"
+              fill="#FFFFFF"
+            ></path>
+            <path
+              d="M138.223888,44.0240653 C126.066079,44.0240653 116.211855,34.1698413 116.211855,22.0120326 C116.211855,9.85422391 126.066079,-1.81866161e-14 138.223888,-1.81866161e-14 C143.854873,-1.81866161e-14 149.357881,2.17560788 153.453143,6.14289283 C153.709097,6.39884669 153.837074,6.65480056 153.837074,7.03873136 C153.837074,7.42266217 153.709097,7.67861603 153.453143,7.9345699 L136.176257,25.211456 L149.741812,38.777011 C150.25372,39.2889187 150.25372,40.0567803 149.741812,40.568688 C149.613835,40.696665 149.613835,40.696665 149.485858,40.8246419 C146.158458,42.8722729 142.191173,44.0240653 138.223888,44.0240653 Z M138.223888,2.68751561 C127.473825,2.68751561 118.771394,11.3899471 118.899371,22.1400096 C118.899371,32.890072 127.601802,41.5925035 138.351865,41.4645266 C141.295334,41.4645266 144.238804,40.8246419 146.926319,39.4168956 L133.488741,26.1072945 C133.232787,25.8513406 133.10481,25.5953868 133.10481,25.211456 C133.10481,24.8275252 133.232787,24.5715713 133.488741,24.3156174 L150.63765,7.1667083 C147.182273,4.22323882 142.831057,2.68751561 138.223888,2.68751561 L138.223888,2.68751561 Z"
+              fill="#FF6C37"
+            ></path>
+            <path
+              d="M152.941235,7.42266217 L152.685281,7.1667083 L134.38458,25.211456 L148.845973,39.6728495 C150.25372,38.777011 151.661466,37.7531955 152.813258,36.6014031 C161.003782,28.5388563 161.003782,15.485209 152.941235,7.42266217 L152.941235,7.42266217 Z"
+              fill="#FFFFFF"
+            ></path>
+            <path
+              d="M148.97395,41.0805958 C148.590019,41.0805958 148.334066,40.9526188 148.078112,40.696665 L133.488741,26.1072945 C133.232787,25.8513406 133.10481,25.5953868 133.10481,25.211456 C133.10481,24.8275252 133.232787,24.5715713 133.488741,24.3156174 L151.661466,6.14289283 C152.173374,5.63098509 152.941235,5.63098509 153.453143,6.14289283 L153.837074,6.39884669 C162.411528,14.9733013 162.411528,28.7948101 153.965051,37.4972416 C152.685281,38.777011 151.277535,39.9288034 149.741812,40.8246419 C149.357881,40.9526188 149.101927,41.0805958 148.97395,41.0805958 L148.97395,41.0805958 Z M136.176257,25.211456 L149.101927,38.1371263 C150.125743,37.4972416 151.149558,36.6014031 151.91742,35.8335415 C159.212105,28.5388563 159.596036,16.6370014 152.557304,8.95838537 L136.176257,25.211456 Z"
+              fill="#FF6C37"
+            ></path>
+            <path
+              d="M126.194056,39.2889187 C123.12261,36.2174723 118.131509,36.2174723 115.060063,39.2889187 L66.8127587,87.5362228 L74.8753055,95.5987696 L125.938102,50.8068428 C129.265502,47.9913502 129.521456,43.0002498 126.705964,39.6728495 C126.45001,39.5448726 126.322033,39.4168956 126.194056,39.2889187 L126.194056,39.2889187 Z"
+              fill="#FFFFFF"
+            ></path>
+            <path
+              d="M74.7473286,96.878539 C74.3633978,96.878539 74.1074439,96.750562 73.85149,96.4946082 L65.7889432,88.4320613 C65.2770355,87.9201536 65.2770355,87.152292 65.7889432,86.6403842 L114.036247,38.3930802 C117.619601,34.809726 123.378563,34.809726 126.961918,38.3930802 C130.545272,41.9764343 130.545272,47.7353963 126.961918,51.3187505 C126.833941,51.4467274 126.705964,51.5747044 126.577987,51.7026813 L75.5151902,96.4946082 C75.3872133,96.750562 75.1312594,96.878539 74.7473286,96.878539 L74.7473286,96.878539 Z M68.6044358,87.5362228 L74.8753055,93.8070925 L125.042264,49.7830273 C127.857756,47.4794425 128.11371,43.2562037 125.810125,40.4407111 C123.50654,37.6252186 119.283302,37.3692647 116.467809,39.6728495 C116.339832,39.8008264 116.211855,39.9288034 115.955901,40.0567803 L68.6044358,87.5362228 Z"
+              fill="#FF6C37"
+            ></path>
+            <path
+              d="M29.8274248,142.438327 C29.3155171,142.694281 29.0595632,143.206189 29.1875401,143.718097 L31.363148,152.932436 C31.8750557,154.212205 31.1071941,155.747929 29.6994479,156.131859 C28.6756324,156.51579 27.52384,156.131859 26.8839553,155.363998 L12.8064926,141.414512 L58.7502118,95.4707927 L74.6193516,95.7267466 L85.3694141,106.476809 C82.8098754,108.652417 67.3246664,123.625718 29.8274248,142.438327 L29.8274248,142.438327 Z"
+              fill="#FFFFFF"
+            ></path>
+            <path
+              d="M28.8036093,157.411629 C27.7797938,157.411629 26.7559784,157.027698 26.1160937,156.259836 L12.1666079,142.31035 C11.910654,142.054397 11.7826771,141.798443 11.7826771,141.414512 C11.7826771,141.030581 11.910654,140.774627 12.1666079,140.518673 L58.1103272,94.5749541 C58.366281,94.3190003 58.7502118,94.1910233 59.0061657,94.1910233 L74.8753055,94.4469772 C75.2592363,94.4469772 75.5151902,94.5749541 75.7711441,94.830908 L86.5212065,105.58097 C86.7771604,105.836924 86.9051373,106.220855 86.9051373,106.604786 C86.9051373,106.988717 86.7771604,107.244671 86.3932296,107.500624 L85.497391,108.268486 C71.931836,120.170341 53.5031576,132.072196 30.5952864,143.462143 L32.7708943,152.548505 C33.1548251,154.212205 32.3869635,156.003882 30.8512403,156.899721 C30.0833787,157.283652 29.443494,157.411629 28.8036093,157.411629 Z M14.7261466,141.414512 L27.9077708,154.468159 C28.2917016,155.108044 29.0595632,155.363998 29.6994479,154.980067 C30.3393325,154.596136 30.5952864,153.828275 30.2113556,153.18839 L28.0357477,143.974051 C27.7797938,142.822258 28.2917016,141.798443 29.3155171,141.286535 C51.9674343,129.896588 70.2681359,118.12271 83.705714,106.476809 L74.2354208,97.0065159 L59.5180734,96.750562 L14.7261466,141.414512 Z"
+              fill="#FF6C37"
+            ></path>
+            <path
+              d="M1.9284532,152.420528 L12.9344695,141.414512 L29.3155171,157.795559 L3.20822254,156.003882 C2.05643013,155.875905 1.28856853,154.85209 1.41654546,153.700298 C1.41654546,153.18839 1.5445224,152.676482 1.9284532,152.420528 L1.9284532,152.420528 Z"
+              fill="#FFFFFF"
+            ></path>
+            <path
+              d="M29.3155171,158.947352 L3.0802456,157.155675 C1.16059159,157.027698 -0.119177745,155.363998 0.00879918845,153.444344 C0.136776122,152.676482 0.39272999,151.908621 1.03261466,151.396713 L12.038631,140.390696 C12.5505387,139.878789 13.3184003,139.878789 13.830308,140.390696 L30.2113556,156.771744 C30.5952864,157.155675 30.7232633,157.667583 30.4673095,158.17949 C30.2113556,158.691398 29.8274248,158.947352 29.3155171,158.947352 L29.3155171,158.947352 Z M12.9344695,143.206189 L2.82429173,153.316367 C2.44036093,153.572321 2.44036093,154.212205 2.82429173,154.468159 C2.95226867,154.596136 3.0802456,154.724113 3.33619947,154.724113 L25.9881168,156.259836 L12.9344695,143.206189 Z"
+              fill="#FF6C37"
+            ></path>
+            <path
+              d="M54.2710192,101.357732 C53.5031576,101.357732 52.9912498,100.717847 52.9912498,100.077962 C52.9912498,99.6940315 53.1192268,99.4380776 53.3751806,99.1821238 L65.7889432,86.7683612 C66.3008509,86.2564534 67.0687125,86.2564534 67.5806203,86.7683612 L75.6431671,94.830908 C76.0270979,95.2148388 76.1550749,95.5987696 76.0270979,96.1106774 C75.899121,96.4946082 75.5151902,96.878539 75.0032825,97.0065159 L54.526973,101.357732 C54.3989961,101.357732 54.2710192,101.357732 54.2710192,101.357732 L54.2710192,101.357732 Z M66.6847817,89.4558768 L58.2383041,97.9023544 L72.059813,94.9588849 L66.6847817,89.4558768 Z"
+              fill="#FF6C37"
+            ></path>
+            <path
+              d="M74.6193516,95.7267466 L60.5418889,98.798193 C59.5180734,99.0541468 58.494258,98.4142622 58.2383041,97.3904467 C58.1103272,96.750562 58.2383041,96.1106774 58.7502118,95.5987696 L66.5568048,87.7921767 L74.6193516,95.7267466 Z"
+              fill="#FFFFFF"
+            ></path>
+            <path
+              d="M60.2859351,100.077962 C58.494258,100.077962 57.0865117,98.670216 57.0865117,96.878539 C57.0865117,95.9827004 57.4704425,95.2148388 57.9823502,94.5749541 L65.7889432,86.7683612 C66.3008509,86.2564534 67.0687125,86.2564534 67.5806203,86.7683612 L75.6431671,94.830908 C76.0270979,95.2148388 76.1550749,95.5987696 76.0270979,96.1106774 C75.899121,96.4946082 75.5151902,96.878539 75.0032825,97.0065159 L60.9258197,100.077962 C60.6698659,100.077962 60.413912,100.077962 60.2859351,100.077962 L60.2859351,100.077962 Z M66.6847817,89.4558768 L59.7740273,96.3666312 C59.5180734,96.6225851 59.5180734,96.878539 59.6460504,97.1344928 C59.7740273,97.3904467 60.0299812,97.5184236 60.413912,97.5184236 L72.1877899,94.9588849 L66.6847817,89.4558768 Z"
+              fill="#FF6C37"
+            ></path>
+            <path
+              d="M153.069212,19.7084478 C152.813258,18.9405862 151.91742,18.5566554 151.149558,18.8126093 C150.381697,19.0685632 149.997766,19.9644017 150.25372,20.7322633 C150.25372,20.8602402 150.381697,20.9882172 150.381697,21.1161941 C151.149558,22.6519173 150.893604,24.5715713 149.869789,25.9793176 C149.357881,26.6192023 149.485858,27.5150408 149.997766,28.0269485 C150.63765,28.5388563 151.533489,28.4108793 152.045397,27.7709947 C153.965051,25.3394329 154.348981,22.2679865 153.069212,19.7084478 L153.069212,19.7084478 Z"
+              fill="#FF6C37"
+            ></path>
+          </g>
+        </g>
+      </svg>
+    </div>
+  `;
+}
+;// CONCATENATED MODULE: ./src/components/assets/openapi-icon.js
+/* eslint-disable no-tabs */
+/* eslint-disable max-len */
+
+
+/* eslint-disable indent */
+function openapiIcon(dimensions) {
+  var _dimensions$width, _dimensions$height;
+  const width = (_dimensions$width = dimensions === null || dimensions === void 0 ? void 0 : dimensions.width) !== null && _dimensions$width !== void 0 ? _dimensions$width : 16;
+  const height = (_dimensions$height = dimensions === null || dimensions === void 0 ? void 0 : dimensions.height) !== null && _dimensions$height !== void 0 ? _dimensions$height : 16;
+  return lit_html_x`
+    <div>
+      <svg
+        height=${width}
+        width=${height}
+        version="1.1"
+        id="Capa_1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 0 452.168 452.168"
+        xml:space="preserve"
+      >
+        <g>
+          <g>
+            <g>
+              <polygon
+                style="fill:#010002;"
+                points="140.446,344.424 226.096,430.075 311.739,344.424 294.352,327.037 238.395,383.002 
+				238.395,216.212 213.798,216.212 213.798,383.002 157.841,327.037 			"
+              />
+            </g>
+            <g>
+              <path
+                style="fill:#010002;"
+                d="M357.34,105.037c-4.072,0-8.185,0.268-12.282,0.797c-20.809-30.458-58.688-46.837-95.681-40.025
+				c-17.428-27.109-47.536-43.715-79.985-43.715c-49.064,0-89.414,36.896-94.576,85.139C31.084,116.613,0,154.727,0,200.207
+				c0,52.47,42.691,95.161,95.161,95.161h95.031v-24.386H95.169c-39.025,0-70.775-31.75-70.775-70.776
+				c0-36.351,27.231-66.606,63.33-70.377l10.909-2.471v-10.12c0-39.017,31.742-70.767,70.767-70.767
+				c26.743,0,50.909,14.867,63.07,38.798l4.576,8.998l9.689-2.812c32.051-9.291,65.972,5.406,81.635,33.693l4.406,7.958l8.893-1.951
+				c5.202-1.146,10.461-1.731,15.664-1.731c38.855,0,70.467,31.75,70.467,70.775c0,39.017-31.75,70.776-70.776,70.776h-95.698
+				v24.386h95.681c52.47,0,95.161-42.691,95.161-95.161C452.168,147.729,409.631,105.037,357.34,105.037z"
+              />
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+  `;
 }
 ;// CONCATENATED MODULE: ./src/templates/expanded-endpoint-template.js
 
  // eslint-disable-line import/extensions
+
+
 
 
 
@@ -23782,18 +24068,40 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
               ${path.xBadges.map(v => lit_html_x`<span style="margin:1px; margin-right:5px; padding:1px 8px; font-weight:bold; border-radius:12px;  background-color: var(--light-${v.color}, var(--input-bg)); color:var(--${v.color}); border:1px solid var(--${v.color})">${v.label}</span>`)}
             </div>
             ` : ''}
-      <div style="display:flex; justify-content:space-between; flex-wrap: wrap; top:28px; margin-bottom:32px; ">
+      <div style="display:flex; justify-content:space-between; flex-wrap: wrap; top:28px; ">
       ${this.renderStyle === 'focused' && tagName !== 'General ⦂' ? lit_html_x`
       <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> <a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>  ›  ${tagName} </h3>
       ` : ''}
-      ${this.specUrl && this.allowSpecFileDownload ? lit_html_x`<div><div style="display:flex; justify-content: flex-end; gap:8px; margin-top: 24px; flex-wrap: wrap;">
-              <button class="m-btn m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${e => {
+      </div>
+      <div style="display: flex; flex-direction:column; row-gap: 20px; margin-bottom: 24px;">
+        ${this.specUrl && this.allowSpecFileDownload ? lit_html_x`<div><div style="display:flex; justify-content: flex-end; gap:8px; flex-wrap: wrap;">
+                <button class="m-btn m-btn-image m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${e => {
     downloadResource(this.specUrl, 'openapi-spec.json', e);
-  }}'>Download OpenAPI spec</button>
-                <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
+  }}'>
+                  ${openapiIcon()}
+                  Download OpenAPI spec
+                </button>
+                  <button class="m-btn m-btn-image m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
     viewResource(this.specUrl, e);
-  }}'>View OpenAPI spec</button>
-            </div></div>` : ''}
+  }}'>
+                    ${openapiIcon()}
+                    View OpenAPI spec
+                  </button>
+              </div></div>` : ''}
+        ${this.postmanUrl ? lit_html_x`<div><div style="display:flex; justify-content: flex-end; gap:8px; flex-wrap: wrap;">
+                <button class="m-btn m-btn-image m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${e => {
+    downloadResource(this.postmanUrl, 'postman-collection.json', e);
+  }}'>
+                  ${postmanIcon()}
+                  Download Postman collection
+                </button>
+                  <button class="m-btn m-btn-image m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
+    viewResource(this.postmanUrl, e);
+  }}'>
+                    ${postmanIcon()}
+                    View Postman collection
+                  </button>
+              </div></div>` : ''}
       </div>
       <h2 part="section-operation-summary"> ${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2>
         ${path.isWebhook ? lit_html_x`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>` : lit_html_x`
@@ -23843,6 +24151,7 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
             file-input:file-input, textbox:textbox, textbox-param:textbox-param, textarea:textarea, textarea-param:textarea-param, 
             anchor:anchor, anchor-param-example:anchor-param-example, schema-description:schema-description, schema-multiline-toggle:schema-multiline-toggle"
           spec-url="${this.specUrl}"
+          postman-url="${this.postmanUrl}"
           allow-spec-file-download="${this.allowSpecFileDownload}"
         > </api-request>
 
@@ -23972,6 +24281,8 @@ function componentsTemplate() {
 
 
 
+
+
 /* eslint-disable indent */
 function overview_template_headingRenderer() {
   const renderer = new marked.Renderer();
@@ -23986,15 +24297,36 @@ function overviewTemplate() {
     <section part="section-overview" class="observe-me ${this.renderStyle === 'view' ? 'section-gap' : 'section-gap--read-mode'}">
       <span part="anchor-endpoint" id="overview"></span>
       ${(_this$resolvedSpec = this.resolvedSpec) !== null && _this$resolvedSpec !== void 0 && _this$resolvedSpec.info ? lit_html_x`
-          ${this.specUrl && this.allowSpecFileDownload === 'true' ? lit_html_x`
-              <div style="display:flex; margin-top:18px; gap:8px; justify-content: flex-end; flex-wrap: wrap;">
-                <button class="m-btn thin-border m-btn-tertiary" part="btn btn-outline" @click='${e => {
-    downloadResource(this.specUrl, 'openapi-spec', e);
-  }}'>Download OpenAPI spec</button>
-                <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
+          <div style="display: flex; flex-direction:column; row-gap: 20px; margin-bottom: 24px;">
+            ${this.specUrl && this.allowSpecFileDownload ? lit_html_x`<div><div style="display:flex; justify-content: flex-end; gap:8px; flex-wrap: wrap;">
+                  <button class="m-btn m-btn-image m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${e => {
+    downloadResource(this.specUrl, 'openapi-spec.json', e);
+  }}'>
+                    ${openapiIcon()}
+                    Download OpenAPI spec
+                  </button>
+                    <button class="m-btn m-btn-image m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
     viewResource(this.specUrl, e);
-  }}'>View OpenAPI spec</button>
-              </div>` : ''}
+  }}'>
+                      ${openapiIcon()}
+                      View OpenAPI spec
+                    </button>
+                </div></div>` : ''}
+            ${this.postmanUrl ? lit_html_x`<div><div style="display:flex; justify-content: flex-end; gap:8px; flex-wrap: wrap;">
+                  <button class="m-btn m-btn-image m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${e => {
+    downloadResource(this.postmanUrl, 'postman-collection.json', e);
+  }}'>
+                    ${postmanIcon()}
+                    Download Postman collection
+                  </button>
+                    <button class="m-btn m-btn-image m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
+    viewResource(this.postmanUrl, e);
+  }}'>
+                      ${postmanIcon()}
+                      View Postman collection
+                    </button>
+                </div></div>` : ''}
+          </div>
           <div id="api-title" part="section-overview-title" style="font-size:32px">
             ${this.resolvedSpec.info.title}
             ${!this.resolvedSpec.info.version ? '' : lit_html_x`
@@ -24334,6 +24666,9 @@ function focusedEndpointTemplate() {
     }
     if (selectedPathObj) {
       // In focused mode we must expand the nav-bar tag element if it is collapsed
+      if (selectedPathObj.servers && selectedPathObj.servers.length > 0) {
+        setApiServer.call(this, selectedPathObj.servers[0].url);
+      }
       const newNavEl = this.shadowRoot.getElementById(`link-${focusElId}`);
       expandCollapseNavBarTag(newNavEl, 'expand');
       focusedTemplate = wrapFocusedTemplate.call(this, expandedEndpointBodyTemplate.call(this, selectedPathObj, selectedTagObj.name || '', selectedTagObj.description || ''));
@@ -24504,7 +24839,7 @@ function endpointBodyTemplate(path) {
           <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
         </div>
       </div>
-      ${path.description ? lit_html_x`<div part="section-endpoint-body-description" class="path-description"> ${unsafe_html_o(path.description)}</div>` : ''}
+      ${path.description ? lit_html_x`<div class="m-markdown"> ${unsafe_html_o(marked(path.description))}</div>` : ''}
       <slot name="${path.elementId}"></slot>
       ${pathSecurityTemplate.call(this, path.security)}
       ${codeSampleTabPanel}
@@ -24605,7 +24940,7 @@ function endpointTemplate(showExpandCollapse = true, showTags = true, pathsExpan
     return true;
   }).map(path => lit_html_x`
                 <section part="section-endpoint" id='${path.elementId}' class='m-endpoint regular-font ${path.method} ${pathsExpanded || path.expanded ? 'expanded' : 'collapsed'}'>
-                  <!--${endpointHeadTemplate.call(this, path, pathsExpanded)}-->
+                  ${endpointHeadTemplate.call(this, path, pathsExpanded)}
                   ${pathsExpanded || path.expanded ? endpointBodyTemplate.call(this, path) : ''}
                 </section>`)}
             </div>
@@ -25492,6 +25827,11 @@ class RapiDoc extends lit_element_s {
         type: String,
         attribute: false
       },
+      // Postman collection
+      postmanUrl: {
+        type: String,
+        attribute: 'postman-url'
+      },
       // UI Layouts
       layout: {
         type: String
@@ -26121,7 +26461,7 @@ class RapiDoc extends lit_element_s {
       this.updateRoute = 'true';
     }
     if (!this.routePrefix) {
-      this.routePrefix = '#';
+      this.routePrefix = window.location.href.indexOf('#') > -1 ? '#' : '?endpoint=';
     }
     if (!this.sortTags || !'true, false,'.includes(`${this.sortTags},`)) {
       this.sortTags = 'false';
@@ -26232,7 +26572,7 @@ class RapiDoc extends lit_element_s {
   } */
 
   attributeChangedCallback(name, oldVal, newVal) {
-    if (name === 'spec-url') {
+    if (name === 'spec-url' || name === 'spec') {
       if (oldVal !== newVal) {
         // put it at the end of event-loop to load all the attributes
         window.setTimeout(async () => {
@@ -26459,20 +26799,28 @@ class RapiDoc extends lit_element_s {
     if (!cleanRouterPrefix) {
       return href.split('#')[0];
     }
-    const indexOfRoutePrefix = href.lastIndexOf(cleanRouterPrefix);
-    if (indexOfRoutePrefix === -1) {
+    const splitRoute = href.split(cleanRouterPrefix);
+    if (splitRoute.length <= 0) {
       return href;
     }
-    return href.slice(0, indexOfRoutePrefix);
+    return splitRoute[0];
   }
 
   /**
-   * From the URL return the ID of the element whether it is in the hash or if used a router prefix without a hash
+   * Returns the element id encoded in the URL's hash or router prefix, or
+   * an empty string when the prefix isn't present (so callers don't get the
+   * full href and pass it to scrollToPath, which would mis-focus the doc).
    */
   getElementIDFromURL() {
+    const {
+      href
+    } = window.location;
     const baseURL = this.getComponentBaseURL();
-    const elementId = window.location.href.replace(baseURL + this.routePrefix, '');
-    return elementId;
+    const prefix = `${baseURL}${this.routePrefix}`;
+    if (!href.startsWith(prefix) || href === baseURL) {
+      return '';
+    }
+    return href.slice(prefix.length);
   }
   replaceHistoryState(hashId) {
     const baseURL = this.getComponentBaseURL();
@@ -70113,7 +70461,7 @@ module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$s
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("e5ec666a776024491683")
+/******/ 		__webpack_require__.h = () => ("d358a8b4ef7493681e85")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
@@ -71132,7 +71480,7 @@ module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$s
 /******/ 	// module cache are used so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	var __webpack_exports__ = __webpack_require__(6698);
+/******/ 	var __webpack_exports__ = __webpack_require__(2915);
 /******/ 	
 /******/ })()
 ;
