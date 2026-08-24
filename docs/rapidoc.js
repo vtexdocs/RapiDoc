@@ -12019,7 +12019,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 6698:
+/***/ 9699:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15024,7 +15024,7 @@ var prism_csharp = __webpack_require__(9016);
   .regular-font-size { font-size: var(--font-size-regular); }
   .small-font-size { font-size: var(--font-size-small); }
   .upper { font-size: 14px; text-transform: uppercase; }
-  .operation-tag { font-size: 16px; line-height: 18px; color: #6b7785; }
+  .operation-tag { font-size: 14px; line-height: 16px; color: #6b7785; margin-top: 0px; padding-top: 0px }
   .primary-text{ color: var(--primary-color); }
   .bold-text { font-weight:bold; }
   .gray-text { color: var(--light-fg); }
@@ -15080,20 +15080,15 @@ var prism_csharp = __webpack_require__(9016);
     grid-template-columns: 20px 1fr;
   }
 
+  .m-markdown .callout-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    grid-row: 1;
+  }
+
   .m-markdown .info-blockquote {
     background: #f8f7fc;
     border: 1px solid #ccced8;
-  }
-
-  .m-markdown .info-blockquote:before {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    content: '';
-    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/info.svg')
-      no-repeat 0 0;
-    background-size: 20px 20px;
-    position: absolute;
   }
 
   .m-markdown .warning-blockquote {
@@ -15101,31 +15096,9 @@ var prism_csharp = __webpack_require__(9016);
     border: 1px solid #ffb100;
   }
 
-  .m-markdown .warning-blockquote:before {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    content: '';
-    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/warning.svg')
-      no-repeat 0 0;
-    background-size: 20px 20px;
-    position: absolute;
-  }
-
   .m-markdown .danger-blockquote {
     background: #fdefef;
     border: 1px solid #dc5a41;
-  }
-
-  .m-markdown .danger-blockquote:before {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    content: '';
-    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/danger.svg')
-      no-repeat 0 0;
-    background-size: 20px 20px;
-    position: absolute;
   }
 
   blockquote p{
@@ -15166,7 +15139,7 @@ var prism_csharp = __webpack_require__(9016);
   }
 
   .m-markdown code span {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .m-markdown-small code {
@@ -15273,7 +15246,6 @@ var prism_csharp = __webpack_require__(9016);
 /* Button */
 .m-btn {
   display: flex;
-  flex-direction: column;
   align-items: center;
   border-radius: var(--border-radius);
   font-weight: 400;
@@ -15289,6 +15261,10 @@ var prism_csharp = __webpack_require__(9016);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+.m-btn-image {
+  flex-direction: row;
+  column-gap: 10px;
+}
 .m-btn-primary {
   background-color: var(--primary-color);
   color: var(--primary-color-invert);
@@ -15296,7 +15272,33 @@ var prism_csharp = __webpack_require__(9016);
 .m-btn-primary:hover {
   background-color: #000711;
 }
-.m-btn-secondary{
+.icon-btn {
+  border: 1px solid #e7e9ee;
+  color: #4a596b;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+}
+.icon-btn:hover{
+  background-color: #f8f7fc;
+}
+.clear-btn {
+  margin-left: 0px;
+  background-color: #fff;
+  cursor: pointer;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 4px;
+}
+.flex-btns {
+  display: flex;
+  margin-top: 12px;
+  justify-content: end;
+  gap: 8px;
+  padding-right: 32px;
+}
+.m-btn-secondary {
   background: #e7e9ee;
   color: #142032;
 }
@@ -15310,12 +15312,22 @@ var prism_csharp = __webpack_require__(9016);
 .m-btn-tertiary:hover {
   color: #000711;
 }
-.m-btn.thin-border { border-width: 1px; }
-.m-btn.large { padding:8px 14px; }
-.m-btn.small { padding:5px 12px; }
-.m-btn.tiny { padding:5px 6px; }
-.m-btn.circle { border-radius: 50%; }
-.m-btn.nav:hover { 
+.m-btn.thin-border {
+  border-width: 1px;
+}
+.m-btn.large {
+  padding: 8px 14px;
+}
+.m-btn.small {
+  padding: 5px 12px;
+}
+.m-btn.tiny {
+  padding: 5px 6px;
+}
+.m-btn.circle {
+  border-radius: 50%;
+}
+.m-btn.nav:hover {
   background-color: var(--nav-accent-color);
 }
 .m-btn:disabled{ 
@@ -15345,10 +15357,11 @@ var prism_csharp = __webpack_require__(9016);
   outline: inherit;
   display: block;
 }
-.copy-button{
+.copy-button {
   opacity: 0.3;
 }
-.check-button, .copy-button:hover{
+.check-button,
+.copy-button:hover {
   opacity: 1;
 }
 
@@ -15356,7 +15369,7 @@ input, textarea, select, pre {
   color: #000000;
   outline: none;
   background-color: var(--input-bg);
-  border: 1px solid #B9B9B9;
+  border: 1px solid #b9b9b9;
   border-radius: var(--border-radius);
 }
 button {
@@ -15372,7 +15385,7 @@ input[type="text"],
 input[type="password"] {
   font-family:var(--font-mono); 
   font-size: var(--font-size-mono);
-  transition: border .2s;
+  transition: border 0.2s;
   padding: 6px 8px;
   line-height: 140%;
 }
@@ -15380,9 +15393,9 @@ input[type="password"] {
 select {
   font-family: var(--font-regular);
   padding: 8px;
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%3E%3Cpath%20d%3D%22M10.3%203.3L6%207.6%201.7%203.3A1%201%200%2000.3%204.7l5%205a1%201%200%20001.4%200l5-5a1%201%200%2010-1.4-1.4z%22%20fill%3D%22%23777777%22%2F%3E%3C%2Fsvg%3E"); 
+  background-image: url('data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%3E%3Cpath%20d%3D%22M10.3%203.3L6%207.6%201.7%203.3A1%201%200%2000.3%204.7l5%205a1%201%200%20001.4%200l5-5a1%201%200%2010-1.4-1.4z%22%20fill%3D%22%23777777%22%2F%3E%3C%2Fsvg%3E');
   background-position: calc(100% - 14px) center;
-  background-repeat: no-repeat;  
+  background-repeat: no-repeat;
   background-size: 10px;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -15417,8 +15430,8 @@ input[type="password"]:active {
 
 input[type="file"]{
   font-family: var(--font-regular);
-  padding:2px;
-  cursor:pointer;
+  padding: 2px;
+  cursor: pointer;
   border: 1px solid var(--primary-color);
   min-height: calc(var(--font-size-small) + 18px);
 }
@@ -15427,12 +15440,12 @@ input[type="file"]::-webkit-file-upload-button {
   font-family: var(--font-regular);
   font-size: var(--font-size-small);
   outline: none;
-  cursor:pointer;
+  cursor: pointer;
   padding: 3px 8px;
   border: 1px solid var(--primary-color);
   background-color: var(--primary-color);
   color: var(--primary-color-invert);
-  border-radius: var(--border-radius);;
+  border-radius: var(--border-radius);
   -webkit-appearance: none;
 }
 
@@ -15520,7 +15533,6 @@ input[type="checkbox"]:checked:after {
   }
   .row-api {
     flex: 1fr 1fr;
-    align-items: center;
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-evenly;
@@ -15534,39 +15546,40 @@ input[type="checkbox"]:checked:after {
   }
   .row-api-left {
     min-width: 288px;
-    max-width: 720px;
     flex: 2 1 0%;
     justify-content: flex-end;
     padding-right: 32px;
+    border-right: 1px solid #e7e9ee;
   }
   .row-api-right {
     min-width: 288px;
-    max-width: 702px;
     flex: 1;
     justify-content: flex-start;
-    border-left: 1px solid #E7E9EE;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
   }
-  .row-api-right-box{
-    text-align:left; 
-    direction:ltr; 
-    margin-block: 32px 16px; 
+  .row-api-right-box {
+    text-align: left;
+    direction: ltr;
+    margin-top: 24px;
     padding-left: 32px;
+    padding-right: 32px;
   }
-  .clear-btn{
-    margin-left: 32px
+  .row-api-right-box:first-child {
+    margin-top: 12px;
   }
-
   @media (max-width: 1280px) {
     .row-api {
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
     }
-    .row-api-right-box{
+    .row-api-right-box {
       padding-left: 0px;
     }
-    .clear-btn{
-      margin-left: 0px
+    .clear-btn {
+      margin-left: 0px;
     }
 
     .row-api-left,
@@ -16296,11 +16309,12 @@ customize their theme. Simply add your css to this file and yarn build.
 
 /* harmony default export */ const custom_styles = (i`
 .code-container {
-  padding-inline: 32px;
-  padding-top: 16px;
+  tab-size: 2;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
 }
-.code-container > code {
-  font-size: 14px;
+.code-container * {
+  font-size: 12px !important;
   line-height: 20px;
 }
 
@@ -16320,7 +16334,7 @@ customize their theme. Simply add your css to this file and yarn build.
   font-size: 18px;
   font-weight: 400;
   line-height: 18px;
-  color: #4A4A4A;
+  color: #4a4a4a;
 }
 
 .label-operation-container {
@@ -16378,14 +16392,15 @@ customize their theme. Simply add your css to this file and yarn build.
 }
 
 .right-box-title {
-  color: #4A4A4A;
-  font-size: 18px;
-  line-height: 20px;
-  font-weight: 400;
+  color: #6b7785;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .right-box-container {
-  margin-top: 16px;
+  margin-top: 12px;
+  padding-inline: 12px;
 }
 
 .right-box-label {
@@ -16397,7 +16412,19 @@ customize their theme. Simply add your css to this file and yarn build.
 
 .right-box-input {
   width: 100%;
-  height: 44px;
+  height: 28px;
+}
+
+.right-box-content {
+  border: 1px solid #e7e9ee;
+  border-radius: 4px;
+  padding-block: 10px;
+  margin-top: 8px;
+}
+
+.right-box-select {
+  padding-inline: 8px;
+  width: 100%;
 }
 
 .server-template {
@@ -16431,8 +16458,7 @@ customize their theme. Simply add your css to this file and yarn build.
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-
-  padding: 16px 0px;
+  padding: 8px 0px;
   gap: 5px;
 }
 
@@ -16525,9 +16551,9 @@ customize their theme. Simply add your css to this file and yarn build.
   border: 1px solid rgb(59, 59, 59);
 }
 
-.data-example{
-  background: #FFF3F6;
-  border: 1px solid #FFE0EF;
+.data-example {
+  background: #fff3f6;
+  border: 1px solid #ffe0ef;
   border-radius: 4px;
   font-family: var(--font-mono);
   font-size: var(--font-size-small);
@@ -16535,13 +16561,14 @@ customize their theme. Simply add your css to this file and yarn build.
   padding: 0.2em 0.4em;
 }
 
-.data-example:hover{
+.data-example:hover {
   border: 1px solid #ffb5cb;
 }
 
 .language-show-more:active {
   border-color: rgb(59, 59, 59);
-  box-shadow: rgb(255 255 255) 0px 0px 0px 1px, rgb(185 185 185) 0px 0px 0px 3px;
+  box-shadow: rgb(255 255 255) 0px 0px 0px 1px,
+    rgb(185 185 185) 0px 0px 0px 3px;
 }
 
 .more-languages-dropdown {
@@ -16558,11 +16585,41 @@ customize their theme. Simply add your css to this file and yarn build.
   
   z-index: 1;
 
-  transition: visibility 0.3s linear,opacity 0.3s linear;
+  transition: visibility 0.3s linear, opacity 0.3s linear;
 }
 `);
+;// CONCATENATED MODULE: ./src/components/assets/check-symbol.js
+/* eslint-disable max-len */
+
+
+/* eslint-disable indent */
+function checkSymbol(dimensions) {
+  var _dimensions$width, _dimensions$height;
+  const width = (_dimensions$width = dimensions === null || dimensions === void 0 ? void 0 : dimensions.width) !== null && _dimensions$width !== void 0 ? _dimensions$width : 24;
+  const height = (_dimensions$height = dimensions === null || dimensions === void 0 ? void 0 : dimensions.height) !== null && _dimensions$height !== void 0 ? _dimensions$height : 24;
+  return lit_html_x`
+    <svg
+      width=${width}
+      height=${height}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M7 12L9.89075 14.8907V14.8907C9.95114 14.951 10.049 14.9511 10.1094 14.8907V14.8907L17 8"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  `;
+}
 ;// CONCATENATED MODULE: ./src/utils/common-utils.js
 /* provided dependency */ var common_utils_console = __webpack_require__(5108);
+
+
+
 /* For Delayed Event Handler Execution */
 function debounce(fn, delay) {
   let timeoutID = null;
@@ -16580,33 +16637,33 @@ function sleep(ms) {
   // eslint-disable-next-line no-promise-executor-return
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-function copyToClipboard(data, e) {
-  const btnEl = e.target.closest('button');
-  const textArea = document.createElement('textarea');
-  textArea.value = data;
-  textArea.style.position = 'fixed'; // avoid scrolling to bottom
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
+async function copyToClipboard(data, e) {
+  var _e$currentTarget;
+  const btnEl = ((_e$currentTarget = e.currentTarget) === null || _e$currentTarget === void 0 ? void 0 : _e$currentTarget.closest('button')) || e.target.closest('button');
+  const originalContent = btnEl.cloneNode(true);
   try {
-    document.execCommand('copy');
-    btnEl.innerHTML = `<svg class="check-button" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 17.5C5.8575 17.5 2.5 14.1425 2.5 10C2.5 5.8575 5.8575 2.5 10 2.5C14.1425 2.5 17.5 5.8575 17.5 10C17.5 14.1425 14.1425 17.5 10 17.5Z" fill="#79A479"/>
-    <path d="M13.3327 8.33337L9.16602 12.5L6.66602 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>`;
+    var _navigator$clipboard;
+    if ((_navigator$clipboard = navigator.clipboard) !== null && _navigator$clipboard !== void 0 && _navigator$clipboard.writeText) {
+      await navigator.clipboard.writeText(data);
+    } else {
+      const textArea = document.createElement('textarea');
+      textArea.value = data;
+      textArea.style.position = 'fixed';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    }
+    B(checkSymbol(), btnEl);
     setTimeout(() => {
-      btnEl.innerHTML = `
-        <svg class="copy-button" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="m4.873 3.1245c0-0.41421 0.33578-0.75 0.75-0.75h11.251c0.4142 0 0.75 0.33579 0.75 0.75v11.25c0 0.4142-0.3358 0.75-0.75 0.75s-0.75-0.3358-0.75-0.75v-10.5h-10.501c-0.41422 0-0.75-0.33578-0.75-0.75z" clip-rule="evenodd" fill="#4A596B" fill-rule="evenodd"/>
-        <path d="m2.373 5.6246c0-0.41421 0.33578-0.75 0.75-0.75h11.25c0.4142 0 0.75 0.33579 0.75 0.75v11.25c0 0.4142-0.3358 0.75-0.75 0.75h-11.25c-0.41422 0-0.75-0.3358-0.75-0.75v-11.25zm1.5 0.75v9.75h9.7504v-9.75h-9.7504z" clip-rule="evenodd" fill="#4A596B" fill-rule="evenodd"/>
-        </svg>`;
+      btnEl.replaceWith(originalContent);
     }, 5000);
   } catch (err) {
     common_utils_console.error('Unable to copy', err); // eslint-disable-line no-console
   }
-
-  document.body.removeChild(textArea);
 }
+
 function getBaseUrlFromUrl(url) {
   const pathArray = url.split('/');
   return `${pathArray[0]}//${pathArray[2]}`;
@@ -16813,7 +16870,10 @@ async function ProcessSpec(specUrl, spec, generateMissingTags = false, sortTags 
 
   // Security Scheme
   const securitySchemes = [];
+  let security = [];
   if ((_jsonParsedSpec$compo = jsonParsedSpec.components) !== null && _jsonParsedSpec$compo !== void 0 && _jsonParsedSpec$compo.securitySchemes) {
+    var _jsonParsedSpec$compo2;
+    if (jsonParsedSpec.security) security = jsonParsedSpec.security;else security = [(_jsonParsedSpec$compo2 = jsonParsedSpec.components) === null || _jsonParsedSpec$compo2 === void 0 ? void 0 : _jsonParsedSpec$compo2.securitySchemes];
     const securitySchemeSet = new Set();
     Object.entries(jsonParsedSpec.components.securitySchemes).forEach(kv => {
       if (!securitySchemeSet.has(kv[0])) {
@@ -16918,7 +16978,8 @@ async function ProcessSpec(specUrl, spec, generateMissingTags = false, sortTags 
     components,
     externalDocs: jsonParsedSpec.externalDocs,
     securitySchemes,
-    servers
+    servers,
+    security
   };
   return parsedSpec;
 }
@@ -17162,6 +17223,13 @@ const directive_t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,EL
 
 //# sourceMappingURL=unsafe-html.js.map
 
+;// CONCATENATED MODULE: ./src/utils/security-utils.js
+function isSecuritySchemeIdValid(security, securitySchemeId) {
+  if (!security) return true;
+  return security.some(securityObject => {
+    return securityObject.hasOwnProperty(securitySchemeId) && Array.isArray(securityObject[securitySchemeId]) && securityObject[securitySchemeId].length === 0;
+  });
+}
 // EXTERNAL MODULE: ./node_modules/httpsnippet/src/index.js
 var src = __webpack_require__(212);
 var src_default = /*#__PURE__*/__webpack_require__.n(src);
@@ -17811,7 +17879,7 @@ function generateMarkdownForArrayAndObjectDescription(schema, level = 0) {
   let markdown = (schema.description || schema.title) && (schema.minItems || schema.maxItems) ? '<span class="descr-expand-toggle">➔</span>' : '';
   if (schema.title) {
     if (schema.description) {
-      markdown = `${markdown} <b>${schema.title}:</b> ${schema.description}<br/>`;
+      markdown = `${markdown} ${schema.description}<br/>`;
     } else {
       markdown = `${markdown} ${schema.title}<br/>`;
     }
@@ -17873,7 +17941,8 @@ function schemaInObjectNotation(schema, obj, level = 0, suffix = '') {
       }
     });
     obj = objWithAllProps;
-  } else if (schema.anyOf || schema.oneOf) {
+  }
+  if (schema.anyOf || schema.oneOf) {
     obj['::description'] = schema.description || '';
     // 1. First iterate the regular properties
     if (schema.type === 'object' || schema.properties) {
@@ -18023,7 +18092,7 @@ function schemaInObjectNotation(schema, obj, level = 0, suffix = '') {
       obj['::array-type'] = schema.items.items.type;
     }
     obj['::props'] = schemaInObjectNotation(schema.items, {}, level + 1);
-  } else {
+  } else if (!schema.allOf) {
     const typeObj = getTypeInfo(schema);
     if (typeObj !== null && typeObj !== void 0 && typeObj.html) {
       return `${typeObj.html}`;
@@ -18216,6 +18285,7 @@ function getSchemaFromParam(param) {
 }
 ;// CONCATENATED MODULE: ./src/utils/update-code-example.js
 /* provided dependency */ var update_code_example_console = __webpack_require__(5108);
+
 
 
 function buildFetchURL(requestPanelEl) {
@@ -18527,6 +18597,7 @@ function buildFetchHeaders(requestPanelEl) {
   var _this$closest;
   let acceptValue = '';
   let contentTypeValue = '';
+  const reqCookieHeader = [];
   const reqHeaders = new Headers();
   const headers = [];
   const requestBodyContainerEl = requestPanelEl.querySelector('.request-body-container');
@@ -18580,21 +18651,59 @@ function buildFetchHeaders(requestPanelEl) {
     });
   }
 
-  // Add Authentication Header if provided
-  this.resolvedSpec.securitySchemes.forEach(key => {
-    reqHeaders.append(key.name, key.value);
-    headers.push({
-      name: key.name,
-      value: key.value
+  // Add Authentication Header if provided and necessary
+  let securitySchemes = this.security ? this.security : this.resolvedSpec.security;
+  securitySchemes.forEach((scheme, id) => {
+    if (this.selectedAuthScheme !== id) return;
+    Object.keys(scheme).map(key => {
+      const schemeKey = this.resolvedSpec.securitySchemes.find(s => s.securitySchemeId === key);
+      if (!isSecuritySchemeIdValid(this.security, schemeKey.securitySchemeId)) return;
+      if (schemeKey.in !== 'cookie') {
+        reqHeaders.append(schemeKey.name, schemeKey.value);
+        headers.push({
+          name: schemeKey.name,
+          value: schemeKey.value
+        });
+      }
+      if (schemeKey.in === 'cookie') {
+        reqCookieHeader.push({
+          name: schemeKey.name,
+          value: schemeKey.value
+        });
+      }
     });
+
+    // add cookie header
+    if (reqCookieHeader.length > 0) {
+      const cookie = reqCookieHeader.map(el => `${el.name}=${el.value}`);
+      headers.push({
+        name: 'Cookie',
+        value: cookie.join('; path=/')
+      });
+    }
   });
   return {
     reqHeaders,
-    headers
+    headers,
+    reqCookieHeader
+  };
+}
+function buildFetchCookies(requestPanelEl) {
+  const cookies = [];
+  const cookieParamEls = [...requestPanelEl.querySelectorAll("[data-ptype='cookie']")];
+  cookieParamEls.forEach(el => {
+    if (!el.value) return;
+    cookies.push({
+      name: el.dataset.pname,
+      value: el.value
+    });
+  });
+  return {
+    cookies
   };
 }
 function decodeCurlyBrackets(url) {
-  url = url.replace(/\/?%7B/gm, '{').replace(/\/?%7D/gm, '}');
+  url = url.replace(/%7B/gm, '{').replace(/%7D/gm, '}');
   return url;
 }
 function updateCodeExample(tryBtnEl) {
@@ -18609,14 +18718,19 @@ function updateCodeExample(tryBtnEl) {
   } = buildFetchOptions.call(this, requestPanelEl);
   const {
     reqHeaders,
-    headers
+    headers,
+    reqCookieHeader
   } = buildFetchHeaders.call(this, requestPanelEl);
+  const {
+    cookies
+  } = buildFetchCookies.call(this, requestPanelEl);
   const snippet = new (src_default())({
     method: this.method,
     url: fetchUrl,
     queryString,
     headers,
-    postData
+    postData,
+    cookies
   });
   snippet.requests[0].url = decodeCurlyBrackets(snippet.requests[0].url);
   snippet.requests[0].fullUrl = decodeCurlyBrackets(snippet.requests[0].fullUrl);
@@ -18628,7 +18742,8 @@ function updateCodeExample(tryBtnEl) {
   return {
     fetchUrl,
     fetchOptions,
-    reqHeaders
+    reqHeaders,
+    reqCookie: cookies.concat(reqCookieHeader)
   };
 }
 ;// CONCATENATED MODULE: ./src/templates/security-scheme-template.js
@@ -18637,6 +18752,7 @@ function updateCodeExample(tryBtnEl) {
 /* eslint-disable arrow-body-style */
 
  // eslint-disable-line import/extensions
+
 
 
 const codeVerifier = '731DB1C3F7EA533B85E29492D26AA-1234567890-1234567890';
@@ -19005,94 +19121,139 @@ function handleApiKeyChange(e, securitySchemeId, apiKey) {
   const requestPanelEl = this.getRequestPanel(e);
   updateCodeExample.call(this, requestPanelEl);
 }
+function handleSecuritySchemeChange(e) {
+  const newSelectedAuthScheme = parseInt(e.target.value);
+  this.selectedAuthScheme = newSelectedAuthScheme;
+}
+function getSchemeTypes(scheme) {
+  let authTypes = '';
+  const keys = Object.keys(scheme);
+  const keyCount = keys.length;
+  const v = this.resolvedSpec.securitySchemes.find(s => s.securitySchemeId === keys[0]);
+  if (v.type === 'apiKey') {
+    authTypes += v.in.charAt(0).toUpperCase() + v.in.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else if (v.type === 'http') {
+    authTypes += v.scheme.charAt(0).toUpperCase() + v.scheme.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else if (v.type) {
+    authTypes += v.type.charAt(0).toUpperCase() + v.type.slice(1) + (keyCount > 1 ? ` + ${keyCount - 1}` : '');
+  } else authTypes += 'Authentication';
+  return authTypes;
+}
+function selectSecuritySchemeTemplate() {
+  return lit_html_x`
+    <div class="right-box-select">
+      <select
+        disabled=${this.resolvedSpec.security.length <= 1 || A}
+        name="selectSecurityScheme"
+        style="width: 100%;"
+        @change=${e => {
+    handleSecuritySchemeChange.call(this, e);
+  }}
+      >
+        ${this.resolvedSpec.security.map((scheme, id) => {
+    return lit_html_x`
+            <option value=${id}>
+              ${id + 1}. ${getSchemeTypes.call(this, scheme)}
+            </option>`;
+  })}
+      </select>
+    </div>`;
+}
 function securitySchemeTemplate() {
   var _this$resolvedSpec$se4;
   if (!this.resolvedSpec) {
     return '';
   }
+  if (this.security && this.security.length === 0) return ''; // If security is explicitly defined as [], it indicates that an authentation header is not required
   const providedApiKeys = (_this$resolvedSpec$se4 = this.resolvedSpec.securitySchemes) === null || _this$resolvedSpec$se4 === void 0 ? void 0 : _this$resolvedSpec$se4.filter(v => v.finalKeyValue);
   if (!providedApiKeys) {
     return;
   }
   return lit_html_x`
-  <section id='auth' part="section-auth" class = 'row-api-right-box observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
-    <div class="right-box-title">Header Auth</div>
-
     ${this.resolvedSpec.securitySchemes && this.resolvedSpec.securitySchemes.length > 0 ? lit_html_x`
-        <div id="auth-table">
-          ${this.resolvedSpec.securitySchemes.map(v => lit_html_x`
-            <div id="security-scheme-${v.securitySchemeId}" class="right-box-container ${v.type.toLowerCase()}">
-              <div class="right-box-label">${v.name}</div>
-              ${v.description ? lit_html_x`
-                  <div class="m-markdown">
-                    ${unsafe_html_o(marked(v.description || ''))}
-                  </div>` : ''}
+      <section id='auth' part="section-auth" class = 'row-api-right-box observe-me ${'read focused'.includes(this.renderStyle) ? 'section-gap--read-mode' : 'section-gap '}'>
+        <div class="right-box-title">Authentication</div>
+        <div id="auth-table" class="right-box-content">
+          ${selectSecuritySchemeTemplate.call(this)}
+          <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 12px 0px;">
+          ${this.resolvedSpec.security.map((scheme, id) => {
+    return lit_html_x`
+            ${id === this.selectedAuthScheme ? lit_html_x`<div>
+              ${Object.keys(scheme).map(key => {
+      const v = this.resolvedSpec.securitySchemes.find(s => s.securitySchemeId === key);
+      if (!isSecuritySchemeIdValid(this.security, v.securitySchemeId)) return;
+      return lit_html_x`
+                  <div id="security-scheme-${v.securitySchemeId}" class="right-box-container ${v.type.toLowerCase()}">
+                    <div class="right-box-label">${v.name}</div>
+                    ${v.description ? lit_html_x`
+                        <div class="m-markdown-small">
+                          ${unsafe_html_o(marked(v.description || ''))}
+                        </div>` : ''}
 
-              ${v.type.toLowerCase() === 'apikey' || v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'bearer' ? lit_html_x`
-                  <div>
-                    ${v.in !== 'cookie' ? lit_html_x`
-                        <input
-                          type="text"
-                          spellcheck="false"
-                          value="${v.value}"
-                          class="${v.type} ${v.securitySchemeId} api-key-input right-box-input"
-                          @input="${e => {
-    handleApiKeyChange.call(this, e, v.securitySchemeId, e.target.value);
-  }}"
-                        >` : lit_html_x`<span class="gray-text" style="font-size::var(--font-size-small)"> cookies cannot be set from here</span>`}
-                  </div>` : ''}
-              ${v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'basic' ? lit_html_x`
-                  <div style="margin-bottom:5px">
-                    Send <code>Authorization</code> in <code>header</code> containing the word <code>Basic</code> followed by a space and a base64 encoded string of <code>username:password</code>.
+                    ${v.type.toLowerCase() === 'apikey' || v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'bearer' ? lit_html_x`
+                        <div>
+                          <input
+                            type="text"
+                            spellcheck="false"
+                            value="${v.value}"
+                            class="${v.type} ${v.securitySchemeId} api-key-input right-box-input"
+                            @input="${e => {
+        handleApiKeyChange.call(this, e, v.securitySchemeId, e.target.value);
+      }}"
+                          >
+                        </div>` : ''}
+                    ${v.type.toLowerCase() === 'http' && v.scheme.toLowerCase() === 'basic' ? lit_html_x`
+                        <div style="margin-bottom:5px">
+                          Send <code>Authorization</code> in <code>header</code> containing the word <code>Basic</code> followed by a space and a base64 encoded string of <code>username:password</code>.
+                        </div>
+                        <div>
+                          <input
+                            type="text"
+                            value="${v.user}"
+                            spellcheck="false"
+                            placeholder="username"
+                            class="${v.type} ${v.securitySchemeId} api-key-user"
+                            style="width:100px"
+                            @change = ${e => {
+        const requestPanelEl = this.getRequestPanel(e);
+        updateCodeExample.call(this, requestPanelEl);
+      }}
+                          >
+                          <input
+                            type="password"
+                            spellcheck="false"
+                            placeholder="password"
+                            value="${v.password}"
+                            class="${v.type} ${v.securitySchemeId} api-key-password"
+                            style="width:100px; margin:0 5px;"
+                            @change = ${e => {
+        const requestPanelEl = this.getRequestPanel(e);
+        updateCodeExample.call(this, requestPanelEl);
+      }}
+                          >
+                          <button class="m-btn thin-border"
+                            @click="${e => {
+        onApiKeyChange.call(this, v.securitySchemeId, e);
+      }}"
+                            part="btn btn-outline"
+                          >
+                            ${v.finalKeyValue ? 'UPDATE' : 'SET'}
+                          </button>
+                        </div>` : ''}
                   </div>
-                  <div>
-                    <input
-                      type="text"
-                      value="${v.user}"
-                      spellcheck="false"
-                      placeholder="username"
-                      class="${v.type} ${v.securitySchemeId} api-key-user"
-                      style="width:100px"
-                      @change = ${e => {
-    const requestPanelEl = this.getRequestPanel(e);
-    updateCodeExample.call(this, requestPanelEl);
-  }}
-                    >
-                    <input
-                      type="password"
-                      spellcheck="false"
-                      placeholder="password"
-                      value="${v.password}"
-                      class="${v.type} ${v.securitySchemeId} api-key-password"
-                      style="width:100px; margin:0 5px;"
-                      @change = ${e => {
-    const requestPanelEl = this.getRequestPanel(e);
-    updateCodeExample.call(this, requestPanelEl);
-  }}
-                    >
-                    <button class="m-btn thin-border"
-                      @click="${e => {
-    onApiKeyChange.call(this, v.securitySchemeId, e);
-  }}"
-                      part="btn btn-outline"
-                    >
-                      ${v.finalKeyValue ? 'UPDATE' : 'SET'}
-                    </button>
-                  </div>` : ''}
-            </div>
-            ${v.type.toLowerCase() === 'oauth2' ? lit_html_x`
-                <div>
-                  ${Object.keys(v.flows).map(f => oAuthFlowTemplate.call(this, f, v['x-client-id'], v['x-client-secret'], v.securitySchemeId, v.flows[f], v['x-default-scopes'], v['x-receive-token-in']))}
-                </div>
-                ` : ''}
-          `)}
-        </div>` : ''}
-    <button class='m-btn m-btn-primary' style="margin-top: 16px" @click='${this.onTryClick}' >
-      TEST METHOD
-    </button>
-    <slot name="auth">
-    </slot>
-  </section>
+                  ${v.type.toLowerCase() === 'oauth2' ? lit_html_x`
+                      <div>
+                        ${Object.keys(v.flows).map(f => oAuthFlowTemplate.call(this, f, v['x-client-id'], v['x-client-secret'], v.securitySchemeId, v.flows[f], v['x-default-scopes'], v['x-receive-token-in']))}
+                      </div>
+                      ` : ''}
+                `;
+    })}
+              </div>` : ''}
+            `;
+  })}
+        </div>
+        <slot name="auth"></slot>
+      </section>` : ''}
 `;
 }
 function pathSecurityTemplate(pathSecurity) {
@@ -19195,11 +19356,30 @@ function pathSecurityTemplate(pathSecurity) {
 /* eslint-disable indent */
 function copySymbol() {
   return lit_html_x`
-  <svg class="copy-button" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.87305 3.12451C4.87305 2.7103 5.20883 2.37451 5.62305 2.37451H16.8736C17.2878 2.37451 17.6236 2.7103 17.6236 3.12451V14.3746C17.6236 14.7888 17.2878 15.1246 16.8736 15.1246C16.4594 15.1246 16.1236 14.7888 16.1236 14.3746V3.87451H5.62305C5.20883 3.87451 4.87305 3.53873 4.87305 3.12451Z" fill="#4A596B"/>
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M2.37305 5.62457C2.37305 5.21036 2.70883 4.87457 3.12305 4.87457H14.3735C14.7877 4.87457 15.1235 5.21036 15.1235 5.62457V16.8746C15.1235 17.2888 14.7877 17.6246 14.3735 17.6246H3.12305C2.70883 17.6246 2.37305 17.2888 2.37305 16.8746V5.62457ZM3.87305 6.37457V16.1246H13.6235V6.37457H3.87305Z" fill="#4A596B"/>
-  </svg>
-`;
+    <svg
+      class="copy-button"
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12.5 5.625H6.875C6.18464 5.625 5.625 6.18464 5.625 6.875V12.5C5.625 13.1904 6.18464 13.75 6.875 13.75H12.5C13.1904 13.75 13.75 13.1904 13.75 12.5V6.875C13.75 6.18464 13.1904 5.625 12.5 5.625Z"
+        stroke="currentcolor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M3.125 9.375H2.5C2.16848 9.375 1.85054 9.2433 1.61612 9.00888C1.3817 8.77446 1.25 8.45652 1.25 8.125V2.5C1.25 2.16848 1.3817 1.85054 1.61612 1.61612C1.85054 1.3817 2.16848 1.25 2.5 1.25H8.125C8.45652 1.25 8.77446 1.3817 9.00888 1.61612C9.2433 1.85054 9.375 2.16848 9.375 2.5V3.125"
+        stroke="currentcolor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  `;
 }
 ;// CONCATENATED MODULE: ./src/templates/code-samples-template.js
 
@@ -19242,9 +19422,12 @@ function codeSamplesTemplate(xCodeSamples) {
     var _v$lang, _v$lang2, _v$lang3;
     return lit_html_x`
       <div class="tab-content m-markdown" style= "display:${i === 0 ? 'block' : 'none'}" data-tab = '${v.lang}${i}'>
-        <button class="copy-code" style = "position:absolute; top:12px; right:8px" @click='${e => {
-      copyToClipboard(v.source, e);
-    }}'> ${copySymbol()} </button>
+        <button
+          class="copy-code"
+          @click=${e => copyToClipboard(v.source, e)}
+        >
+          ${copySymbol()}
+        </button>
         <pre><code class="language">${(prism_core_default()).languages[(_v$lang = v.lang) === null || _v$lang === void 0 ? void 0 : _v$lang.toLowerCase()] ? unsafe_html_o(prism_core_default().highlight(v.source, (prism_core_default()).languages[(_v$lang2 = v.lang) === null || _v$lang2 === void 0 ? void 0 : _v$lang2.toLowerCase()], (_v$lang3 = v.lang) === null || _v$lang3 === void 0 ? void 0 : _v$lang3.toLowerCase())) : v.source}</code></pre>
       </div>`;
   })}
@@ -19460,6 +19643,19 @@ const PythonStyle = i`
 }
 `;
 /* harmony default export */ const prism_languages_styles = ([ShellStyle, JavascriptStyle, RubyStyle, PhpStyle, PythonStyle, JsonStyle]);
+;// CONCATENATED MODULE: ./src/utils/url.js
+function joinURLandPath(url, path) {
+  if (url.length > 0 && path.length > 0 && url.slice(-1) === path.charAt(0)) return url.slice(0, -1) + path;
+  return url + path;
+}
+function parseURL(variables, url, path) {
+  if (!variables) return url;
+  for (const [key, value] of Object.entries(variables)) {
+    const regex = new RegExp(`{${key}}`, 'g');
+    url = url.replace(regex, value.value);
+  }
+  return joinURLandPath(url, path);
+}
 ;// CONCATENATED MODULE: ./src/components/json-tree.js
 
 
@@ -19671,12 +19867,13 @@ if (!customElements.get('json-tree')) customElements.define('json-tree', JsonTre
 }
 
 .xxx-of-key {
-  font-size: calc(var(--font-size-small) - 2px); 
+  font-family: var(--font-mono);
+  font-size: 12px; 
   font-weight:bold; 
-  background-color:var(--primary-color); 
-  border-radius:2px;
+  background-color:#f8f7fc; 
+  border-radius:4px;
   line-height:calc(var(--font-size-small) + 6px);
-  padding:0px 5px; 
+  padding: 0.2em 0.4em;
   margin-bottom:1px; 
   display:inline-block;
 }
@@ -20352,35 +20549,6 @@ class Breadcrumbs extends lit_element_s {
   }
 }
 if (!customElements.get('bread-crumbs')) customElements.define('bread-crumbs', Breadcrumbs);
-;// CONCATENATED MODULE: ./src/utils/url.js
-function joinURLandPath(url, path) {
-  if (url.length > 0 && path.length > 0 && url.slice(-1) === path.charAt(0)) return url.slice(0, -1) + path;
-  return url + path;
-}
-function parseURL(variables, url, path) {
-  if (!variables) return url;
-  for (const [key, value] of Object.entries(variables)) {
-    const regex = new RegExp(`{${key}}`, 'g');
-    url = url.replace(regex, value.value);
-  }
-  return joinURLandPath(url, path);
-}
-;// CONCATENATED MODULE: ./src/components/assets/check-symbol.js
-/* eslint-disable max-len */
-
-
-/* eslint-disable indent */
-function checkSymbol(dimensions) {
-  var _dimensions$width, _dimensions$height;
-  const width = (_dimensions$width = dimensions === null || dimensions === void 0 ? void 0 : dimensions.width) !== null && _dimensions$width !== void 0 ? _dimensions$width : 20;
-  const height = (_dimensions$height = dimensions === null || dimensions === void 0 ? void 0 : dimensions.height) !== null && _dimensions$height !== void 0 ? _dimensions$height : 20;
-  return lit_html_x`
-      <svg width=${width} height=${height} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M10 17.5C5.8575 17.5 2.5 14.1425 2.5 10C2.5 5.8575 5.8575 2.5 10 2.5C14.1425 2.5 17.5 5.8575 17.5 10C17.5 14.1425 14.1425 17.5 10 17.5Z" fill="#79A479"/>
-          <path d="M13.3327 8.33337L9.16602 12.5L6.66602 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-  `;
-}
 ;// CONCATENATED MODULE: ./src/components/assets/close-symbol.js
 /* eslint-disable max-len */
 
@@ -20684,7 +20852,6 @@ class BaseUrl extends lit_element_s {
                 </div>
                 <slot></slot>
             </div>
-            ${this.showToast ? lit_html_x`<toast-component tone="positive" message="Copied to clipboard"></toast-component>` : ''}
         `;
   }
   static get styles() {
@@ -20720,9 +20887,9 @@ class BaseUrl extends lit_element_s {
             }
 
             .container {
-                height: 42px;
+                height: 28px;
                 font-size:14px;
-                border: 1px solid var(--border-color);
+                border: 1px solid #e7e9ee;
                 border-radius: 4px;
                 margin: 4px 0px;
                 position: relative;
@@ -21255,10 +21422,434 @@ function languagePickerTemplate() {
         </div>
     </section>`;
 }
+;// CONCATENATED MODULE: ./src/components/assets/play-icon.js
+/* eslint-disable max-len */
+
+
+/* eslint-disable indent */
+function playIcon(dimensions) {
+  var _dimensions$width, _dimensions$height;
+  const width = (_dimensions$width = dimensions === null || dimensions === void 0 ? void 0 : dimensions.width) !== null && _dimensions$width !== void 0 ? _dimensions$width : 12;
+  const height = (_dimensions$height = dimensions === null || dimensions === void 0 ? void 0 : dimensions.height) !== null && _dimensions$height !== void 0 ? _dimensions$height : 12;
+  return lit_html_x`
+    <svg
+      width=${width}
+      height=${height} 
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M16.6582 9.28638C18.098 10.1862 18.8178 10.6361 19.0647 11.2122C19.2803 11.7152 19.2803 12.2847 19.0647 12.7878C18.8178 13.3638 18.098 13.8137 16.6582 14.7136L9.896 18.94C8.29805 19.9387 7.49907 20.4381 6.83973 20.385C6.26501 20.3388 5.73818 20.0469 5.3944 19.584C5 19.053 5 18.1108 5 16.2264V7.77357C5 5.88919 5 4.94701 5.3944 4.41598C5.73818 3.9531 6.26501 3.66111 6.83973 3.6149C7.49907 3.5619 8.29805 4.06126 9.896 5.05998L16.6582 9.28638Z"
+        stroke="#4A596B"
+        stroke-width="2"
+        stroke-linejoin="round"
+      />
+    </svg>
+  `;
+}
+;// CONCATENATED MODULE: ./src/components/assets/trash-icon.js
+/* eslint-disable max-len */
+
+
+/* eslint-disable indent */
+function trash_icon_copySymbol(dimensions) {
+  var _dimensions$width, _dimensions$height;
+  const width = (_dimensions$width = dimensions === null || dimensions === void 0 ? void 0 : dimensions.width) !== null && _dimensions$width !== void 0 ? _dimensions$width : 12;
+  const height = (_dimensions$height = dimensions === null || dimensions === void 0 ? void 0 : dimensions.height) !== null && _dimensions$height !== void 0 ? _dimensions$height : 12;
+  return lit_html_x`
+    <svg
+      width=${width}
+      height=${height}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 2.75C11.0215 2.75 10.1871 3.37503 9.87787 4.24993C9.73983 4.64047 9.31134 4.84517 8.9208 4.70713C8.53026 4.56909 8.32557 4.1406 8.46361 3.75007C8.97804 2.29459 10.3661 1.25 12 1.25C13.634 1.25 15.022 2.29459 15.5365 3.75007C15.6745 4.1406 15.4698 4.56909 15.0793 4.70713C14.6887 4.84517 14.2602 4.64047 14.1222 4.24993C13.813 3.37503 12.9785 2.75 12 2.75Z"
+        fill="currentColor"
+      />
+      <path
+        d="M2.75 6C2.75 5.58579 3.08579 5.25 3.5 5.25H20.5001C20.9143 5.25 21.2501 5.58579 21.2501 6C21.2501 6.41421 20.9143 6.75 20.5001 6.75H3.5C3.08579 6.75 2.75 6.41421 2.75 6Z"
+        fill="currentColor"
+      />
+      <path
+        d="M5.91508 8.45011C5.88753 8.03681 5.53015 7.72411 5.11686 7.75166C4.70356 7.77921 4.39085 8.13659 4.41841 8.54989L4.88186 15.5016C4.96735 16.7844 5.03641 17.8205 5.19838 18.6336C5.36678 19.4789 5.6532 20.185 6.2448 20.7384C6.83639 21.2919 7.55994 21.5307 8.41459 21.6425C9.23663 21.75 10.2751 21.75 11.5607 21.75H12.4395C13.7251 21.75 14.7635 21.75 15.5856 21.6425C16.4402 21.5307 17.1638 21.2919 17.7554 20.7384C18.347 20.185 18.6334 19.4789 18.8018 18.6336C18.9637 17.8205 19.0328 16.7844 19.1183 15.5016L19.5818 8.54989C19.6093 8.13659 19.2966 7.77921 18.8833 7.75166C18.47 7.72411 18.1126 8.03681 18.0851 8.45011L17.6251 15.3492C17.5353 16.6971 17.4712 17.6349 17.3307 18.3405C17.1943 19.025 17.004 19.3873 16.7306 19.6431C16.4572 19.8988 16.083 20.0647 15.391 20.1552C14.6776 20.2485 13.7376 20.25 12.3868 20.25H11.6134C10.2626 20.25 9.32255 20.2485 8.60915 20.1552C7.91715 20.0647 7.54299 19.8988 7.26957 19.6431C6.99616 19.3873 6.80583 19.025 6.66948 18.3405C6.52891 17.6349 6.46488 16.6971 6.37503 15.3492L5.91508 8.45011Z"
+        fill="currentColor"
+      />
+      <path
+        d="M9.42546 10.2537C9.83762 10.2125 10.2051 10.5132 10.2464 10.9254L10.7464 15.9254C10.7876 16.3375 10.4869 16.7051 10.0747 16.7463C9.66256 16.7875 9.29502 16.4868 9.25381 16.0746L8.75381 11.0746C8.71259 10.6625 9.0133 10.2949 9.42546 10.2537Z"
+        fill="currentColor"
+      />
+      <path
+        d="M15.2464 11.0746C15.2876 10.6625 14.9869 10.2949 14.5747 10.2537C14.1626 10.2125 13.795 10.5132 13.7538 10.9254L13.2538 15.9254C13.2126 16.3375 13.5133 16.7051 13.9255 16.7463C14.3376 16.7875 14.7051 16.4868 14.7464 16.0746L15.2464 11.0746Z"
+        fill="currentColor"
+      />
+    </svg>
+  `;
+}
+;// CONCATENATED MODULE: ./src/components/assets/postman-icon.js
+/* eslint-disable max-len */
+
+
+/* eslint-disable indent */
+function postmanIcon(dimensions) {
+  var _dimensions$width, _dimensions$height;
+  const width = (_dimensions$width = dimensions === null || dimensions === void 0 ? void 0 : dimensions.width) !== null && _dimensions$width !== void 0 ? _dimensions$width : 14;
+  const height = (_dimensions$height = dimensions === null || dimensions === void 0 ? void 0 : dimensions.height) !== null && _dimensions$height !== void 0 ? _dimensions$height : 14;
+  return lit_html_x`
+    <svg
+      width=${width}
+      height=${height}
+      viewBox="0 0 256 256"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      preserveAspectRatio="xMidYMid"
+    >
+      <g>
+        <path
+          d="M254.953118,144.253071 C263.911504,74.1217108 214.38443,10.0052669 144.381048,1.04688158 C74.3776647,-7.9115038 10.0052669,41.6155696 1.04688158,111.618952 C-7.9115038,181.622335 41.6155696,245.866756 111.618952,254.953118 C181.750312,263.911504 245.866756,214.38443 254.953118,144.253071 Z"
+          fill="#4A596B"
+        ></path>
+        <g transform="translate(50.181225, 45.198924)">
+          <path
+            d="M124.018448,36.9853339 L70.012182,90.9916 L54.7829269,75.7623449 C107.893354,22.6519173 113.140409,27.2590869 124.018448,36.9853339 L124.018448,36.9853339 Z"
+            fill="#FFFFFF"
+          ></path>
+          <path
+            d="M70.012182,92.2713693 C69.6282512,92.2713693 69.3722974,92.1433924 69.1163435,91.8874385 L53.7591114,76.6581834 C53.2472037,76.1462757 53.2472037,75.3784141 53.7591114,74.8665063 C107.765378,20.8602402 113.396363,25.9793176 124.78631,36.2174723 C125.042264,36.4734262 125.170241,36.72938 125.170241,37.1133108 C125.170241,37.4972416 125.042264,37.7531955 124.78631,38.0091494 L70.7800436,91.8874385 C70.6520667,92.1433924 70.2681359,92.2713693 70.012182,92.2713693 Z M56.574604,75.7623449 L70.012182,89.1999229 L122.098794,37.1133108 C112.628501,28.6668332 106.229654,26.1072945 56.574604,75.7623449 L56.574604,75.7623449 Z"
+            fill="#4A596B"
+          ></path>
+          <path
+            d="M85.497391,106.476809 L70.7800436,91.7594616 L124.78631,37.7531955 C139.247703,52.342566 117.619601,76.0182987 85.497391,106.476809 Z"
+            fill="#FFFFFF"
+          ></path>
+          <path
+            d="M85.497391,107.756578 C85.1134602,107.756578 84.8575064,107.628601 84.6015525,107.372648 L69.8842051,92.6553001 C69.6282512,92.3993463 69.6282512,92.1433924 69.6282512,91.7594616 C69.6282512,91.3755308 69.7562282,91.1195769 70.012182,90.8636231 L124.018448,36.857357 C124.530356,36.3454492 125.298217,36.3454492 125.810125,36.857357 C129.137525,39.9288034 130.929203,44.2800191 130.801226,48.7592118 C130.545272,62.9646515 114.420178,81.0093992 86.5212065,107.372648 C86.1372757,107.628601 85.7533449,107.756578 85.497391,107.756578 L85.497391,107.756578 Z M72.5717207,91.7594616 C80.7622445,100.077962 84.2176217,103.405363 85.497391,104.685132 C106.997516,84.2088225 127.857756,63.2206053 127.985733,48.7592118 C128.11371,45.4318115 126.833941,42.1044113 124.658333,39.5448726 L72.5717207,91.7594616 Z"
+            fill="#4A596B"
+          ></path>
+          <path
+            d="M55.0388808,76.1462757 L65.9169201,87.024315 C66.172874,87.2802689 66.172874,87.5362228 65.9169201,87.7921767 C65.7889432,87.9201536 65.7889432,87.9201536 65.6609663,87.9201536 L43.1370259,92.7832771 C41.9852335,92.911254 40.961418,92.1433924 40.7054642,90.9916 C40.5774872,90.3517153 40.8334411,89.7118307 41.2173719,89.3278999 L54.2710192,76.2742526 C54.526973,76.0182987 54.9109038,75.8903218 55.0388808,76.1462757 Z"
+            fill="#FFFFFF"
+          ></path>
+          <path
+            d="M42.7530951,94.0630464 C40.8334411,94.0630464 39.4256948,92.5273232 39.4256948,90.6076692 C39.4256948,89.7118307 39.8096256,88.8159921 40.4495103,88.1761075 L53.5031576,75.1224602 C54.2710192,74.4825755 55.2948346,74.4825755 56.0626962,75.1224602 L66.9407356,86.0004996 C67.7085972,86.6403842 67.7085972,87.7921767 66.9407356,88.5600383 C66.6847817,88.8159921 66.4288279,88.9439691 66.0448971,89.071946 L43.5209567,93.9350695 C43.2650028,93.9350695 43.009049,94.0630464 42.7530951,94.0630464 L42.7530951,94.0630464 Z M54.65495,77.5540219 L42.1132104,90.0957615 C41.8572566,90.3517153 41.7292796,90.7356461 41.9852335,91.1195769 C42.1132104,91.5035077 42.4971412,91.6314847 42.881072,91.5035077 L63.9972661,86.8963381 L54.65495,77.5540219 Z"
+            fill="#4A596B"
+          ></path>
+          <path
+            d="M152.557304,7.03873136 C144.366781,-0.895838537 131.185156,-0.639884669 123.250587,7.67861603 C115.316017,15.9971167 115.57197,29.050764 123.890471,36.9853339 C130.673249,43.5121575 140.911403,44.6639499 148.97395,39.8008264 L134.38458,25.211456 L152.557304,7.03873136 Z"
+            fill="#FFFFFF"
+          ></path>
+          <path
+            d="M138.223888,44.0240653 C126.066079,44.0240653 116.211855,34.1698413 116.211855,22.0120326 C116.211855,9.85422391 126.066079,-1.81866161e-14 138.223888,-1.81866161e-14 C143.854873,-1.81866161e-14 149.357881,2.17560788 153.453143,6.14289283 C153.709097,6.39884669 153.837074,6.65480056 153.837074,7.03873136 C153.837074,7.42266217 153.709097,7.67861603 153.453143,7.9345699 L136.176257,25.211456 L149.741812,38.777011 C150.25372,39.2889187 150.25372,40.0567803 149.741812,40.568688 C149.613835,40.696665 149.613835,40.696665 149.485858,40.8246419 C146.158458,42.8722729 142.191173,44.0240653 138.223888,44.0240653 Z M138.223888,2.68751561 C127.473825,2.68751561 118.771394,11.3899471 118.899371,22.1400096 C118.899371,32.890072 127.601802,41.5925035 138.351865,41.4645266 C141.295334,41.4645266 144.238804,40.8246419 146.926319,39.4168956 L133.488741,26.1072945 C133.232787,25.8513406 133.10481,25.5953868 133.10481,25.211456 C133.10481,24.8275252 133.232787,24.5715713 133.488741,24.3156174 L150.63765,7.1667083 C147.182273,4.22323882 142.831057,2.68751561 138.223888,2.68751561 L138.223888,2.68751561 Z"
+            fill="#4A596B"
+          ></path>
+          <path
+            d="M152.941235,7.42266217 L152.685281,7.1667083 L134.38458,25.211456 L148.845973,39.6728495 C150.25372,38.777011 151.661466,37.7531955 152.813258,36.6014031 C161.003782,28.5388563 161.003782,15.485209 152.941235,7.42266217 L152.941235,7.42266217 Z"
+            fill="#FFFFFF"
+          ></path>
+          <path
+            d="M148.97395,41.0805958 C148.590019,41.0805958 148.334066,40.9526188 148.078112,40.696665 L133.488741,26.1072945 C133.232787,25.8513406 133.10481,25.5953868 133.10481,25.211456 C133.10481,24.8275252 133.232787,24.5715713 133.488741,24.3156174 L151.661466,6.14289283 C152.173374,5.63098509 152.941235,5.63098509 153.453143,6.14289283 L153.837074,6.39884669 C162.411528,14.9733013 162.411528,28.7948101 153.965051,37.4972416 C152.685281,38.777011 151.277535,39.9288034 149.741812,40.8246419 C149.357881,40.9526188 149.101927,41.0805958 148.97395,41.0805958 L148.97395,41.0805958 Z M136.176257,25.211456 L149.101927,38.1371263 C150.125743,37.4972416 151.149558,36.6014031 151.91742,35.8335415 C159.212105,28.5388563 159.596036,16.6370014 152.557304,8.95838537 L136.176257,25.211456 Z"
+            fill="#4A596B"
+          ></path>
+          <path
+            d="M126.194056,39.2889187 C123.12261,36.2174723 118.131509,36.2174723 115.060063,39.2889187 L66.8127587,87.5362228 L74.8753055,95.5987696 L125.938102,50.8068428 C129.265502,47.9913502 129.521456,43.0002498 126.705964,39.6728495 C126.45001,39.5448726 126.322033,39.4168956 126.194056,39.2889187 L126.194056,39.2889187 Z"
+            fill="#FFFFFF"
+          ></path>
+          <path
+            d="M74.7473286,96.878539 C74.3633978,96.878539 74.1074439,96.750562 73.85149,96.4946082 L65.7889432,88.4320613 C65.2770355,87.9201536 65.2770355,87.152292 65.7889432,86.6403842 L114.036247,38.3930802 C117.619601,34.809726 123.378563,34.809726 126.961918,38.3930802 C130.545272,41.9764343 130.545272,47.7353963 126.961918,51.3187505 C126.833941,51.4467274 126.705964,51.5747044 126.577987,51.7026813 L75.5151902,96.4946082 C75.3872133,96.750562 75.1312594,96.878539 74.7473286,96.878539 L74.7473286,96.878539 Z M68.6044358,87.5362228 L74.8753055,93.8070925 L125.042264,49.7830273 C127.857756,47.4794425 128.11371,43.2562037 125.810125,40.4407111 C123.50654,37.6252186 119.283302,37.3692647 116.467809,39.6728495 C116.339832,39.8008264 116.211855,39.9288034 115.955901,40.0567803 L68.6044358,87.5362228 Z"
+            fill="#4A596B"
+          ></path>
+          <path
+            d="M29.8274248,142.438327 C29.3155171,142.694281 29.0595632,143.206189 29.1875401,143.718097 L31.363148,152.932436 C31.8750557,154.212205 31.1071941,155.747929 29.6994479,156.131859 C28.6756324,156.51579 27.52384,156.131859 26.8839553,155.363998 L12.8064926,141.414512 L58.7502118,95.4707927 L74.6193516,95.7267466 L85.3694141,106.476809 C82.8098754,108.652417 67.3246664,123.625718 29.8274248,142.438327 L29.8274248,142.438327 Z"
+            fill="#FFFFFF"
+          ></path>
+          <path
+            d="M28.8036093,157.411629 C27.7797938,157.411629 26.7559784,157.027698 26.1160937,156.259836 L12.1666079,142.31035 C11.910654,142.054397 11.7826771,141.798443 11.7826771,141.414512 C11.7826771,141.030581 11.910654,140.774627 12.1666079,140.518673 L58.1103272,94.5749541 C58.366281,94.3190003 58.7502118,94.1910233 59.0061657,94.1910233 L74.8753055,94.4469772 C75.2592363,94.4469772 75.5151902,94.5749541 75.7711441,94.830908 L86.5212065,105.58097 C86.7771604,105.836924 86.9051373,106.220855 86.9051373,106.604786 C86.9051373,106.988717 86.7771604,107.244671 86.3932296,107.500624 L85.497391,108.268486 C71.931836,120.170341 53.5031576,132.072196 30.5952864,143.462143 L32.7708943,152.548505 C33.1548251,154.212205 32.3869635,156.003882 30.8512403,156.899721 C30.0833787,157.283652 29.443494,157.411629 28.8036093,157.411629 Z M14.7261466,141.414512 L27.9077708,154.468159 C28.2917016,155.108044 29.0595632,155.363998 29.6994479,154.980067 C30.3393325,154.596136 30.5952864,153.828275 30.2113556,153.18839 L28.0357477,143.974051 C27.7797938,142.822258 28.2917016,141.798443 29.3155171,141.286535 C51.9674343,129.896588 70.2681359,118.12271 83.705714,106.476809 L74.2354208,97.0065159 L59.5180734,96.750562 L14.7261466,141.414512 Z"
+            fill="#4A596B"
+          ></path>
+          <path
+            d="M1.9284532,152.420528 L12.9344695,141.414512 L29.3155171,157.795559 L3.20822254,156.003882 C2.05643013,155.875905 1.28856853,154.85209 1.41654546,153.700298 C1.41654546,153.18839 1.5445224,152.676482 1.9284532,152.420528 L1.9284532,152.420528 Z"
+            fill="#FFFFFF"
+          ></path>
+          <path
+            d="M29.3155171,158.947352 L3.0802456,157.155675 C1.16059159,157.027698 -0.119177745,155.363998 0.00879918845,153.444344 C0.136776122,152.676482 0.39272999,151.908621 1.03261466,151.396713 L12.038631,140.390696 C12.5505387,139.878789 13.3184003,139.878789 13.830308,140.390696 L30.2113556,156.771744 C30.5952864,157.155675 30.7232633,157.667583 30.4673095,158.17949 C30.2113556,158.691398 29.8274248,158.947352 29.3155171,158.947352 L29.3155171,158.947352 Z M12.9344695,143.206189 L2.82429173,153.316367 C2.44036093,153.572321 2.44036093,154.212205 2.82429173,154.468159 C2.95226867,154.596136 3.0802456,154.724113 3.33619947,154.724113 L25.9881168,156.259836 L12.9344695,143.206189 Z"
+            fill="#4A596B"
+          ></path>
+          <path
+            d="M54.2710192,101.357732 C53.5031576,101.357732 52.9912498,100.717847 52.9912498,100.077962 C52.9912498,99.6940315 53.1192268,99.4380776 53.3751806,99.1821238 L65.7889432,86.7683612 C66.3008509,86.2564534 67.0687125,86.2564534 67.5806203,86.7683612 L75.6431671,94.830908 C76.0270979,95.2148388 76.1550749,95.5987696 76.0270979,96.1106774 C75.899121,96.4946082 75.5151902,96.878539 75.0032825,97.0065159 L54.526973,101.357732 C54.3989961,101.357732 54.2710192,101.357732 54.2710192,101.357732 L54.2710192,101.357732 Z M66.6847817,89.4558768 L58.2383041,97.9023544 L72.059813,94.9588849 L66.6847817,89.4558768 Z"
+            fill="#4A596B"
+          ></path>
+          <path
+            d="M74.6193516,95.7267466 L60.5418889,98.798193 C59.5180734,99.0541468 58.494258,98.4142622 58.2383041,97.3904467 C58.1103272,96.750562 58.2383041,96.1106774 58.7502118,95.5987696 L66.5568048,87.7921767 L74.6193516,95.7267466 Z"
+            fill="#FFFFFF"
+          ></path>
+          <path
+            d="M60.2859351,100.077962 C58.494258,100.077962 57.0865117,98.670216 57.0865117,96.878539 C57.0865117,95.9827004 57.4704425,95.2148388 57.9823502,94.5749541 L65.7889432,86.7683612 C66.3008509,86.2564534 67.0687125,86.2564534 67.5806203,86.7683612 L75.6431671,94.830908 C76.0270979,95.2148388 76.1550749,95.5987696 76.0270979,96.1106774 C75.899121,96.4946082 75.5151902,96.878539 75.0032825,97.0065159 L60.9258197,100.077962 C60.6698659,100.077962 60.413912,100.077962 60.2859351,100.077962 L60.2859351,100.077962 Z M66.6847817,89.4558768 L59.7740273,96.3666312 C59.5180734,96.6225851 59.5180734,96.878539 59.6460504,97.1344928 C59.7740273,97.3904467 60.0299812,97.5184236 60.413912,97.5184236 L72.1877899,94.9588849 L66.6847817,89.4558768 Z"
+            fill="#4A596B"
+          ></path>
+          <path
+            d="M153.069212,19.7084478 C152.813258,18.9405862 151.91742,18.5566554 151.149558,18.8126093 C150.381697,19.0685632 149.997766,19.9644017 150.25372,20.7322633 C150.25372,20.8602402 150.381697,20.9882172 150.381697,21.1161941 C151.149558,22.6519173 150.893604,24.5715713 149.869789,25.9793176 C149.357881,26.6192023 149.485858,27.5150408 149.997766,28.0269485 C150.63765,28.5388563 151.533489,28.4108793 152.045397,27.7709947 C153.965051,25.3394329 154.348981,22.2679865 153.069212,19.7084478 L153.069212,19.7084478 Z"
+            fill="#4A596B"
+          ></path>
+        </g>
+      </g>
+    </svg>
+  `;
+}
+;// CONCATENATED MODULE: ./src/components/assets/openapi-icon.js
+/* eslint-disable no-tabs */
+/* eslint-disable max-len */
+
+
+/* eslint-disable indent */
+function openapiIcon(dimensions) {
+  var _dimensions$width, _dimensions$height;
+  const width = (_dimensions$width = dimensions === null || dimensions === void 0 ? void 0 : dimensions.width) !== null && _dimensions$width !== void 0 ? _dimensions$width : 14;
+  const height = (_dimensions$height = dimensions === null || dimensions === void 0 ? void 0 : dimensions.height) !== null && _dimensions$height !== void 0 ? _dimensions$height : 14;
+  return lit_html_x`
+    <svg
+      width=${width}
+      height=${height}
+      fill="#4A596B"
+      viewBox="0 0 24 24"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M21.039 0a2.959 2.959 0 00-2.65 4.274l-6.447 6.447a2.96 2.96 0 101.335 1.336l6.447-6.447A2.959 2.959 0 1021.04 0zM10.628 2.745c-.072 0-.143.003-.214.004-.072.002-.143.002-.215.005-.447.018-.893.064-1.335.138l-.03.005-.185.033-.105.02a7.718 7.718 0 00-.289.062l-.032.008a10.69 10.69 0 00-2.55.95l-.155.089c-.063.034-.125.07-.187.105-.046.027-.093.051-.14.079H5.19l-.01.005-.036.02v.002l.111.184 3.15 5.23a4.168 4.168 0 01.38-.202 4.294 4.294 0 011.628-.413c.071-.004.143-.008.214-.008zm.428.01v6.333c.325.034.647.103.96.209l4.66-4.66c-.173-.12-.348-.237-.528-.347l-.026-.015c-.056-.035-.112-.067-.168-.1l-.098-.056-.099-.055a12.735 12.735 0 00-.171-.092l-.027-.014a10.628 10.628 0 00-1.425-.617c-.69-.241-1.403-.41-2.128-.505l-.089-.012-.09-.01a6.56 6.56 0 00-.17-.019l-.049-.004-.204-.017a6.44 6.44 0 00-.255-.015c-.031-.003-.062-.003-.093-.004zM4.782 4.498a9.92 9.92 0 00-1.36 1.062l4.461 4.461.018.018c.049-.04.098-.078.149-.116l-.011-.018zm-1.67 1.36c-.05.05-.098.103-.147.154l-.149.155c-.33.357-.63.73-.902 1.118l-.039.056a10.588 10.588 0 00-.216.326 10.6 10.6 0 00-1.65 5.276l-.006.215-.003.214h6.317c0-.072.007-.143.01-.214.005-.072.006-.144.013-.215.081-.822.399-1.625.952-2.3.045-.055.096-.106.144-.16.048-.052.093-.107.144-.158zm16.255 1.464l-4.663 4.663c.106.312.175.634.21.959h6.332l-.004-.094a11.579 11.579 0 00-.032-.456l-.005-.052a13.044 13.044 0 00-.026-.241v-.009l-.033-.24v-.009a10.618 10.618 0 00-.327-1.493l-.003-.01a15.839 15.839 0 00-.07-.228l-.01-.03a14.111 14.111 0 00-.069-.204l-.02-.055a5.65 5.65 0 00-.153-.405 7.84 7.84 0 00-.093-.227 16.67 16.67 0 00-.063-.144l-.037-.081a13.776 13.776 0 00-.08-.171l-.024-.052-.096-.194-.014-.027a11.2 11.2 0 00-.112-.212l-.004-.008a10.615 10.615 0 00-.604-.98zm-4.43 6.05c0 .071-.006.142-.01.214-.003.072-.005.143-.012.214a4.29 4.29 0 01-.952 2.301c-.045.055-.096.107-.144.16-.048.053-.093.108-.144.159l4.467 4.467c.051-.051.099-.104.148-.155.05-.052.1-.103.148-.155.331-.358.633-.733.905-1.122l.032-.046.098-.144.085-.13.04-.063a10.597 10.597 0 001.647-5.272c.003-.071.004-.143.006-.214.001-.071.004-.143.004-.214zM.01 13.8l.004.093.01.179.005.076.017.206.005.046c.007.076.015.153.024.228l.003.022a9.605 9.605 0 00.033.248c.072.505.182 1.005.327 1.497l.002.006c.022.077.047.154.071.23l.004.014.005.014a15.737 15.737 0 00.153.439l.03.08.059.148a7.702 7.702 0 00.093.228l.062.14.038.084.078.169.027.054a10.677 10.677 0 00.225.441l.025.043 5.408-3.258.02-.012a4.314 4.314 0 01-.395-1.414h-.025zm.505 2.846l-.206.058.002.005zm6.425-1.052l-5.415 3.262c.083.139.17.273.259.406l.008.014.004.005.008.014h.001c.007.012.014.022.022.032l.001.002v.001a10.634 10.634 0 00.298.417l.006.008a9.963 9.963 0 00.29.368l.033.04c.043.052.086.103.13.153l.057.065.112.127.064.069.029.031.083.09.035.035c.049.051.098.103.149.153L7.58 16.42a3.86 3.86 0 01-.285-.321 4.422 4.422 0 01-.356-.505zm6.416 1.111c-.05.04-.1.079-.15.116l.011.018 3.257 5.407c.151-.099.3-.2.446-.307.315-.232.62-.484.914-.756l-4.46-4.46zm-5.457.003l-.015.015-4.46 4.46a8.966 8.966 0 00.195.176c.022.02.043.04.065.058l.152.13a10.622 10.622 0 00.215.174l.023.017.191.148.008.005c.268.2.547.389.834.564l.03.018.164.097.101.057a5.458 5.458 0 00.27.148c.008.004.016.01.025.013.162.085.327.164.493.24l.158-.385 2.243-5.448.009-.02a4.328 4.328 0 01-.701-.467zm4.951.353c-.061.037-.124.07-.187.104a4.318 4.318 0 01-3.271.336c-.069-.02-.135-.047-.203-.071-.067-.024-.136-.044-.202-.072l-2.242 5.444-.088.213-.075.183v.001l.017.007a.137.137 0 00.019.007l.005.003c.052.021.106.04.159.06.067.027.133.053.2.077l.102.04c.702.247 1.43.42 2.168.518l.087.012.09.01.172.019a7.173 7.173 0 00.252.022c.023.001.048.001.071.003l.184.011.112.005a7.06 7.06 0 00.358.007h.05a10.667 10.667 0 001.793-.15l.185-.034.105-.02.109-.023.18-.04.032-.008a10.684 10.684 0 002.55-.95c.052-.028.104-.06.156-.089.063-.034.125-.07.187-.105.043-.024.087-.047.13-.073h.001l.002-.002.002-.001.002-.001.007-.004.042-.025-.11-.183-.11-.184zm3.262 5.414l-.042.025.042-.024zm-.05.029h-.001.002zm-.005.004h-.002z"
+      />
+    </svg>
+  `;
+}
+;// CONCATENATED MODULE: ./src/components/assets/icon-caret.js
+/* eslint-disable max-len */
+
+
+/* eslint-disable indent */
+function iconCaret(dimensions) {
+  var _dimensions$width, _dimensions$height;
+  const width = (_dimensions$width = dimensions === null || dimensions === void 0 ? void 0 : dimensions.width) !== null && _dimensions$width !== void 0 ? _dimensions$width : 24;
+  const height = (_dimensions$height = dimensions === null || dimensions === void 0 ? void 0 : dimensions.height) !== null && _dimensions$height !== void 0 ? _dimensions$height : 24;
+  return lit_html_x`
+    <svg
+      width=${width}
+      height=${height}
+      viewBox="0 0 24 24"
+      fill="none"
+      class="css-1afboe"
+    >
+      <path
+        d="M8 10L12 14L16 10"
+        stroke="#4a596b"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  `;
+}
+;// CONCATENATED MODULE: ./src/components/api-dropdown-actions.js
+function api_dropdown_actions_defineProperty(obj, key, value) { key = api_dropdown_actions_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function api_dropdown_actions_toPropertyKey(arg) { var key = api_dropdown_actions_toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function api_dropdown_actions_toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+
+
+
+
+class ApiActionsMenu extends lit_element_s {
+  constructor() {
+    super();
+    this.specUrl = '';
+    this.postmanUrl = '';
+    this.open = false;
+
+    // fechar ao clicar fora / ESC (opcional mas útil)
+    this._onDocClick = e => {
+      if (!this.open) return;
+      const path = e.composedPath();
+      if (!path.includes(this)) this.open = false;
+    };
+    this._onKeyDown = e => {
+      if (e.key === 'Escape') this.open = false;
+    };
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener('click', this._onDocClick);
+    document.addEventListener('keydown', this._onKeyDown, true);
+  }
+  disconnectedCallback() {
+    document.removeEventListener('click', this._onDocClick);
+    document.removeEventListener('keydown', this._onKeyDown, true);
+    super.disconnectedCallback();
+  }
+  _toggleMenu() {
+    this.open = !this.open;
+  }
+  render() {
+    return lit_html_x`
+      <button
+        class="main-btn"
+        @click=${() => downloadResource(this.postmanUrl, 'postman-collection.json')}
+        ?disabled=${!this.postmanUrl}
+      >
+        ${postmanIcon()} Download Postman collection
+      </button>
+
+      <button class="toggle-btn" @click=${this._toggleMenu}>
+        <span class="caret">${iconCaret()}</span>
+      </button>
+
+      ${this.open ? lit_html_x`
+            <div class="menu">
+              ${this.postmanUrl ? lit_html_x`
+                    <button
+                      class="item"
+                      @click=${() => viewResource(this.postmanUrl)}
+                    >
+                      ${postmanIcon()} View Postman collection
+                    </button>
+                    <div class="divider"></div>
+                  ` : null}
+              ${this.specUrl ? lit_html_x`
+                    <button
+                      class="item"
+                      @click=${() => downloadResource(this.specUrl, 'openapi-spec.json')}
+                    >
+                      <span class="icon">${openapiIcon()}</span>
+                      Download OpenAPI spec
+                    </button>
+                    <button
+                      class="item"
+                      @click=${() => viewResource(this.specUrl)}
+                    >
+                      <span class="icon">${openapiIcon()}</span>
+                      View OpenAPI spec
+                    </button>
+                  ` : null}
+            </div>
+          ` : null}
+    `;
+  }
+}
+api_dropdown_actions_defineProperty(ApiActionsMenu, "properties", {
+  specUrl: {
+    type: String
+  },
+  postmanUrl: {
+    type: String
+  },
+  open: {
+    type: Boolean,
+    reflect: true
+  }
+});
+api_dropdown_actions_defineProperty(ApiActionsMenu, "styles", i`
+    :host {
+      display: inline-flex;
+      position: relative;
+    }
+
+    .main-btn {
+      font-family: var(--font-regular);
+      color: #4a596b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0px 8px;
+      height: 36px;
+      background: #fff;
+      border: 1px solid #e7e9ee;
+      border-radius: 4px 0 0 4px;
+      cursor: pointer;
+      border-right: none;
+      font-size: 12px;
+    }
+
+    .main-btn:hover {
+      background: #f8fafc;
+    }
+
+    .toggle-btn {
+      padding: 0px 4px;
+      background: #fff;
+      border: 1px solid #e7e9ee;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 36px;
+      width: 28px;
+      font-size: 12px;
+    }
+
+    .toggle-btn:hover {
+      background: #f8fafc;
+    }
+
+    .menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      min-width: 240px;
+      z-index: 100;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      background: none;
+      border: 0;
+      text-align: left;
+      padding: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      color: #4a596b;
+      font-family: var(--font-regular);
+      height: 40px;
+    }
+
+    .item:hover {
+      background: #f3f4f6;
+    }
+
+    .divider {
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .caret {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: none;
+    }
+
+    :host([open]) .caret {
+      transform: rotate(180deg);
+    }
+  `);
+customElements.define('api-dropdown-actions', ApiActionsMenu);
 ;// CONCATENATED MODULE: ./src/components/api-request.js
+/* provided dependency */ var api_request_console = __webpack_require__(5108);
 
  // eslint-disable-line import/extensions
  // eslint-disable-line import/extensions
+
+
+
+
+
 
 
 
@@ -21306,9 +21897,11 @@ class ApiRequest extends lit_element_s {
     this.activeResponseTab = 'response'; // allowed values: response, headers, curl
     this.selectedRequestBodyType = '';
     this.selectedRequestBodyExample = '';
+    this.selectedAuthScheme = 0;
     this.activeParameterSchemaTabs = {};
     this.showCurlBeforeTry = true;
     this.selectedLanguage = 'shell';
+    this._copied = false;
   }
   static get properties() {
     return {
@@ -21334,6 +21927,25 @@ class ApiRequest extends lit_element_s {
       },
       path: {
         type: String
+      },
+      pathDescription: {
+        type: String,
+        attribute: 'path-description'
+      },
+      shortSummary: {
+        type: String,
+        attribute: 'short-summary'
+      },
+      tagName: {
+        type: String,
+        attribute: 'tag-name'
+      },
+      responses: {
+        type: Object
+      },
+      defaultSchemaTab: {
+        type: String,
+        attribute: 'default-schema-tab'
       },
       security: {
         type: Array
@@ -21455,10 +22067,17 @@ class ApiRequest extends lit_element_s {
       },
       // internal tracking of selected request-body example
 
+      selectedAuthScheme: {
+        type: Number
+      },
       selectedLanguage: {
         type: String
       },
       // open-api file download
+      postmanUrl: {
+        type: String,
+        attribute: 'postman-url'
+      },
       specUrl: {
         type: String,
         attribute: 'spec-url'
@@ -21466,6 +22085,15 @@ class ApiRequest extends lit_element_s {
       allowSpecFileDownload: {
         type: String,
         attribute: 'allow-spec-file-download'
+      },
+      _copied: {
+        state: true
+      },
+      codeExample: {
+        type: String
+      },
+      selectedLanguage: {
+        type: String
       }
     };
   }
@@ -21475,10 +22103,6 @@ class ApiRequest extends lit_element_s {
         :where(button, input[type="checkbox"], [tabindex="0"]):focus-visible { box-shadow: var(--focus-shadow); }
         :where(input[type="text"], input[type="password"], select, textarea):focus-visible { border-color: var(--primary-color); }
         tag-input:focus-within { outline: 1px solid;}
-        .read-mode {
-          border-top: 1px solid #E7E9EE;
-          margin-top: 24px;
-        }
 
         .param-name {
           font-size: 14px;
@@ -21586,15 +22210,58 @@ class ApiRequest extends lit_element_s {
       `, custom_styles];
   }
   render() {
+    const docUrl = `https://developers.vtex.com/docs/api-reference/${this.specUrl.split('/').filter(Boolean).pop()}`;
     return lit_html_x`
     <div class="row-api regular-font request-panel ${'read focused'.includes(this.renderStyle) || this.callback === 'true' ? 'read-mode' : 'view-mode'}">
       <div class="row-api-left">
+       <div style="display:flex; justify-content:space-between; flex-wrap: wrap; align-items: center; margin-top: 32px">
+        <div style="display:flex; justify-content:space-between; flex-wrap: wrap;">
+          ${this.renderStyle === 'focused' && this.tagName !== 'General ⦂' ? lit_html_x`
+          <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> <a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>  ›  ${this.tagName} </h3>
+          ` : ''}
+        </div>
+
+        <api-dropdown-actions
+          .specUrl=${this.specUrl && this.allowSpecFileDownload && this.specUrl}
+          .postmanUrl=${this.postmanUrl}>
+        </api-dropdown-actions>  
+       </div>
+
+        <h2 part="section-operation-summary"> ${this.shortSummary || `${this.method.toUpperCase()} ${this.path}`}</h2>
+        ${this.webhook === 'true' ? lit_html_x`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>` : lit_html_x`
+              <div class='mono-font regular-font-size label-operation-container' part="section-operation-webhook-method">
+                <div class='label-operation-method-container' style='border-color: var(--${this.method}-border-color); background-color: var(--${this.method}-bg-color);'>
+                  <span part="label-operation-method" class='regular-font upper method-fg bold-text ${this.method}'>${this.method}</span>
+                </div>
+                <div class='label-operation-path-container'>
+                  <content-copy-button id='${this.method}${this.path}' content='${joinURLandPath(this.selectedServer.url, this.path)}'></content-copy-button>
+                </div>
+              </div>
+            `}
+        ${this.pathDescription ? lit_html_x`<div class="m-markdown"> ${unsafe_html_o(marked(this.pathDescription))}</div>` : ''}
         ${guard_i([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('path'))}
         ${guard_i([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('query'))}
         ${this.requestBodyTemplate()}
         ${guard_i([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('header'))}
         ${guard_i([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('cookie'))}
         ${this.allowTry === 'false' ? '' : lit_html_x`${this.apiCallTemplate()}`}
+        <api-response
+        class = "${this.renderStyle}-mode"
+        style = "width:100%;"
+        webhook = "${this.webhook}"
+        .responses = "${this.responses}"
+        render-style = "${this.renderStyle}"
+        schema-style = "${this.schemaStyle}"
+        active-schema-tab = "${this.defaultSchemaTab}"
+        schema-expand-level = "${this.schemaExpandLevel}"
+        schema-description-expanded = "${this.schemaDescriptionExpanded}"
+        allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
+        schema-hide-read-only = "${this.schemaHideReadOnly === 'never' ? 'false' : this.webhook === 'true' ? 'true' : 'false'}"
+        schema-hide-write-only = "${this.schemaHideWriteOnly === 'never' ? 'false' : this.webhook === 'true' ? 'false' : 'true'}"
+        selected-status = "${Object.keys(this.responses || {})[0] || ''}"
+        exportparts = "btn:btn, btn-response-status:btn-response-status, btn-selected-response-status:btn-selected-response-status, btn-fill:btn-fill, btn-copy:btn-copy,
+        schema-description:schema-description, schema-multiline-toggle:schema-multiline-toggle"
+      > </api-response>
       </div>
       <div class="row-api-right">
         ${languagePickerTemplate.call(this)}
@@ -21861,7 +22528,7 @@ class ApiRequest extends lit_element_s {
         >
         </bread-crumbs>
       </div>
-      <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 24px 0px;">
+      <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 12px 0px;">
       <div style="display:block; overflow-x:auto; max-width:100%;padding-inline: 16px;">
         <div style="width:100%; display:flex; flex-direction: column;">
           ${tableRows}
@@ -22289,13 +22956,28 @@ class ApiRequest extends lit_element_s {
       ${schema.description ? lit_html_x`<span class="m-markdown-small">${unsafe_html_o(marked(schema.description))}</span>` : ''}
     `;
   }
+  async _copyCode(code) {
+    try {
+      await navigator.clipboard.writeText(code);
+      this._copied = true;
+      setTimeout(() => this._copied = false, 3000);
+    } catch (err) {
+      api_request_console.error('Unable to copy', err);
+    }
+  }
   codeExampleTemplate(display = 'flex') {
+    const code = this.codeExample.replace(/\\$/, '');
     return lit_html_x`
       <div class="col m-markdown" style="flex:1; display:${display}; position:relative; max-width: 100%;">
-        <button class="copy-code" style = "position:absolute; top:12px; right:8px" @click='${e => {
-      copyToClipboard(this.codeExample.replace(/\\$/, ''), e);
-    }}' part="btn btn-fill"> ${copySymbol()} </button>
-        <pre class="code-container" style="white-space:pre; border: none;"><code>${unsafe_html_o(prism_core_default().highlight(this.codeExample.trim().replace(/\\$/, ''), (prism_core_default()).languages[this.selectedLanguage], this.selectedLanguage))}</code></pre>
+      <button
+        class="copy-code"
+        style="position:absolute; top:12px; right:32px"
+        part="btn btn-fill"
+        @click=${() => this._copyCode(code)}
+      >
+        ${this._copied ? checkSymbol() : copySymbol()}
+      </button>
+        <pre class="code-container" style="white-space: pre-wrap; word-break: break-all; border: none;"><code>${unsafe_html_o(prism_core_default().highlight(this.codeExample.trim().replace(/\\$/, ''), (prism_core_default()).languages[this.selectedLanguage], this.selectedLanguage))}</code></pre>
       </div>
       `;
   }
@@ -22319,10 +23001,9 @@ class ApiRequest extends lit_element_s {
       }
     }
     return lit_html_x`
-      <button class="clear-btn m-btn m-btn-secondary" part="btn btn-outline" @click="${this.clearResponseData}">CLEAR RESPONSE</button>
-      <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 24px;">
+      <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 8px;">
         ${this.codeExampleTemplate('flex')}
-        <div style="background: #F8F7FC; padding-inline: 32px;padding-block: 16px">
+        <div style="background: #F8F7FC; padding-inline: 32px;padding-block: 8px">
           ${this.responseMessage ? lit_html_x`
                 <div class="row" style="width:100%; height:max-content; background:#E7E9EE; border-radius:2px;padding-inline:4px;margin-bottom:4px">
                   <div style="min-width:8px;min-height:8px;width:8px;height:8px;border-radius:50%;${this.responseBlobUrl || this.responseText ? 'border: 1px solid #79A479;background: #E6F2E6;' : 'border: 1px solid #DC4C43;background: #F0E6E4;'}"></div>
@@ -22340,13 +23021,17 @@ class ApiRequest extends lit_element_s {
     }}' part="btn btn-outline">VIEW (NEW TAB)</button>` : ''}
               </div>` : lit_html_x`
               ${this.responseText ? lit_html_x`
-                <div class="tab-content col m-markdown" style="max-height:500px; flex:1; display:flex;" >
+                <div class="tab-content col m-markdown" style="max-height:300px; flex:1; display:flex;" >
                   <button class="copy-code" style="position:absolute; top:12px; right:16px" @click='${e => {
       copyToClipboard(this.responseText, e);
     }}' part="btn btn-fill"> ${copySymbol()} </button>
                   <pre style="display:flex; white-space:pre; min-height:50px; height:auto; resize:vertical; overflow:auto">${responseContent}</pre>
                 </div>` : ''}`}
         </div>
+      </div>
+      <div class="flex-btns">
+        <button class='clear-btn icon-btn' @click='${this.onTryClick}'>${playIcon()} Test method</button>
+        <button class="clear-btn icon-btn" part="btn btn-outline" @click="${this.clearResponseData}">${trash_icon_copySymbol()} Clear</button>
       </div>`;
   }
   apiCallTemplate() {
@@ -22435,7 +23120,8 @@ class ApiRequest extends lit_element_s {
     const {
       fetchUrl,
       fetchOptions,
-      reqHeaders
+      reqHeaders,
+      reqCookie
     } = updateCodeExample.call(this, tryBtnEl);
     const encodedUrl = `/api/proxy/${encodeURIComponent(fetchUrl)}`;
     this.responseUrl = '';
@@ -22473,6 +23159,11 @@ class ApiRequest extends lit_element_s {
       credentials: tempRequest.credentials,
       body: tempRequest.body
     };
+
+    //fetch uses the cookies in the browser, so we add the needed cookies for the request
+    reqCookie.forEach(cookie => {
+      document.cookie = `${cookie.name}=${cookie.value}; path=/`;
+    });
     const fetchRequest = new Request(tempRequest.url, updatedFetchOptions);
     let fetchResponse;
     let responseClone;
@@ -22589,6 +23280,11 @@ class ApiRequest extends lit_element_s {
       }
     }
     this.requestUpdate();
+
+    //now we remove the cookies added
+    reqCookie.forEach(cookie => {
+      document.cookie = `${cookie.name}=; path=/`;
+    });
   }
   getRequestPanel(e) {
     return e.target.closest('.request-panel');
@@ -22783,15 +23479,20 @@ class SchemaTable extends lit_element_s {
         border-radius:2px;
         border: 1px solid transparent;
         display: inline-block;
-        margin-left: -16px;
-        color:var(--primary-color);
+        color:var(--vtex-pink);
         cursor:pointer;
         font-size: calc(var(--font-size-small) + 4px);
         font-family: var(--font-mono);
         background-clip: border-box;
       }
       .obj-toggle:hover {
-        border-color: var(--primary-color);
+        border-color: var(--vtex-pink);
+      }
+      .obj-toggle.expanded::after {
+        content: '-';
+      }
+      .obj-toggle.collapsed::after  {
+        content: '+';
       }
       .tr.expanded + .object-body {
         display:block;
@@ -22872,11 +23573,17 @@ class SchemaTable extends lit_element_s {
     let isOneOfLabel = false;
     if (key.startsWith('::ONE~OF') || key.startsWith('::ANY~OF')) {
       keyLabel = key.replace('::', '').replace('~', ' ');
+      description = "Click <code>+</code> to expand or <code>-</code> to hide each valid schema.";
       isOneOfLabel = true;
     } else if (key.startsWith('::OPTION')) {
       const parts = key.split('~');
-      keyLabel = parts[1]; // eslint-disable-line prefer-destructuring
-      keyDescr = parts[2]; // eslint-disable-line prefer-destructuring
+      if (parts[2]) {
+        keyLabel = parts[2];
+        keyDescr = '';
+      } else {
+        keyLabel = parts[1];
+        keyDescr = parts[2];
+      }
     } else {
       keyLabel = key;
     }
@@ -22901,9 +23608,7 @@ class SchemaTable extends lit_element_s {
             <div class='tr ${newSchemaLevel <= this.schemaExpandLevel ? 'expanded' : 'collapsed'} ${data['::type']}' data-obj='${keyLabel}' title="${data['::deprecated'] ? 'Deprecated' : ''}">
               <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style='padding-left:${leftPadding}px'>
                 ${keyLabel || keyDescr ? lit_html_x`
-                    <span class='obj-toggle ${newSchemaLevel < this.schemaExpandLevel ? 'expanded' : 'collapsed'}' data-obj='${keyLabel}'>
-                      ${schemaLevel < this.schemaExpandLevel ? '-' : '+'}
-                    </span>` : ''}
+                    <span class='obj-toggle ${newSchemaLevel < this.schemaExpandLevel ? 'expanded' : 'collapsed'}' data-obj='${keyLabel}'/>` : ''}
                 ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION') ? lit_html_x`<span class="xxx-of-key" style="margin-left:-6px">${keyLabel}</span><span class="${isOneOfLabel ? 'xxx-of-key' : 'xxx-of-descr'}">${keyDescr}</span>` : keyLabel.endsWith('*') ? lit_html_x`<span class="key-label" style="display:inline-block; margin-left:-6px;"><span>${data['::deprecated'] ? '❌' : ''} ${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>*</span></span>` : lit_html_x`<span class="key-label" style="display:inline-block; margin-left:-6px;"><span>${data['::deprecated'] ? '❌' : ''} ${keyLabel === '::props' ? '' : keyLabel}</span></span>`}
                 ${data['::type'] === 'xxx-of' && dataType === 'array' ? lit_html_x`<span style="color:var(--primary-color)">ARRAY</span>` : ''} 
               </div>
@@ -22983,26 +23688,21 @@ class SchemaTable extends lit_element_s {
   handleAllEvents(e) {
     if (e.target.classList.contains('obj-toggle')) {
       this.toggleObjectExpand(e);
-    } else if (e.target.classList.contains('schema-multiline-toggle')) {
-      this.schemaDescriptionExpanded = this.schemaDescriptionExpanded === 'true' ? 'false' : 'true';
-    } else if (e.target.classList.contains('descr-expand-toggle')) {
-      const trEl = e.target.closest('.tr');
-      if (trEl) {
-        trEl.classList.toggle('expanded-descr');
-        trEl.style.maxHeight = trEl.scrollHeight;
-      }
     }
   }
   toggleObjectExpand(e) {
-    const rowEl = e.target.closest('.tr');
+    const toggleEl = e.target;
+    const rowEl = toggleEl.closest('.tr');
     if (rowEl.classList.contains('expanded')) {
       rowEl.classList.add('collapsed');
       rowEl.classList.remove('expanded');
-      e.target.innerText = '+';
+      toggleEl.classList.add('collapsed');
+      toggleEl.classList.remove('expanded');
     } else {
       rowEl.classList.remove('collapsed');
       rowEl.classList.add('expanded');
-      e.target.innerText = '-';
+      toggleEl.classList.add('expanded');
+      toggleEl.classList.remove('collapsed');
     }
   }
 }
@@ -23518,7 +24218,6 @@ class ContentCopyButton extends lit_element_s {
                         </div>
                     </button>
                 </div>
-                ${this.showToast ? lit_html_x`<toast-component tone="positive" message="Copied to clipboard"></toast-component>` : ''}
         `;
   }
   static get styles() {
@@ -23699,6 +24398,16 @@ function processPathDescription(description) {
   return replacedMarkdown;
 }
 ;// CONCATENATED MODULE: ./src/utils/renderBlockquote.js
+const calloutColors = {
+  info: '#8C929D',
+  warning: '#FFB100',
+  danger: '#DC5A41'
+};
+function calloutIcon(type) {
+  const fill = calloutColors[type] || calloutColors.info;
+  const glyph = type === 'info' ? '<rect x="9.1" y="5" width="1.8" height="1.8" rx="0.9" fill="white"/><rect x="9.1" y="8.2" width="1.8" height="6.8" rx="0.9" fill="white"/>' : '<rect x="9.1" y="5" width="1.8" height="7" rx="0.9" fill="white"/><rect x="9.1" y="13.5" width="1.8" height="1.8" rx="0.9" fill="white"/>';
+  return `<svg class="callout-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="${fill}"/>${glyph}</svg>`;
+}
 function renderBlockquote(text) {
   const infoMarker = 'ℹ️';
   const bookMarker = '📘';
@@ -23706,28 +24415,27 @@ function renderBlockquote(text) {
   const dangerMarker = '❗';
   if (text.startsWith(`<p>${infoMarker}`)) {
     // Apply custom styling for the info blockquote
-    return `<blockquote class="info-blockquote">${text.replace(infoMarker, '').trim()}</blockquote>`;
+    return `<blockquote class="info-blockquote">${calloutIcon('info')}${text.replace(infoMarker, '').trim()}</blockquote>`;
   }
   if (text.startsWith(`<p>${bookMarker}`)) {
     // Apply custom styling for the info blockquote
-    return `<blockquote class="info-blockquote">${text.replace(bookMarker, '').trim()}</blockquote>`;
+    return `<blockquote class="info-blockquote">${calloutIcon('info')}${text.replace(bookMarker, '').trim()}</blockquote>`;
   }
   if (text.startsWith(`<p>${warningMarker} `)) {
     // Apply custom styling for the warning blockquote
-    return `<blockquote class="warning-blockquote">${text.replace(warningMarker, '').trim()}</blockquote>`;
+    return `<blockquote class="warning-blockquote">${calloutIcon('warning')}${text.replace(warningMarker, '').trim()}</blockquote>`;
   }
   if (text.startsWith(`<p>${dangerMarker} `)) {
     // Apply custom styling for the danger blockquote
-    return `<blockquote class="danger-blockquote">${text.replace(dangerMarker, '').trim()}</blockquote>`;
+    return `<blockquote class="danger-blockquote">${calloutIcon('danger')}${text.replace(dangerMarker, '').trim()}</blockquote>`;
   }
 
   // Default rendering for regular blockquotes
-  return `<blockquote class="info-blockquote">${text}</blockquote>`;
+  return `<blockquote class="info-blockquote">${calloutIcon('info')}${text}</blockquote>`;
 }
 ;// CONCATENATED MODULE: ./src/templates/expanded-endpoint-template.js
 
  // eslint-disable-line import/extensions
-
 
 
 
@@ -23767,7 +24475,6 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
   if (rapiDocApiKey) {
     nonEmptyApiKeys.push(rapiDocApiKey);
   }
-  const docUrl = `https://developers.vtex.com/docs/api-reference/${this.specUrl.split('/')[3]}`;
   marked.Renderer.prototype.blockquote = renderBlockquote;
   const codeSampleTabPanel = path.xCodeSamples ? codeSamplesTemplate.call(this, path.xCodeSamples) : '';
   path.description = processPathDescription(path.description);
@@ -23781,33 +24488,8 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
             <div style="display:flex; flex-wrap:wrap; margin-bottom: -24px; font-size: var(--font-size-small);">
               ${path.xBadges.map(v => lit_html_x`<span style="margin:1px; margin-right:5px; padding:1px 8px; font-weight:bold; border-radius:12px;  background-color: var(--light-${v.color}, var(--input-bg)); color:var(--${v.color}); border:1px solid var(--${v.color})">${v.label}</span>`)}
             </div>
-            ` : ''}
-      <div style="display:flex; justify-content:space-between; flex-wrap: wrap; top:28px; margin-bottom:32px; ">
-      ${this.renderStyle === 'focused' && tagName !== 'General ⦂' ? lit_html_x`
-      <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> <a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>  ›  ${tagName} </h3>
-      ` : ''}
-      ${this.specUrl && this.allowSpecFileDownload ? lit_html_x`<div><div style="display:flex; justify-content: flex-end; gap:8px; margin-top: 24px; flex-wrap: wrap;">
-              <button class="m-btn m-btn-tertiary thin-border" style="padding-left: 0;" part="btn btn-outline" @click='${e => {
-    downloadResource(this.specUrl, 'openapi-spec.json', e);
-  }}'>Download OpenAPI spec</button>
-                <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
-    viewResource(this.specUrl, e);
-  }}'>View OpenAPI spec</button>
-            </div></div>` : ''}
-      </div>
-      <h2 part="section-operation-summary"> ${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2>
-        ${path.isWebhook ? lit_html_x`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>` : lit_html_x`
-            <div class='mono-font regular-font-size label-operation-container' part="section-operation-webhook-method">
-              <div class='label-operation-method-container' style='border-color: var(--${path.method}-border-color); background-color: var(--${path.method}-bg-color);'>
-                <span part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span>
-              </div>
-              <div class='label-operation-path-container'>
-                <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
-              </div>
-            </div>
-          `}
+            ` : ''}        
         <slot name="${path.elementId}"></slot>`}
-      ${path.description ? lit_html_x`<div class="m-markdown"> ${unsafe_html_o(marked(path.description))}</div>` : ''}
       <!-- ${pathSecurityTemplate.call(this, path.security)} -->
       ${codeSampleTabPanel}
       <div class='expanded-req-resp-container'>
@@ -23815,9 +24497,14 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
           class = "${this.renderStyle}-mode"
           style = "width:100%;"
           schema-short-summary = "${path.shortSummary}"
+          short-summary = "${path.shortSummary}"
+          tag-name = "${tagName}"
           webhook = "${path.isWebhook}"
           method = "${path.method}"
           path = "${path.path}"
+          path-description = "${path.description}"
+          .responses = "${path.responses}"
+          default-schema-tab = "${this.defaultSchemaTab}"
           .security = "${path.security}"
           .parameters = "${path.parameters}"
           .request_body = "${path.requestBody}"
@@ -23843,28 +24530,11 @@ function expandedEndpointBodyTemplate(path, tagName = '') {
             file-input:file-input, textbox:textbox, textbox-param:textbox-param, textarea:textarea, textarea-param:textarea-param, 
             anchor:anchor, anchor-param-example:anchor-param-example, schema-description:schema-description, schema-multiline-toggle:schema-multiline-toggle"
           spec-url="${this.specUrl}"
+          postman-url="${this.postmanUrl}"
           allow-spec-file-download="${this.allowSpecFileDownload}"
         > </api-request>
 
         ${path.callbacks ? callbackTemplate.call(this, path.callbacks) : ''}
-
-        <api-response
-          class = "${this.renderStyle}-mode"
-          style = "width:100%;"
-          webhook = "${path.isWebhook}"
-          .responses = "${path.responses}"
-          render-style = "${this.renderStyle}"
-          schema-style = "${this.schemaStyle}"
-          active-schema-tab = "${this.defaultSchemaTab}"
-          schema-expand-level = "${this.schemaExpandLevel}"
-          schema-description-expanded = "${this.schemaDescriptionExpanded}"
-          allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
-          schema-hide-read-only = "${this.schemaHideReadOnly === 'never' ? 'false' : path.isWebhook ? 'true' : 'false'}"
-          schema-hide-write-only = "${this.schemaHideWriteOnly === 'never' ? 'false' : path.isWebhook ? 'false' : 'true'}"
-          selected-status = "${Object.keys(path.responses || {})[0] || ''}"
-          exportparts = "btn:btn, btn-response-status:btn-response-status, btn-selected-response-status:btn-selected-response-status, btn-fill:btn-fill, btn-copy:btn-copy,
-          schema-description:schema-description, schema-multiline-toggle:schema-multiline-toggle"
-        > </api-response>
       </div>
     </div>
   `;
@@ -23986,15 +24656,12 @@ function overviewTemplate() {
     <section part="section-overview" class="observe-me ${this.renderStyle === 'view' ? 'section-gap' : 'section-gap--read-mode'}">
       <span part="anchor-endpoint" id="overview"></span>
       ${(_this$resolvedSpec = this.resolvedSpec) !== null && _this$resolvedSpec !== void 0 && _this$resolvedSpec.info ? lit_html_x`
-          ${this.specUrl && this.allowSpecFileDownload === 'true' ? lit_html_x`
-              <div style="display:flex; margin-top:18px; gap:8px; justify-content: flex-end; flex-wrap: wrap;">
-                <button class="m-btn thin-border m-btn-tertiary" part="btn btn-outline" @click='${e => {
-    downloadResource(this.specUrl, 'openapi-spec', e);
-  }}'>Download OpenAPI spec</button>
-                <button class="m-btn m-btn-secondary thin-border" part="btn btn-outline" @click='${e => {
-    viewResource(this.specUrl, e);
-  }}'>View OpenAPI spec</button>
-              </div>` : ''}
+          <div style="display: flex; justify-content: end; margin-top: 32px">
+            <api-dropdown-actions
+              .specUrl=${this.specUrl && this.allowSpecFileDownload && this.specUrl}
+              .postmanUrl=${this.postmanUrl}>
+            </api-dropdown-actions>  
+          </div>
           <div id="api-title" part="section-overview-title" style="font-size:32px">
             ${this.resolvedSpec.info.title}
             ${!this.resolvedSpec.info.version ? '' : lit_html_x`
@@ -24334,6 +25001,9 @@ function focusedEndpointTemplate() {
     }
     if (selectedPathObj) {
       // In focused mode we must expand the nav-bar tag element if it is collapsed
+      if (selectedPathObj.servers && selectedPathObj.servers.length > 0) {
+        setApiServer.call(this, selectedPathObj.servers[0].url);
+      }
       const newNavEl = this.shadowRoot.getElementById(`link-${focusElId}`);
       expandCollapseNavBarTag(newNavEl, 'expand');
       focusedTemplate = wrapFocusedTemplate.call(this, expandedEndpointBodyTemplate.call(this, selectedPathObj, selectedTagObj.name || '', selectedTagObj.description || ''));
@@ -24504,7 +25174,7 @@ function endpointBodyTemplate(path) {
           <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
         </div>
       </div>
-      ${path.description ? lit_html_x`<div part="section-endpoint-body-description" class="path-description"> ${unsafe_html_o(path.description)}</div>` : ''}
+      ${path.description ? lit_html_x`<div class="m-markdown"> ${unsafe_html_o(marked(path.description))}</div>` : ''}
       <slot name="${path.elementId}"></slot>
       ${pathSecurityTemplate.call(this, path.security)}
       ${codeSampleTabPanel}
@@ -24515,9 +25185,15 @@ function endpointBodyTemplate(path) {
           class = "${this.renderStyle}-mode ${this.layout}-layout"
           style = "width:100%;"
           schema-short-summary="${path.shortSummary}"
+          short-summary = "${path.shortSummary}"
+          tag-name = ""
+          doc-url = ""
           webhook = "${path.isWebhook}"
           method = "${path.method}"
           path = "${path.path}"
+          path-description = "${path.description}"
+          .responses = "${path.responses}"
+          default-schema-tab = "${this.defaultSchemaTab}"
           .security = "${path.security}"
           .parameters = "${path.parameters}"
           .request_body = "${path.requestBody}"
@@ -24605,7 +25281,7 @@ function endpointTemplate(showExpandCollapse = true, showTags = true, pathsExpan
     return true;
   }).map(path => lit_html_x`
                 <section part="section-endpoint" id='${path.elementId}' class='m-endpoint regular-font ${path.method} ${pathsExpanded || path.expanded ? 'expanded' : 'collapsed'}'>
-                  <!--${endpointHeadTemplate.call(this, path, pathsExpanded)}-->
+                  ${endpointHeadTemplate.call(this, path, pathsExpanded)}
                   ${pathsExpanded || path.expanded ? endpointBodyTemplate.call(this, path) : ''}
                 </section>`)}
             </div>
@@ -25135,9 +25811,9 @@ function setTheme(baseTheme, theme = {}) {
       pink: theme.pink ? theme.pink : '#990055',
       lightPink: theme.lightPink ? theme.lightPink : '#ffb2b2',
       vtexPink: theme.vtexPink ? theme.vtexPink : '#D71D55',
-      green: theme.green || '#690',
+      green: theme.green || '#79A479',
       lightGreen: theme.lightGreen || '#fbfff0',
-      blue: theme.blue || '#47AFE8',
+      blue: theme.blue || '#2953B2',
       lightBlue: theme.lightBlue || '#eff8fd',
       orange: theme.orange || '#FF9900',
       lightOrange: theme.lightOrange || '#fff5e6',
@@ -25184,7 +25860,7 @@ function setTheme(baseTheme, theme = {}) {
     --resp-area-height: ${this.responseAreaHeight};
     --font-size-small:  ${this.fontSize === 'default' ? '12px' : this.fontSize === 'large' ? '13px' : '14px'};
     --font-size-mono:   ${this.fontSize === 'default' ? '13px' : this.fontSize === 'large' ? '14px' : '15px'};
-    --font-size-regular: ${this.fontSize === 'default' ? '16px' : this.fontSize === 'large' ? '17px' : '18px'};
+    --font-size-regular: ${this.fontSize === 'default' ? '14px' : this.fontSize === 'large' ? '17px' : '18px'};
     --dialog-z-index: 1000;
 
     --focus-shadow: 0 0 0 1px transparent, 0 0 0 3px ${newTheme.primaryColorTrans};
@@ -25492,6 +26168,11 @@ class RapiDoc extends lit_element_s {
         type: String,
         attribute: false
       },
+      // Postman collection
+      postmanUrl: {
+        type: String,
+        attribute: 'postman-url'
+      },
       // UI Layouts
       layout: {
         type: String
@@ -25773,7 +26454,6 @@ class RapiDoc extends lit_element_s {
         display:flex;
         height:100%;
         width:100%;
-        overflow:hidden;
         max-width: 2087px;
       }
       .main-content { 
@@ -25885,7 +26565,7 @@ class RapiDoc extends lit_element_s {
       }
       .expanded-endpoint-body { 
         position: relative;
-        padding: 6px 0px; 
+        padding: 0px; 
       }
       .expanded-endpoint-body .tag-description {
         background: var(--code-bg);
@@ -25986,18 +26666,11 @@ class RapiDoc extends lit_element_s {
           padding: 24px 8px; 
         }
         .section-gap--read-mode { 
-          padding: 24px 8px; 
+          padding: 0px 80px;
         }
         .endpoint-body {
           position: relative;
           padding:36px 0 48px 0;
-        }
-      }
-
-      @media (min-width: 2560px) {
-        .body {
-          padding-left: 316px;
-          padding-right: 221px;
         }
       }
 
@@ -26007,10 +26680,10 @@ class RapiDoc extends lit_element_s {
           display:flex;
         }
         .section-gap--focused-mode { 
-          padding: 12px 80px 12px 80px; 
+          padding: 0px 0px 12px 80px; 
         }
         .section-gap--read-mode { 
-          padding: 24px 80px 12px 80px; 
+          padding: 0px 80px;
         }
       }`, custom_styles];
   }
@@ -26121,7 +26794,7 @@ class RapiDoc extends lit_element_s {
       this.updateRoute = 'true';
     }
     if (!this.routePrefix) {
-      this.routePrefix = '#';
+      this.routePrefix = window.location.href.indexOf('#') > -1 ? '#' : '?endpoint=';
     }
     if (!this.sortTags || !'true, false,'.includes(`${this.sortTags},`)) {
       this.sortTags = 'false';
@@ -26232,7 +26905,7 @@ class RapiDoc extends lit_element_s {
   } */
 
   attributeChangedCallback(name, oldVal, newVal) {
-    if (name === 'spec-url') {
+    if (name === 'spec-url' || name === 'spec') {
       if (oldVal !== newVal) {
         // put it at the end of event-loop to load all the attributes
         window.setTimeout(async () => {
@@ -26459,20 +27132,28 @@ class RapiDoc extends lit_element_s {
     if (!cleanRouterPrefix) {
       return href.split('#')[0];
     }
-    const indexOfRoutePrefix = href.lastIndexOf(cleanRouterPrefix);
-    if (indexOfRoutePrefix === -1) {
+    const splitRoute = href.split(cleanRouterPrefix);
+    if (splitRoute.length <= 0) {
       return href;
     }
-    return href.slice(0, indexOfRoutePrefix);
+    return splitRoute[0];
   }
 
   /**
-   * From the URL return the ID of the element whether it is in the hash or if used a router prefix without a hash
+   * Returns the element id encoded in the URL's hash or router prefix, or
+   * an empty string when the prefix isn't present (so callers don't get the
+   * full href and pass it to scrollToPath, which would mis-focus the doc).
    */
   getElementIDFromURL() {
+    const {
+      href
+    } = window.location;
     const baseURL = this.getComponentBaseURL();
-    const elementId = window.location.href.replace(baseURL + this.routePrefix, '');
-    return elementId;
+    const prefix = `${baseURL}${this.routePrefix}`;
+    if (!href.startsWith(prefix) || href === baseURL) {
+      return '';
+    }
+    return href.slice(prefix.length);
   }
   replaceHistoryState(hashId) {
     const baseURL = this.getComponentBaseURL();
@@ -70113,7 +70794,7 @@ module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$s
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("e5ec666a776024491683")
+/******/ 		__webpack_require__.h = () => ("415945698cc0cd065d3f")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
@@ -71132,7 +71813,7 @@ module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$s
 /******/ 	// module cache are used so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	var __webpack_exports__ = __webpack_require__(6698);
+/******/ 	var __webpack_exports__ = __webpack_require__(9699);
 /******/ 	
 /******/ })()
 ;

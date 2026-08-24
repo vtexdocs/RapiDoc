@@ -819,12 +819,18 @@ export default class RapiDoc extends LitElement {
   }
 
   /**
-   * From the URL return the ID of the element whether it is in the hash or if used a router prefix without a hash
+   * Returns the element id encoded in the URL's hash or router prefix, or
+   * an empty string when the prefix isn't present (so callers don't get the
+   * full href and pass it to scrollToPath, which would mis-focus the doc).
    */
   getElementIDFromURL() {
+    const { href } = window.location;
     const baseURL = this.getComponentBaseURL();
-    const elementId = window.location.href.replace(baseURL + this.routePrefix, '');
-    return elementId;
+    const prefix = `${baseURL}${this.routePrefix}`;
+    if (!href.startsWith(prefix) || href === baseURL) {
+      return '';
+    }
+    return href.slice(prefix.length);
   }
 
   replaceHistoryState(hashId) {

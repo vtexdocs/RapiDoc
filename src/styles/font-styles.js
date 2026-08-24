@@ -87,19 +87,15 @@ export default css`
     grid-template-columns: 20px 1fr;
   }
 
+  .m-markdown .callout-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    grid-row: 1;
+  }
+
   .m-markdown .info-blockquote {
     background: #f8f7fc;
     border: 1px solid #ccced8;
-  }
-
-  .m-markdown .info-blockquote:before {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    content: '';
-    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/info.svg')
-      no-repeat 0 0;
-    background-size: 20px 20px;
   }
 
   .m-markdown .warning-blockquote {
@@ -107,29 +103,9 @@ export default css`
     border: 1px solid #ffb100;
   }
 
-  .m-markdown .warning-blockquote:before {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    content: '';
-    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/warning.svg')
-      no-repeat 0 0;
-    background-size: 20px 20px;
-  }
-
   .m-markdown .danger-blockquote {
     background: #fdefef;
     border: 1px solid #dc5a41;
-  }
-
-  .m-markdown .danger-blockquote:before {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    content: '';
-    background: url('https://vtex-dev-portal-navigation.fra1.digitaloceanspaces.com/danger.svg')
-      no-repeat 0 0;
-    background-size: 20px 20px;
   }
 
   blockquote p{
