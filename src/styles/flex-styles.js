@@ -12,6 +12,8 @@ export default css`
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-evenly;
+    max-width: 100vw;
+    box-sizing: border-box;
   }
   .row {
     align-items: center;
@@ -32,15 +34,17 @@ export default css`
     flex: 1;
     justify-content: flex-start;
     position: sticky;
-    top: 0;
+    top: 5rem;
     align-self: flex-start;
+    min-height: calc(100vh - 5rem);
+    overflow-y: auto;
   }
   .row-api-right-box {
     text-align: left;
     direction: ltr;
     margin-top: 24px;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
   .row-api-right-box:first-child {
     margin-top: 12px;
@@ -60,10 +64,12 @@ export default css`
 
     .row-api-left,
     .row-api-right {
-      max-width: unset;
-      width: 100%;
+      max-width: 100%;
       border: none;
       padding: 10px;
+      position: static;
+      max-height: none;
+      overflow: visible;
     }
   }
 `;

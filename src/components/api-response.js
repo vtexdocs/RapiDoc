@@ -74,7 +74,6 @@ export default class ApiResponse extends LitElement {
         flex-direction: row;
         flex: 1 1 auto;
         justify-content: space-around;
-        align-items: center;
         column-gap: 12px;
         padding: 12px;
       }
@@ -91,15 +90,12 @@ export default class ApiResponse extends LitElement {
       .resp-title {
         display: flex;
         flex-direction: row;
-        align-items: center;
         justify-content: space-between;
         flex: 1 1 auto;
         height: 45px;
         text-transform: uppercase;
       }
       .resp-content {
-        padding: 24px 40px;
-        max-height: calc(100vh - 5rem - 48px);
         overflow: auto;
         background-color: #FFFFFF;
       }
@@ -135,7 +131,6 @@ export default class ApiResponse extends LitElement {
       }
       .focused-mode,
       .read-mode {
-        margin: 32px 0px;
         display: flex;
         flex-direction: column;
       }
@@ -245,17 +240,12 @@ export default class ApiResponse extends LitElement {
                     }
                   }}"
                 >
-                  <div style='display: flex; flex-direction: row; justify-content: flex-start; align-items: center;'>
-                    <div style="margin: 0">
-                      ${this.callback === 'true' ? 'Callback Response' : 'Response'}
-                    </div>
-                  </div>
                   <div style='display: flex; flex-direction: row; justify-content: flex-end; align-items: center; color: var(--fg)'>
                     <div style='margin-right: 4px'>
                       <span class='dot ${this.getResponseStatusType(respStatus)}'></span>
                     </div>
                     <div>
-                      <span>${respStatus}</span>
+                      <span>${respStatus} ${this.responses[respStatus]?.description || ''}</span>
                     </div>
                   </div>
                 </div>
@@ -269,24 +259,8 @@ export default class ApiResponse extends LitElement {
       ${Object.keys(this.responses).map((status) => html`
         <div class="resp-content-container" id="resp-content-${status}" style="${this.selectedStatus === status ? 'display: block' : 'display: none'} ">
           <div class="resp-border resp-content">
-            <div class="resp-title">
-              <div style='display: flex; flex-direction: row; justify-content: flex-start; align-items: center;'>
-                <div class=" ${this.callback === 'true' ? 'tiny-title' : 'req-res-title'} " style="margin: 0">
-                  ${this.callback === 'true' ? 'Callback Response' : 'Response'}
-                </div>
-              </div>
-              <div style='display: flex; flex-direction: row; justify-content: flex-end; align-items: center; column-gap: 4px'>
-                <div>
-                  <span class='dot ${this.getResponseStatusType(status)}'></span>
-                </div>
-                <div>
-                  <span>${status}</span>
-                </div>
-              </div>
-            </div>
             <div class="resp-content-body">
               <div class="top-gap">
-                <span class="resp-descr m-markdown ">${unsafeHTML(marked(this.responses[status]?.description || ''))}</span>
                 ${(this.headersForEachRespStatus[status] && this.headersForEachRespStatus[status]?.length > 0)
                   ? html`${this.responseHeaderListTemplate(this.headersForEachRespStatus[status])}`
                   : ''

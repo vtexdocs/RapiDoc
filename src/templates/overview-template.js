@@ -60,7 +60,7 @@ export default function overviewTemplate() {
             }
           </div>
           <slot name="overview"></slot>
-          <div id="api-description">
+          <div id="api-description" class="api-description">
           ${this.resolvedSpec.info.description
             ? html`${
               unsafeHTML(`

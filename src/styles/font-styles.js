@@ -76,41 +76,74 @@ export default css`
     font-size: calc(var(--font-size-mono) - 1px);
   }
 
-  .m-markdown blockquote {
+  .m-markdown blockquote,
+  .m-markdown-small blockquote,
+  .api-description blockquote {
     display: grid;
+    box-sizing: border-box;
     padding: 20px;
     gap: 0px 20px;
     width: 100%;
+    max-width: 100%;
     margin: 20px 0;
     border-radius: 4px;
-    align-items: center;
-    grid-template-columns: 20px 1fr;
-  }
-
-  .m-markdown .callout-icon {
-    display: inline-block;
-    flex-shrink: 0;
-    grid-row: 1;
-  }
-
-  .m-markdown .info-blockquote {
+    align-items: start;
+    grid-template-columns: 20px minmax(0, 1fr);
     background: #f8f7fc;
     border: 1px solid #ccced8;
   }
 
-  .m-markdown .warning-blockquote {
+  .m-markdown .info-blockquote,
+  .m-markdown-small .info-blockquote,
+  .api-description .info-blockquote {
+    background: #f8f7fc;
+    border: 1px solid #ccced8;
+  }
+
+  .m-markdown .callout-icon,
+  .m-markdown-small .callout-icon,
+  .api-description .callout-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .m-markdown .warning-blockquote,
+  .m-markdown-small .warning-blockquote,
+  .api-description .warning-blockquote,
+  .m-markdown blockquote.warning,
+  .m-markdown-small blockquote.warning,
+  .api-description blockquote.warning {
     background: #fff2d4;
     border: 1px solid #ffb100;
   }
 
-  .m-markdown .danger-blockquote {
+  .m-markdown .danger-blockquote,
+  .m-markdown-small .danger-blockquote,
+  .api-description .danger-blockquote,
+  .m-markdown blockquote.danger,
+  .m-markdown-small blockquote.danger,
+  .api-description blockquote.danger {
     background: #fdefef;
     border: 1px solid #dc5a41;
   }
 
-  blockquote p{
+  .m-markdown blockquote > :not(.callout-icon),
+  .m-markdown-small blockquote > :not(.callout-icon),
+  .api-description blockquote > :not(.callout-icon) {
     grid-column: 2 / -1;
+    min-width: 0;
+    overflow-wrap: break-word;
     margin: 0;
+  }
+
+  .m-markdown blockquote h3,
+  .m-markdown-small blockquote h3 {
+    padding: 0;
+    font-size: var(--font-size-regular);
+    font-weight: 600;
+    line-height: 1.375em;
   }
 
   .m-markdown,
@@ -217,29 +250,52 @@ export default css`
   /* Markdown table */
 
   table {
-    border-collapse: collapse;
-    max-width: 100%;
-    overflow-x: auto;
-    display: inline-block;
-    margin: 16px 0;
-    border-radius: 4px;
-  }
-  
-  table thead {
-    border: 1px solid #e7e9ef;
-    font-weight: 500;
-  }
-  
-  table td,
-  table th {
-    font-size: 0.875em;
-    border: 1px solid #e7e9ef;
-    padding: 0.5em;
-  }
-  
-  table tbody tr:nth-of-type(even) {
-    background-color: #f8f7fc;
-  }
+  width: 100%;
+  table-layout: auto;
+  text-align: left;
+  margin: 1.5em 0;
+  font-size: 0.875em;
+  line-height: 1.7em;
+  border-collapse: collapse; 
+}
+
+table thead {
+  border-bottom: 1px solid #cbd5e1; 
+}
+
+table thead th {
+  font-weight: 600;
+  color: rgb(15, 23, 42); 
+  text-align: left;
+  vertical-align: bottom;
+  padding: 0 0.75em 0.75em 0.75em;
+}
+
+table thead th:first-of-type {
+  padding-left: 0;
+}
+
+table tbody tr {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+table tbody tr:last-of-type {
+  border-bottom: none; 
+}
+
+table tbody td {
+  vertical-align: baseline;
+  padding: 0.75em;
+}
+
+table tbody td:first-of-type {
+  padding-left: 0;
+}
+
+table td,
+table th {
+  min-width: 60px;
+}
 
   .m-markdown hr{
     border: 1px solid var(--border-color);

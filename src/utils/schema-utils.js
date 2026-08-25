@@ -638,7 +638,7 @@ function generateMarkdownForArrayAndObjectDescription(schema, level = 0) {
     if (schema.items.maxProperties) {
       itemsMarkdown = `${itemsMarkdown} <b>Max Properties:</b> ${schema.items.maxProperties}`;
     }
-    markdown = `${markdown} ⮕ ${itemsMarkdown} [ ${schema.items.description} ] `;
+    markdown = `${markdown} » ${itemsMarkdown} [ ${schema.items.description} ] `;
   }
   return markdown;
 }

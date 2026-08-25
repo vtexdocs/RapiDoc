@@ -1,4 +1,5 @@
 import { marked } from 'marked';
+import { calloutIcon, resolveCalloutType } from './renderBlockquote';
 
 function replacerBlocks(_match, textBefore, blockType, blockContent, textAfter) {
   let replaced = '';
@@ -38,9 +39,16 @@ function replacerBlocks(_match, textBefore, blockType, blockContent, textAfter) 
         replaced += marked(`## ${block.title}`);
         break;
 
-      case 'callout':
-        replaced += `<blockquote class=${block.type}><h3>${block.title ?? ''}</h3>${marked(block.body)}</blockquote>`;
+      case 'callout': {
+        const type = resolveCalloutType(block.type);
+        const title = block.title ? `<h3>${block.title}</h3>` : '';
+        if (type === 'info' || type === 'warning' || type === 'danger') {
+          replaced += `<blockquote class="${type}-blockquote">${calloutIcon(type)}${title}${marked(block.body)}</blockquote>`;
+        } else {
+          replaced += `<blockquote class="${type}">${title}${marked(block.body)}</blockquote>`;
+        }
         break;
+      }
 
       case 'embed':
         replaced += `\n\n${block.html}\n\n`;

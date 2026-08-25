@@ -2,12 +2,14 @@ import { LitElement, html, css } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-line import/extensions
 import { guard } from 'lit/directives/guard.js'; // eslint-disable-line import/extensions
 import { marked } from 'marked';
+import '../utils/renderBlockquote';
 import formatXml from 'xml-but-prettier';
 import Prism from 'prismjs';
 import TableStyles from '../styles/table-styles';
 import FlexStyles from '../styles/flex-styles';
 import InputStyles from '../styles/input-styles';
 import FontStyles from '../styles/font-styles';
+import InfoStyles from '../styles/info-styles';
 import BorderStyles from '../styles/border-styles';
 import TabStyles from '../styles/tab-styles';
 import PrismStyles from '../styles/prism-styles';
@@ -131,12 +133,18 @@ export default class ApiRequest extends LitElement {
       TableStyles,
       InputStyles,
       FontStyles,
+      InfoStyles,
       FlexStyles,
       BorderStyles,
       TabStyles,
       PrismStyles,
       PrismLanguagesStyles,
       css`
+        :host {
+          display: block;
+          width: 100%;
+          overflow: visible;
+        }
         *, *:before, *:after { box-sizing: border-box; }
         :where(button, input[type="checkbox"], [tabindex="0"]):focus-visible { box-shadow: var(--focus-shadow); }
         :where(input[type="text"], input[type="password"], select, textarea):focus-visible { border-color: var(--primary-color); }
@@ -283,13 +291,16 @@ export default class ApiRequest extends LitElement {
               </div>
             `
         }
-        ${this.pathDescription ? html`<div class="m-markdown"> ${unsafeHTML(marked(this.pathDescription))}</div>` : ''}
+        ${this.pathDescription ? html`<div class="m-markdown api-description"> ${unsafeHTML(marked(this.pathDescription))}</div>` : ''}
         ${guard([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('path'))}
         ${guard([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('query'))}
         ${this.requestBodyTemplate()}
         ${guard([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('header'))}
         ${guard([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('cookie'))}
         ${this.allowTry === 'false' ? '' : html`${this.apiCallTemplate()}`}
+        <h2 class="api-h2 row">
+          Responses
+        </h2>
         <api-response
         class = "${this.renderStyle}-mode"
         style = "width:100%;"
@@ -837,13 +848,13 @@ export default class ApiRequest extends LitElement {
 
     return html`
       <div class='request-body-container' data-selected-request-body-type="${this.selectedRequestBodyType}">
-        <div class="table-title top-gap row">
-          REQUEST BODY ${this.request_body.required ? html`<span class="mono-font" style='color:var(--red)'>*</span>` : ''} 
+        <h2 class="api-h2 row">
+          Request Body ${this.request_body.required ? html`<span class="mono-font" style='color:var(--red)'>*</span>` : ''} 
           <code style = "font-weight:normal; margin-left:5px"> ${this.selectedRequestBodyType}</code>
           <span style="flex:1"></span>
           ${reqBodyTypeSelectorHtml}
-        </div>
-        ${this.request_body.description ? html`<div class="m-markdown-mal" style="margin-bottom:12px">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
+        </h2>
+        ${this.request_body.description ? html`<div class="m-markdown" style="margin-bottom:12px">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
         
         ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose'))
           ? html`
@@ -1109,7 +1120,7 @@ export default class ApiRequest extends LitElement {
           ? checkSymbol()
           : copySymbol()}
       </button>
-        <pre class="code-container" style="white-space: pre-wrap; word-break: break-all; border: none;"><code>${unsafeHTML(Prism.highlight(this.codeExample.trim().replace(/\\$/, ''), Prism.languages[this.selectedLanguage], this.selectedLanguage))}</code></pre>
+        <pre class="code-container" style="border: none;"><code>${unsafeHTML(Prism.highlight(this.codeExample.trim().replace(/\\$/, ''), Prism.languages[this.selectedLanguage], this.selectedLanguage))}</code></pre>
       </div>
       `;
   }
@@ -1134,12 +1145,15 @@ export default class ApiRequest extends LitElement {
       }
     }
     return html`
-      <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 8px;">
-        ${this.codeExampleTemplate('flex')}
-        <div style="background: #F8F7FC; padding-inline: 32px;padding-block: 8px">
+      <div class="flex-btns">
+        <button class='clear-btn icon-btn' @click='${this.onTryClick}'>${playIcon()} Test method</button>
+        <button class="clear-btn icon-btn" part="btn btn-outline" @click="${this.clearResponseData}">${trashIcon()} Clear</button>
+      </div>
+      <div >
+        <div style=" padding-inline: 12px;padding-block: 8px">
           ${this.responseMessage
               ? html`
-                <div class="row" style="width:100%; height:max-content; background:#E7E9EE; border-radius:2px;padding-inline:4px;margin-bottom:4px">
+                <div class="row" style="width:100%; height:max-content; border-radius:2px;padding-inline:4px;margin-bottom:4px">
                   <div style="min-width:8px;min-height:8px;width:8px;height:8px;border-radius:50%;${this.responseBlobUrl || this.responseText ? 'border: 1px solid #79A479;background: #E6F2E6;' : 'border: 1px solid #DC4C43;background: #F0E6E4;'}"></div>
                   <div style="margin-left:4px; color:#4A596B; font-size:12px; font-weight:500;">${this.responseMessage}</div>
                 </div>`
@@ -1166,10 +1180,9 @@ export default class ApiRequest extends LitElement {
               }`
           }
         </div>
-      </div>
-      <div class="flex-btns">
-        <button class='clear-btn icon-btn' @click='${this.onTryClick}'>${playIcon()} Test method</button>
-        <button class="clear-btn icon-btn" part="btn btn-outline" @click="${this.clearResponseData}">${trashIcon()} Clear</button>
+      <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 8px;">
+        ${this.codeExampleTemplate('flex')}
+        </div>
       </div>`;
   }
 
