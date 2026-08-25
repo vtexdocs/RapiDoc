@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
-import { html } from 'lit'
+import { html } from 'lit';
 
 /* eslint-disable indent */
 export default function postmanIcon(dimensions) {
-  const width = dimensions?.width ?? 14
-  const height = dimensions?.height ?? 14
+  const width = dimensions?.width ?? 14;
+  const height = dimensions?.height ?? 14;
 
   return html`
     <svg
@@ -105,5 +105,5 @@ export default function postmanIcon(dimensions) {
         </g>
       </g>
     </svg>
-  `
+  `;
 }

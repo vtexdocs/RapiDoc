@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-line import/extensions
 import { marked } from 'marked';
-import { rapidocApiKey, downloadResource, viewResource } from '../utils/common-utils';
+import { rapidocApiKey } from '../utils/common-utils';
 import { pathSecurityTemplate } from './security-scheme-template';
 import codeSamplesTemplate from './code-samples-template';
 import callbackTemplate from './callback-template';

@@ -1,5 +1,5 @@
 import { render } from 'lit';
-import checkSymbol from "../components/assets/check-symbol";
+import checkSymbol from '../components/assets/check-symbol';
 
 /* For Delayed Event Handler Execution */
 export function debounce(fn, delay) {

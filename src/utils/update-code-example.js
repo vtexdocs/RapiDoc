@@ -1,6 +1,6 @@
 import HTTPSnippet from 'httpsnippet';
 import { json2xml } from './schema-utils';
-import { isSecuritySchemeIdValid } from './security-utils'
+import { isSecuritySchemeIdValid } from './security-utils';
 
 function buildFetchURL(requestPanelEl) {
   let fetchUrl = this.path;
@@ -336,25 +336,25 @@ function buildFetchHeaders(requestPanelEl) {
   }
 
   // Add Authentication Header if provided and necessary
-  let securitySchemes = this.security ? this.security : this.resolvedSpec.security;
+  const securitySchemes = this.security ? this.security : this.resolvedSpec.security;
   securitySchemes.forEach((scheme, id) => {
-    if (this.selectedAuthScheme !== id) return
+    if (this.selectedAuthScheme !== id) return;
     Object.keys(scheme).map((key) => {
-      const schemeKey = this.resolvedSpec.securitySchemes.find((s) => (s.securitySchemeId === key))
-      if (!isSecuritySchemeIdValid(this.security, schemeKey.securitySchemeId)) return
+      const schemeKey = this.resolvedSpec.securitySchemes.find((s) => (s.securitySchemeId === key));
+      if (!isSecuritySchemeIdValid(this.security, schemeKey.securitySchemeId)) return;
       if (schemeKey.in !== 'cookie') {
         reqHeaders.append(schemeKey.name, schemeKey.value);
         headers.push({ name: schemeKey.name, value: schemeKey.value });
       }
       if (schemeKey.in === 'cookie') {
-        reqCookieHeader.push({ name: schemeKey.name, value: schemeKey.value }); 
+        reqCookieHeader.push({ name: schemeKey.name, value: schemeKey.value });
       }
-    })
+    });
 
     // add cookie header
     if (reqCookieHeader.length > 0) {
       const cookie = reqCookieHeader.map((el) => `${el.name}=${el.value}`);
-      headers.push({ name: 'Cookie', value: cookie.join('; path=/')})
+      headers.push({ name: 'Cookie', value: cookie.join('; path=/') });
     }
   });
 
@@ -368,11 +368,11 @@ function buildFetchCookies(requestPanelEl) {
 
   cookieParamEls.forEach((el) => {
     if (!el.value) return;
-    
+
     cookies.push({ name: el.dataset.pname, value: el.value });
   });
-  
-  return { cookies }
+
+  return { cookies };
 }
 
 function decodeCurlyBrackets(url) {
@@ -394,7 +394,7 @@ export default function updateCodeExample(tryBtnEl) {
     queryString,
     headers,
     postData,
-    cookies
+    cookies,
   });
 
   snippet.requests[0].url = decodeCurlyBrackets(snippet.requests[0].url);

@@ -210,19 +210,17 @@ export default class SchemaTable extends LitElement {
     let isOneOfLabel = false;
     if (key.startsWith('::ONE~OF') || key.startsWith('::ANY~OF')) {
       keyLabel = key.replace('::', '').replace('~', ' ');
-      description = "Click <code>+</code> to expand or <code>-</code> to hide each valid schema."
+      description = 'Click <code>+</code> to expand or <code>-</code> to hide each valid schema.';
       isOneOfLabel = true;
     } else if (key.startsWith('::OPTION')) {
       const parts = key.split('~');
       if (parts[2]) {
         keyLabel = parts[2];
         keyDescr = '';
-      }
-      else {
+      } else {
         keyLabel = parts[1];
         keyDescr = parts[2];
       }
-      
     } else {
       keyLabel = key;
     }

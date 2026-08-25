@@ -27,5 +27,5 @@ export default function copySymbol() {
         stroke-linejoin="round"
       />
     </svg>
-  `
+  `;
 }

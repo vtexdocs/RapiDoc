@@ -65,6 +65,6 @@ export default function renderBlockquote(text) {
 }
 
 marked.Renderer.prototype.blockquote = renderBlockquote;
-marked.Renderer.prototype.html = function html(html) {
-  return decorateDefaultBlockquotes(html);
+marked.Renderer.prototype.html = function htmlRenderer(htmlContent) {
+  return decorateDefaultBlockquotes(htmlContent);
 };

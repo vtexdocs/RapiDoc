@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
-import { html } from 'lit'
+import { html } from 'lit';
 
 /* eslint-disable indent */
 export default function iconCaret(dimensions) {
-  const width = dimensions?.width ?? 24
-  const height = dimensions?.height ?? 24
+  const width = dimensions?.width ?? 24;
+  const height = dimensions?.height ?? 24;
   return html`
     <svg
       width=${width}
@@ -21,5 +21,5 @@ export default function iconCaret(dimensions) {
         stroke-linejoin="round"
       />
     </svg>
-  `
+  `;
 }

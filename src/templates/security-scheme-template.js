@@ -396,7 +396,7 @@ function handleApiKeyChange(e, securitySchemeId, apiKey) {
 }
 
 function handleSecuritySchemeChange(e) {
-  const newSelectedAuthScheme = parseInt(e.target.value);
+  const newSelectedAuthScheme = parseInt(e.target.value, 10);
   this.selectedAuthScheme = newSelectedAuthScheme;
 }
 
@@ -432,7 +432,7 @@ function selectSecuritySchemeTemplate() {
           return html`
             <option value=${id}>
               ${id + 1}. ${getSchemeTypes.call(this, scheme)}
-            </option>`
+            </option>`;
         })}
       </select>
     </div>
@@ -459,7 +459,7 @@ export default function securitySchemeTemplate() {
             return html`
             ${id === this.selectedAuthScheme ? html`<div>
               ${Object.keys(scheme).map((key) => {
-                const v = this.resolvedSpec.securitySchemes.find((s) => (s.securitySchemeId === key))
+                const v = this.resolvedSpec.securitySchemes.find((s) => (s.securitySchemeId === key));
                 if (!isSecuritySchemeIdValid(this.security, v.securitySchemeId)) return;
                 return html`
                   <div id="security-scheme-${v.securitySchemeId}" class="right-box-container ${v.type.toLowerCase()}">
@@ -533,11 +533,12 @@ export default function securitySchemeTemplate() {
                       `
                     : ''
                   }
-                `})
+                `;
+})
               }
               </div>` : ''
             }
-            `
+            `;
           })}
         </div>
         <slot name="auth"></slot>

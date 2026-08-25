@@ -1,7 +1,7 @@
-import { LitElement, css, html } from 'lit'
-import postmanIcon from './assets/postman-icon'
-import openapiIcon from './assets/openapi-icon'
-import iconCaret from './assets/icon-caret'
+import { LitElement, css, html } from 'lit';
+import postmanIcon from './assets/postman-icon';
+import openapiIcon from './assets/openapi-icon';
+import iconCaret from './assets/icon-caret';
 import { downloadResource, viewResource } from '../utils/common-utils';
 
 class ApiActionsMenu extends LitElement {
@@ -9,35 +9,35 @@ class ApiActionsMenu extends LitElement {
     specUrl: { type: String },
     postmanUrl: { type: String },
     open: { type: Boolean, reflect: true },
-  }
+  };
 
   constructor() {
-    super()
-    this.specUrl = ''
-    this.postmanUrl = ''
-    this.open = false
+    super();
+    this.specUrl = '';
+    this.postmanUrl = '';
+    this.open = false;
 
     // fechar ao clicar fora / ESC (opcional mas útil)
-    this._onDocClick = (e) => {
-      if (!this.open) return
-      const path = e.composedPath()
-      if (!path.includes(this)) this.open = false
-    }
-    this._onKeyDown = (e) => {
-      if (e.key === 'Escape') this.open = false
-    }
+    this.onDocClick = (e) => {
+      if (!this.open) return;
+      const path = e.composedPath();
+      if (!path.includes(this)) this.open = false;
+    };
+    this.onKeyDown = (e) => {
+      if (e.key === 'Escape') this.open = false;
+    };
   }
 
   connectedCallback() {
-    super.connectedCallback()
-    document.addEventListener('click', this._onDocClick)
-    document.addEventListener('keydown', this._onKeyDown, true)
+    super.connectedCallback();
+    document.addEventListener('click', this.onDocClick);
+    document.addEventListener('keydown', this.onKeyDown, true);
   }
 
   disconnectedCallback() {
-    document.removeEventListener('click', this._onDocClick)
-    document.removeEventListener('keydown', this._onKeyDown, true)
-    super.disconnectedCallback()
+    document.removeEventListener('click', this.onDocClick);
+    document.removeEventListener('keydown', this.onKeyDown, true);
+    super.disconnectedCallback();
   }
 
   static styles = css`
@@ -131,32 +131,31 @@ class ApiActionsMenu extends LitElement {
     :host([open]) .caret {
       transform: rotate(180deg);
     }
-  `
+  `;
 
-  _toggleMenu() {
-    this.open = !this.open
+  toggleMenu() {
+    this.open = !this.open;
   }
 
   render() {
     return html`
       <button
         class="main-btn"
-        @click=${() =>
-          downloadResource(this.postmanUrl, 'postman-collection.json')}
+        @click=${() => downloadResource(this.postmanUrl, 'postman-collection.json')}
         ?disabled=${!this.postmanUrl}
       >
         ${postmanIcon()} Download Postman collection
       </button>
 
-      <button class="toggle-btn" @click=${this._toggleMenu}>
+      <button class="toggle-btn" @click=${this.toggleMenu}>
         <span class="caret">${iconCaret()}</span>
       </button>
 
       ${this.open
-        ? html`
+    ? html`
             <div class="menu">
               ${this.postmanUrl
-                ? html`
+    ? html`
                     <button
                       class="item"
                       @click=${() => viewResource(this.postmanUrl)}
@@ -165,13 +164,12 @@ class ApiActionsMenu extends LitElement {
                     </button>
                     <div class="divider"></div>
                   `
-                : null}
+    : null}
               ${this.specUrl
-                ? html`
+    ? html`
                     <button
                       class="item"
-                      @click=${() =>
-                        downloadResource(this.specUrl, 'openapi-spec.json')}
+                      @click=${() => downloadResource(this.specUrl, 'openapi-spec.json')}
                     >
                       <span class="icon">${openapiIcon()}</span>
                       Download OpenAPI spec
@@ -184,12 +182,12 @@ class ApiActionsMenu extends LitElement {
                       View OpenAPI spec
                     </button>
                   `
-                : null}
+    : null}
             </div>
           `
-        : null}
-    `
+    : null}
+    `;
   }
 }
 
-customElements.define('api-dropdown-actions', ApiActionsMenu)
+customElements.define('api-dropdown-actions', ApiActionsMenu);
