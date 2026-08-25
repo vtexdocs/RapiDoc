@@ -135,15 +135,6 @@ export default class SchemaTable extends LitElement {
       <div class="table ${this.schemaDescriptionExpanded === 'true' ? 'expanded-all-descr' : 'collapsed-all-descr'}" @click="${(e) => this.handleAllEvents(e)}">
         <div class='toolbar'>
           <div class="toolbar-item schema-root-type ${this.data?.['::type'] || ''} "> ${this.data?.['::type'] || ''} </div>
-          ${(this.data && this.allowSchemaDescriptionExpandToggle === 'true')
-            ? html`
-              <div style="flex:1"></div>
-              <div part="schema-multiline-toggle" class='toolbar-item schema-multiline-toggle' > 
-                ${this.schemaDescriptionExpanded === 'true' ? 'Single line description' : 'Multiline description'}
-              </div>
-            `
-            : ''
-          }
         </div>
         ${this.data?.['::description']
           ? html`<span part="schema-description" class='m-markdown'> ${unsafeHTML(marked(this.data['::description'] || ''))}</span>`

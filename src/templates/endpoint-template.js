@@ -171,7 +171,7 @@ function endpointBodyTemplate(path) {
           <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
         </div>
       </div>
-      ${path.description ? html`<div class="m-markdown"> ${unsafeHTML(marked(path.description))}</div>` : ''}
+      ${path.description ? html`<div class="m-markdown api-description"> ${unsafeHTML(marked(path.description))}</div>` : ''}
       <slot name="${path.elementId}"></slot>
       ${pathSecurityTemplate.call(this, path.security)}
       ${codeSampleTabPanel}
@@ -182,9 +182,15 @@ function endpointBodyTemplate(path) {
           class = "${this.renderStyle}-mode ${this.layout}-layout"
           style = "width:100%;"
           schema-short-summary="${path.shortSummary}"
+          short-summary = "${path.shortSummary}"
+          tag-name = ""
+          doc-url = ""
           webhook = "${path.isWebhook}"
           method = "${path.method}"
           path = "${path.path}"
+          path-description = "${path.description}"
+          .responses = "${path.responses}"
+          default-schema-tab = "${this.defaultSchemaTab}"
           .security = "${path.security}"
           .parameters = "${path.parameters}"
           .request_body = "${path.requestBody}"

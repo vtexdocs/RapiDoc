@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-import { html, nothing } from 'lit';
+import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-line import/extensions
 import { marked } from 'marked';
 import { isSecuritySchemeIdValid } from '../utils/security-utils';
@@ -418,10 +418,12 @@ function getSchemeTypes(scheme) {
 }
 
 function selectSecuritySchemeTemplate() {
+  if (!this.resolvedSpec.security || this.resolvedSpec.security.length <= 1) {
+    return '';
+  }
   return html`
     <div class="right-box-select">
       <select
-        disabled=${this.resolvedSpec.security.length <= 1 || nothing}
         name="selectSecurityScheme"
         style="width: 100%;"
         @change=${(e) => { handleSecuritySchemeChange.call(this, e); }}
@@ -433,7 +435,9 @@ function selectSecuritySchemeTemplate() {
             </option>`
         })}
       </select>
-    </div>`
+    </div>
+    <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 12px 0px;">
+  `;
 }
 
 export default function securitySchemeTemplate() {
@@ -451,7 +455,6 @@ export default function securitySchemeTemplate() {
         <div class="right-box-title">Authentication</div>
         <div id="auth-table" class="right-box-content">
           ${selectSecuritySchemeTemplate.call(this)}
-          <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 24px 0px;">
           ${this.resolvedSpec.security.map((scheme, id) => {
             return html`
             ${id === this.selectedAuthScheme ? html`<div>

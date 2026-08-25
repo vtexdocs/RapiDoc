@@ -164,10 +164,10 @@ export default function setTheme(baseTheme, theme = {}) {
       lightPink: theme.lightPink ? theme.lightPink : '#ffb2b2',
       vtexPink: theme.vtexPink ? theme.vtexPink : '#D71D55',
 
-      green: theme.green || '#690',
+      green: theme.green || '#79A479',
       lightGreen: theme.lightGreen || '#fbfff0',
 
-      blue: theme.blue || '#47AFE8',
+      blue: theme.blue || '#2953B2',
       lightBlue: theme.lightBlue || '#eff8fd',
 
       orange: theme.orange || '#FF9900',
@@ -227,7 +227,7 @@ export default function setTheme(baseTheme, theme = {}) {
     --resp-area-height: ${this.responseAreaHeight};
     --font-size-small:  ${this.fontSize === 'default' ? '12px' : (this.fontSize === 'large' ? '13px' : '14px')};
     --font-size-mono:   ${this.fontSize === 'default' ? '13px' : (this.fontSize === 'large' ? '14px' : '15px')};
-    --font-size-regular: ${this.fontSize === 'default' ? '16px' : (this.fontSize === 'large' ? '17px' : '18px')};
+    --font-size-regular: ${this.fontSize === 'default' ? '14px' : (this.fontSize === 'large' ? '17px' : '18px')};
     --dialog-z-index: 1000;
 
     --focus-shadow: 0 0 0 1px transparent, 0 0 0 3px ${newTheme.primaryColorTrans};

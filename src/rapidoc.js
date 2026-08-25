@@ -164,10 +164,10 @@ export default class RapiDoc extends LitElement {
         flex-direction: column;
         min-width:360px;
         width:100%;
-        height:100%;
+        height:auto;
         margin:0;
         padding:0;
-        overflow: hidden;
+        overflow: visible;
         letter-spacing:normal;
         color:var(--fg);
         background-color:var(--bg);
@@ -177,9 +177,8 @@ export default class RapiDoc extends LitElement {
       :where(input[type="text"], input[type="password"], select, textarea):focus-visible { border-color: var(--primary-color); }
     .body {
         display:flex;
-        height:100%;
+        height:auto;
         width:100%;
-        overflow:hidden;
         max-width: 2087px;
       }
       .main-content { 
@@ -187,9 +186,8 @@ export default class RapiDoc extends LitElement {
         padding: 0; 
         display:block;
         flex:1;
-        height:100%;
-        overflow-y: auto;
-        overflow-x: hidden;
+        height:auto;
+        overflow: visible;
         scrollbar-width: thin;
         scrollbar-color: var(--border-color) transparent;
       }
@@ -291,7 +289,7 @@ export default class RapiDoc extends LitElement {
       }
       .expanded-endpoint-body { 
         position: relative;
-        padding: 6px 0px; 
+        padding: 0px; 
       }
       .expanded-endpoint-body .tag-description {
         background: var(--code-bg);
@@ -388,22 +386,9 @@ export default class RapiDoc extends LitElement {
         .section-gap { 
           padding: 0 0 0 24px; 
         }
-        .section-gap--focused-mode {
-          padding: 24px 8px; 
-        }
-        .section-gap--read-mode { 
-          padding: 24px 8px; 
-        }
         .endpoint-body {
           position: relative;
           padding:36px 0 48px 0;
-        }
-      }
-
-      @media (min-width: 2560px) {
-        .body {
-          padding-left: 316px;
-          padding-right: 221px;
         }
       }
 
@@ -411,12 +396,6 @@ export default class RapiDoc extends LitElement {
         .nav-bar {
           width: ${unsafeCSS(this.fontSize === 'default' ? '300px' : this.fontSize === 'large' ? '315px' : '330px')};
           display:flex;
-        }
-        .section-gap--focused-mode { 
-          padding: 12px 80px 12px 80px; 
-        }
-        .section-gap--read-mode { 
-          padding: 24px 80px 12px 80px; 
         }
       }`,
       CustomStyles,

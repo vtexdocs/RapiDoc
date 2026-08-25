@@ -70,11 +70,6 @@ export class ContentCopyButton extends LitElement {
                         </div>
                     </button>
                 </div>
-                ${
-                    this.showToast
-                    ? html`<toast-component tone="positive" message="Copied to clipboard"></toast-component>`
-                    : ''
-                }
         `;
     }
 

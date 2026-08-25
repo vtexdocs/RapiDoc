@@ -2,18 +2,21 @@ import { LitElement, html, css } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-line import/extensions
 import { guard } from 'lit/directives/guard.js'; // eslint-disable-line import/extensions
 import { marked } from 'marked';
+import '../utils/renderBlockquote';
 import formatXml from 'xml-but-prettier';
 import Prism from 'prismjs';
 import TableStyles from '../styles/table-styles';
 import FlexStyles from '../styles/flex-styles';
 import InputStyles from '../styles/input-styles';
 import FontStyles from '../styles/font-styles';
+import InfoStyles from '../styles/info-styles';
 import BorderStyles from '../styles/border-styles';
 import TabStyles from '../styles/tab-styles';
 import PrismStyles from '../styles/prism-styles';
 import PrismLanguagesStyles from '../styles/prism-languages-styles';
 import CustomStyles from '../styles/custom-styles';
 import { copyToClipboard, downloadResource, viewResource } from '../utils/common-utils';
+import { joinURLandPath } from '../utils/url';
 import { schemaInObjectNotation,
   getTypeInfo,
   generateExample,
@@ -31,6 +34,10 @@ import securitySchemeTemplate from '../templates/security-scheme-template';
 import languagePickerTemplate from '../templates/language-picker-template';
 import updateCodeExample from '../utils/update-code-example';
 import copySymbol from './assets/copy-symbol';
+import checkSymbol from './assets/check-symbol';
+import playIcon from './assets/play-icon';
+import trashIcon from './assets/trash-icon';
+import "./api-dropdown-actions"
 
 export default class ApiRequest extends LitElement {
   constructor() {
@@ -50,6 +57,7 @@ export default class ApiRequest extends LitElement {
     this.activeParameterSchemaTabs = {};
     this.showCurlBeforeTry = true;
     this.selectedLanguage = 'shell';
+    this._copied = false;
   }
 
   static get properties() {
@@ -61,6 +69,11 @@ export default class ApiRequest extends LitElement {
       servers: { type: Array },
       method: { type: String },
       path: { type: String },
+      pathDescription: { type: String, attribute: 'path-description' },
+      shortSummary: { type: String, attribute: 'short-summary' },
+      tagName: { type: String, attribute: 'tag-name' },
+      responses: { type: Object },
+      defaultSchemaTab: { type: String, attribute: 'default-schema-tab' },
       security: { type: Array },
       parameters: { type: Array },
       request_body: { type: Object },
@@ -105,8 +118,13 @@ export default class ApiRequest extends LitElement {
       selectedLanguage: { type: String },
 
       // open-api file download
+      postmanUrl: { type: String, attribute: 'postman-url' },
       specUrl: { type: String, attribute: 'spec-url' },
       allowSpecFileDownload: { type: String, attribute: 'allow-spec-file-download' },
+
+      _copied: { state: true },
+      codeExample: { type: String },
+      selectedLanguage: { type: String },
     };
   }
 
@@ -115,20 +133,22 @@ export default class ApiRequest extends LitElement {
       TableStyles,
       InputStyles,
       FontStyles,
+      InfoStyles,
       FlexStyles,
       BorderStyles,
       TabStyles,
       PrismStyles,
       PrismLanguagesStyles,
       css`
+        :host {
+          display: block;
+          width: 100%;
+          overflow: visible;
+        }
         *, *:before, *:after { box-sizing: border-box; }
         :where(button, input[type="checkbox"], [tabindex="0"]):focus-visible { box-shadow: var(--focus-shadow); }
         :where(input[type="text"], input[type="password"], select, textarea):focus-visible { border-color: var(--primary-color); }
         tag-input:focus-within { outline: 1px solid;}
-        .read-mode {
-          border-top: 1px solid #E7E9EE;
-          margin-top: 24px;
-        }
 
         .param-name {
           font-size: 14px;
@@ -239,15 +259,65 @@ export default class ApiRequest extends LitElement {
   }
 
   render() {
+    const docUrl = `https://developers.vtex.com/docs/api-reference/${this.specUrl.split('/').filter(Boolean).pop()}`;
+
     return html`
     <div class="row-api regular-font request-panel ${'read focused'.includes(this.renderStyle) || this.callback === 'true' ? 'read-mode' : 'view-mode'}">
       <div class="row-api-left">
+       <div style="display:flex; justify-content:space-between; flex-wrap: wrap; align-items: center; margin-top: 32px">
+        <div style="display:flex; justify-content:space-between; flex-wrap: wrap;">
+          ${(this.renderStyle === 'focused' && this.tagName !== 'General ⦂') ? html`
+          <h3 class="operation-tag" style="color: #6b7785" part="section-operation-tag"> <a href="${docUrl}" style="text-decoration: none; color: #6b7785">${this.resolvedSpec.info.title}</a>  ›  ${this.tagName} </h3>
+          ` : ''}
+        </div>
+
+        <api-dropdown-actions
+          .specUrl=${(this.specUrl && this.allowSpecFileDownload) && this.specUrl}
+          .postmanUrl=${this.postmanUrl}>
+        </api-dropdown-actions>  
+       </div>
+
+        <h2 part="section-operation-summary"> ${this.shortSummary || `${this.method.toUpperCase()} ${this.path}`}</h2>
+        ${this.webhook === 'true'
+          ? html`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>`
+          : html`
+              <div class='mono-font regular-font-size label-operation-container' part="section-operation-webhook-method">
+                <div class='label-operation-method-container' style='border-color: var(--${this.method}-border-color); background-color: var(--${this.method}-bg-color);'>
+                  <span part="label-operation-method" class='regular-font upper method-fg bold-text ${this.method}'>${this.method}</span>
+                </div>
+                <div class='label-operation-path-container'>
+                  <content-copy-button id='${this.method}${this.path}' content='${joinURLandPath(this.selectedServer.url, this.path)}'></content-copy-button>
+                </div>
+              </div>
+            `
+        }
+        ${this.pathDescription ? html`<div class="m-markdown api-description"> ${unsafeHTML(marked(this.pathDescription))}</div>` : ''}
         ${guard([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('path'))}
         ${guard([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('query'))}
         ${this.requestBodyTemplate()}
         ${guard([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('header'))}
         ${guard([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('cookie'))}
         ${this.allowTry === 'false' ? '' : html`${this.apiCallTemplate()}`}
+        <h2 class="api-h2 row">
+          Responses
+        </h2>
+        <api-response
+        class = "${this.renderStyle}-mode"
+        style = "width:100%;"
+        webhook = "${this.webhook}"
+        .responses = "${this.responses}"
+        render-style = "${this.renderStyle}"
+        schema-style = "${this.schemaStyle}"
+        active-schema-tab = "${this.defaultSchemaTab}"
+        schema-expand-level = "${this.schemaExpandLevel}"
+        schema-description-expanded = "${this.schemaDescriptionExpanded}"
+        allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
+        schema-hide-read-only = "${this.schemaHideReadOnly === 'never' ? 'false' : this.webhook === 'true' ? 'true' : 'false'}"
+        schema-hide-write-only = "${this.schemaHideWriteOnly === 'never' ? 'false' : this.webhook === 'true' ? 'false' : 'true'}"
+        selected-status = "${Object.keys(this.responses || {})[0] || ''}"
+        exportparts = "btn:btn, btn-response-status:btn-response-status, btn-selected-response-status:btn-selected-response-status, btn-fill:btn-fill, btn-copy:btn-copy,
+        schema-description:schema-description, schema-multiline-toggle:schema-multiline-toggle"
+      > </api-response>
       </div>
       <div class="row-api-right">
         ${languagePickerTemplate.call(this)}
@@ -554,7 +624,7 @@ export default class ApiRequest extends LitElement {
         >
         </bread-crumbs>
       </div>
-      <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 24px 0px;">
+      <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 12px 0px;">
       <div style="display:block; overflow-x:auto; max-width:100%;padding-inline: 16px;">
         <div style="width:100%; display:flex; flex-direction: column;">
           ${tableRows}
@@ -778,13 +848,13 @@ export default class ApiRequest extends LitElement {
 
     return html`
       <div class='request-body-container' data-selected-request-body-type="${this.selectedRequestBodyType}">
-        <div class="table-title top-gap row">
-          REQUEST BODY ${this.request_body.required ? html`<span class="mono-font" style='color:var(--red)'>*</span>` : ''} 
+        <h2 class="api-h2 row">
+          Request Body ${this.request_body.required ? html`<span class="mono-font" style='color:var(--red)'>*</span>` : ''} 
           <code style = "font-weight:normal; margin-left:5px"> ${this.selectedRequestBodyType}</code>
           <span style="flex:1"></span>
           ${reqBodyTypeSelectorHtml}
-        </div>
-        ${this.request_body.description ? html`<div class="m-markdown-mal" style="margin-bottom:12px">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
+        </h2>
+        ${this.request_body.description ? html`<div class="m-markdown" style="margin-bottom:12px">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
         
         ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose'))
           ? html`
@@ -1026,11 +1096,31 @@ export default class ApiRequest extends LitElement {
     `;
   }
 
+  async _copyCode(code) {
+    try {
+      await navigator.clipboard.writeText(code);
+      this._copied = true;
+      setTimeout(() => (this._copied = false), 3000);
+    } catch (err) {
+      console.error('Unable to copy', err);
+    }
+  }
+
   codeExampleTemplate(display = 'flex') {
+    const code = this.codeExample.replace(/\\$/, '');
     return html`
       <div class="col m-markdown" style="flex:1; display:${display}; position:relative; max-width: 100%;">
-        <button class="copy-code" style = "position:absolute; top:12px; right:8px" @click='${(e) => { copyToClipboard(this.codeExample.replace(/\\$/, ''), e); }}' part="btn btn-fill"> ${copySymbol()} </button>
-        <pre class="code-container" style="white-space:pre; border: none;"><code>${unsafeHTML(Prism.highlight(this.codeExample.trim().replace(/\\$/, ''), Prism.languages[this.selectedLanguage], this.selectedLanguage))}</code></pre>
+      <button
+        class="copy-code"
+        style="position:absolute; top:12px; right:32px"
+        part="btn btn-fill"
+        @click=${() => this._copyCode(code)}
+      >
+        ${this._copied
+          ? checkSymbol()
+          : copySymbol()}
+      </button>
+        <pre class="code-container" style="border: none;"><code>${unsafeHTML(Prism.highlight(this.codeExample.trim().replace(/\\$/, ''), Prism.languages[this.selectedLanguage], this.selectedLanguage))}</code></pre>
       </div>
       `;
   }
@@ -1055,14 +1145,15 @@ export default class ApiRequest extends LitElement {
       }
     }
     return html`
-      <button class='clear-btn m-btn m-btn-primary' style="margin-bottom: 16px" @click='${this.onTryClick}'>TEST METHOD</button>
-      <button class="clear-btn m-btn m-btn-secondary" part="btn btn-outline" @click="${this.clearResponseData}">CLEAR RESPONSE</button>
-      <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 24px;">
-        ${this.codeExampleTemplate('flex')}
-        <div style="background: #F8F7FC; padding-inline: 32px;padding-block: 16px">
+      <div class="flex-btns">
+        <button class='clear-btn icon-btn' @click='${this.onTryClick}'>${playIcon()} Test method</button>
+        <button class="clear-btn icon-btn" part="btn btn-outline" @click="${this.clearResponseData}">${trashIcon()} Clear</button>
+      </div>
+      <div >
+        <div style=" padding-inline: 12px;padding-block: 8px">
           ${this.responseMessage
               ? html`
-                <div class="row" style="width:100%; height:max-content; background:#E7E9EE; border-radius:2px;padding-inline:4px;margin-bottom:4px">
+                <div class="row" style="width:100%; height:max-content; border-radius:2px;padding-inline:4px;margin-bottom:4px">
                   <div style="min-width:8px;min-height:8px;width:8px;height:8px;border-radius:50%;${this.responseBlobUrl || this.responseText ? 'border: 1px solid #79A479;background: #E6F2E6;' : 'border: 1px solid #DC4C43;background: #F0E6E4;'}"></div>
                   <div style="margin-left:4px; color:#4A596B; font-size:12px; font-weight:500;">${this.responseMessage}</div>
                 </div>`
@@ -1081,13 +1172,16 @@ export default class ApiRequest extends LitElement {
               </div>`
             : html`
               ${this.responseText ? html`
-                <div class="tab-content col m-markdown" style="max-height:500px; flex:1; display:flex;" >
+                <div class="tab-content col m-markdown" style="max-height:300px; flex:1; display:flex;" >
                   <button class="copy-code" style="position:absolute; top:12px; right:16px" @click='${(e) => { copyToClipboard(this.responseText, e); }}' part="btn btn-fill"> ${copySymbol()} </button>
                   <pre style="display:flex; white-space:pre; min-height:50px; height:auto; resize:vertical; overflow:auto">${responseContent}</pre>
                 </div>`
                 : ''
               }`
           }
+        </div>
+      <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 8px;">
+        ${this.codeExampleTemplate('flex')}
         </div>
       </div>`;
   }
