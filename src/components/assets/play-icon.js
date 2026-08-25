@@ -3,8 +3,8 @@ import { html } from 'lit';
 
 /* eslint-disable indent */
 export default function playIcon(dimensions) {
-  const width = dimensions?.width ?? 12
-  const height = dimensions?.height ?? 12
+  const width = dimensions?.width ?? 12;
+  const height = dimensions?.height ?? 12;
   return html`
     <svg
       width=${width}
@@ -20,5 +20,5 @@ export default function playIcon(dimensions) {
         stroke-linejoin="round"
       />
     </svg>
-  `
+  `;
 }

@@ -95,7 +95,7 @@ export default function focusedEndpointTemplate() {
     if (selectedPathObj) {
       // In focused mode we must expand the nav-bar tag element if it is collapsed
       if (selectedPathObj.servers && selectedPathObj.servers.length > 0) {
-        setApiServer.call(this, selectedPathObj.servers[0].url)
+        setApiServer.call(this, selectedPathObj.servers[0].url);
       }
       const newNavEl = this.shadowRoot.getElementById(`link-${focusElId}`);
       expandCollapseNavBarTag(newNavEl, 'expand');

@@ -15069,41 +15069,74 @@ var prism_csharp = __webpack_require__(9016);
     font-size: calc(var(--font-size-mono) - 1px);
   }
 
-  .m-markdown blockquote {
+  .m-markdown blockquote,
+  .m-markdown-small blockquote,
+  .api-description blockquote {
     display: grid;
+    box-sizing: border-box;
     padding: 20px;
     gap: 0px 20px;
     width: 100%;
+    max-width: 100%;
     margin: 20px 0;
     border-radius: 4px;
-    align-items: center;
-    grid-template-columns: 20px 1fr;
-  }
-
-  .m-markdown .callout-icon {
-    display: inline-block;
-    flex-shrink: 0;
-    grid-row: 1;
-  }
-
-  .m-markdown .info-blockquote {
+    align-items: start;
+    grid-template-columns: 20px minmax(0, 1fr);
     background: #f8f7fc;
     border: 1px solid #ccced8;
   }
 
-  .m-markdown .warning-blockquote {
+  .m-markdown .info-blockquote,
+  .m-markdown-small .info-blockquote,
+  .api-description .info-blockquote {
+    background: #f8f7fc;
+    border: 1px solid #ccced8;
+  }
+
+  .m-markdown .callout-icon,
+  .m-markdown-small .callout-icon,
+  .api-description .callout-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .m-markdown .warning-blockquote,
+  .m-markdown-small .warning-blockquote,
+  .api-description .warning-blockquote,
+  .m-markdown blockquote.warning,
+  .m-markdown-small blockquote.warning,
+  .api-description blockquote.warning {
     background: #fff2d4;
     border: 1px solid #ffb100;
   }
 
-  .m-markdown .danger-blockquote {
+  .m-markdown .danger-blockquote,
+  .m-markdown-small .danger-blockquote,
+  .api-description .danger-blockquote,
+  .m-markdown blockquote.danger,
+  .m-markdown-small blockquote.danger,
+  .api-description blockquote.danger {
     background: #fdefef;
     border: 1px solid #dc5a41;
   }
 
-  blockquote p{
+  .m-markdown blockquote > :not(.callout-icon),
+  .m-markdown-small blockquote > :not(.callout-icon),
+  .api-description blockquote > :not(.callout-icon) {
     grid-column: 2 / -1;
+    min-width: 0;
+    overflow-wrap: break-word;
     margin: 0;
+  }
+
+  .m-markdown blockquote h3,
+  .m-markdown-small blockquote h3 {
+    padding: 0;
+    font-size: var(--font-size-regular);
+    font-weight: 600;
+    line-height: 1.375em;
   }
 
   .m-markdown,
@@ -15210,29 +15243,52 @@ var prism_csharp = __webpack_require__(9016);
   /* Markdown table */
 
   table {
-    border-collapse: collapse;
-    max-width: 100%;
-    overflow-x: auto;
-    display: inline-block;
-    margin: 16px 0;
-    border-radius: 4px;
-  }
-  
-  table thead {
-    border: 1px solid #e7e9ef;
-    font-weight: 500;
-  }
-  
-  table td,
-  table th {
-    font-size: 0.875em;
-    border: 1px solid #e7e9ef;
-    padding: 0.5em;
-  }
-  
-  table tbody tr:nth-of-type(even) {
-    background-color: #f8f7fc;
-  }
+  width: 100%;
+  table-layout: auto;
+  text-align: left;
+  margin: 1.5em 0;
+  font-size: 0.875em;
+  line-height: 1.7em;
+  border-collapse: collapse; 
+}
+
+table thead {
+  border-bottom: 1px solid #cbd5e1; 
+}
+
+table thead th {
+  font-weight: 600;
+  color: rgb(15, 23, 42); 
+  text-align: left;
+  vertical-align: bottom;
+  padding: 0 0.75em 0.75em 0.75em;
+}
+
+table thead th:first-of-type {
+  padding-left: 0;
+}
+
+table tbody tr {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+table tbody tr:last-of-type {
+  border-bottom: none; 
+}
+
+table tbody td {
+  vertical-align: baseline;
+  padding: 0.75em;
+}
+
+table tbody td:first-of-type {
+  padding-left: 0;
+}
+
+table td,
+table th {
+  min-width: 60px;
+}
 
   .m-markdown hr{
     border: 1px solid var(--border-color);
@@ -15536,6 +15592,8 @@ input[type="checkbox"]:checked:after {
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-evenly;
+    max-width: 100vw;
+    box-sizing: border-box;
   }
   .row {
     align-items: center;
@@ -15556,15 +15614,17 @@ input[type="checkbox"]:checked:after {
     flex: 1;
     justify-content: flex-start;
     position: sticky;
-    top: 0;
+    top: 5rem;
     align-self: flex-start;
+    min-height: calc(100vh - 5rem);
+    overflow-y: auto;
   }
   .row-api-right-box {
     text-align: left;
     direction: ltr;
     margin-top: 24px;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
   .row-api-right-box:first-child {
     margin-top: 12px;
@@ -15584,10 +15644,12 @@ input[type="checkbox"]:checked:after {
 
     .row-api-left,
     .row-api-right {
-      max-width: unset;
-      width: 100%;
+      max-width: 100%;
       border: none;
       padding: 10px;
+      position: static;
+      max-height: none;
+      overflow: visible;
     }
   }
 `);
@@ -16298,6 +16360,152 @@ pre[class*="language-"] {
   content: "";
   width: 0px;
 }
+
+.api-description {
+  font-size: 1em;
+  line-height: 1.75em;
+  width: 100%;
+  color: rgb(51, 65, 85);
+}
+
+.api-description p,
+.api-description span,
+.api-description li {
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.api-description a {
+  color: #E31C58;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.api-description ul {
+  padding-left: 1.5em;
+  padding-inline-start: 1.5em;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  list-style-type: disc;
+}
+
+.api-description ul li,
+.api-description ol li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.api-description ul ul,
+.api-description ul ol,
+.api-description ol ul,
+.api-description ol ol {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.api-description ol {
+  padding-left: 1.5em;
+  padding-inline-start: 1.5em;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+
+.api-description header {
+  margin-top: 16px;
+  border-bottom: 1px solid #E7E9EE;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+}
+
+.api-description h2,
+.api-description h3,
+.api-description h4,
+.api-description h5,
+.api-description h6,
+.api-h2 {
+  padding-top: 0;
+  overflow-wrap: anywhere;
+}
+
+.api-description h2,
+.api-h2 {
+  font-size: 1.375em;
+  line-height: 1.3em;
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  margin-block-end: 0.75em;
+  color: rgb(15, 23, 42);
+}
+
+.api-description h3 {
+  font-size: 1.125em;
+  font-weight: 600;
+  line-height: 1.6em;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+  margin-block-end: 0.6em;
+}
+
+.api-description h4 {
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.5em;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  margin-block-end: 0.5em;
+  color: rgb(15, 23, 42);
+}
+
+.api-description h5 {
+  font-size: 0.9375em;
+  font-weight: 600;
+  line-height: 1.5em;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  margin-block-end: 0.5em;
+  color: rgb(71, 85, 105);
+}
+
+.api-description h6 {
+  font-size: 0.9375em;
+  font-weight: 600;
+  line-height: 1.5em;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  margin-block-end: 0.5em;
+  color: rgb(100, 116, 139);
+}
+
+.api-description strong {
+  font-weight: 600;
+  overflow-wrap: break-word;
+}
+
+.api-description hr {
+  border: 0.5px solid #E7E9EE;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+@media only screen and (min-width: 40em) {
+  .api-description {
+    width: auto;
+  }
+
+  .api-description h2,
+  .api-h2 {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    margin-block-end: 1em;
+  }
+
+  .api-description hr {
+    margin-top: 3em;
+    margin-bottom: 3em;
+  }
+}
 `);
 ;// CONCATENATED MODULE: ./src/styles/custom-styles.js
 
@@ -16310,7 +16518,7 @@ customize their theme. Simply add your css to this file and yarn build.
 /* harmony default export */ const custom_styles = (i`
 .code-container {
   tab-size: 2;
-  padding-left: 32px !important;
+  padding-left: 12px !important;
   padding-right: 32px !important;
 }
 .code-container * {
@@ -17224,11 +17432,10 @@ const directive_t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,EL
 //# sourceMappingURL=unsafe-html.js.map
 
 ;// CONCATENATED MODULE: ./src/utils/security-utils.js
+/* eslint-disable import/prefer-default-export */
 function isSecuritySchemeIdValid(security, securitySchemeId) {
   if (!security) return true;
-  return security.some(securityObject => {
-    return securityObject.hasOwnProperty(securitySchemeId) && Array.isArray(securityObject[securitySchemeId]) && securityObject[securitySchemeId].length === 0;
-  });
+  return security.some(securityObject => Object.prototype.hasOwnProperty.call(securityObject, securitySchemeId) && Array.isArray(securityObject[securitySchemeId]) && securityObject[securitySchemeId].length === 0);
 }
 // EXTERNAL MODULE: ./node_modules/httpsnippet/src/index.js
 var src = __webpack_require__(212);
@@ -17900,7 +18107,7 @@ function generateMarkdownForArrayAndObjectDescription(schema, level = 0) {
     if (schema.items.maxProperties) {
       itemsMarkdown = `${itemsMarkdown} <b>Max Properties:</b> ${schema.items.maxProperties}`;
     }
-    markdown = `${markdown} ⮕ ${itemsMarkdown} [ ${schema.items.description} ] `;
+    markdown = `${markdown} » ${itemsMarkdown} [ ${schema.items.description} ] `;
   }
   return markdown;
 }
@@ -18652,7 +18859,7 @@ function buildFetchHeaders(requestPanelEl) {
   }
 
   // Add Authentication Header if provided and necessary
-  let securitySchemes = this.security ? this.security : this.resolvedSpec.security;
+  const securitySchemes = this.security ? this.security : this.resolvedSpec.security;
   securitySchemes.forEach((scheme, id) => {
     if (this.selectedAuthScheme !== id) return;
     Object.keys(scheme).map(key => {
@@ -19122,7 +19329,7 @@ function handleApiKeyChange(e, securitySchemeId, apiKey) {
   updateCodeExample.call(this, requestPanelEl);
 }
 function handleSecuritySchemeChange(e) {
-  const newSelectedAuthScheme = parseInt(e.target.value);
+  const newSelectedAuthScheme = parseInt(e.target.value, 10);
   this.selectedAuthScheme = newSelectedAuthScheme;
 }
 function getSchemeTypes(scheme) {
@@ -19140,10 +19347,12 @@ function getSchemeTypes(scheme) {
   return authTypes;
 }
 function selectSecuritySchemeTemplate() {
+  if (!this.resolvedSpec.security || this.resolvedSpec.security.length <= 1) {
+    return '';
+  }
   return lit_html_x`
     <div class="right-box-select">
       <select
-        disabled=${this.resolvedSpec.security.length <= 1 || A}
         name="selectSecurityScheme"
         style="width: 100%;"
         @change=${e => {
@@ -19157,7 +19366,9 @@ function selectSecuritySchemeTemplate() {
             </option>`;
   })}
       </select>
-    </div>`;
+    </div>
+    <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 12px 0px;">
+  `;
 }
 function securitySchemeTemplate() {
   var _this$resolvedSpec$se4;
@@ -19175,7 +19386,6 @@ function securitySchemeTemplate() {
         <div class="right-box-title">Authentication</div>
         <div id="auth-table" class="right-box-content">
           ${selectSecuritySchemeTemplate.call(this)}
-          <hr style="border-top: 1px solid #E7E9EE;border-bottom:0;margin-block: 12px 0px;">
           ${this.resolvedSpec.security.map((scheme, id) => {
     return lit_html_x`
             ${id === this.selectedAuthScheme ? lit_html_x`<div>
@@ -19526,6 +19736,64 @@ const guard_e={},guard_i=directive_e(class extends directive_i{constructor(){sup
 
 //# sourceMappingURL=guard.js.map
 
+;// CONCATENATED MODULE: ./src/utils/renderBlockquote.js
+
+const calloutColors = {
+  info: '#8C929D',
+  warning: '#FFB100',
+  danger: '#DC5A41'
+};
+function calloutIcon(type) {
+  const fill = calloutColors[type] || calloutColors.info;
+  const glyph = type === 'info' ? '<rect x="9.1" y="5" width="1.8" height="1.8" rx="0.9" fill="white"/><rect x="9.1" y="8.2" width="1.8" height="6.8" rx="0.9" fill="white"/>' : '<rect x="9.1" y="5" width="1.8" height="7" rx="0.9" fill="white"/><rect x="9.1" y="13.5" width="1.8" height="1.8" rx="0.9" fill="white"/>';
+  return `<svg class="callout-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="${fill}"/>${glyph}</svg>`;
+}
+const calloutTypeMap = {
+  default: 'info',
+  info: 'info',
+  warning: 'warning',
+  danger: 'danger',
+  error: 'danger'
+};
+function resolveCalloutType(type) {
+  if (calloutTypeMap[type]) return calloutTypeMap[type];
+  if (type === 'success') return 'success';
+  return 'info';
+}
+function innerCalloutText(text) {
+  return (text || '').trim().replace(/^<p>\s*/i, '');
+}
+function decorateDefaultBlockquotes(html) {
+  if (!html || typeof html !== 'string') return html;
+  return html.replace(/<blockquote(\s[^>]*)?>/gi, (match, attrs = '') => {
+    if (/(?:info|warning|danger)-blockquote/.test(attrs)) return match;
+    if (/\b(?:warning|danger|success)\b/.test(attrs) && !/\b(?:default|info)\b/.test(attrs)) return match;
+    return `<blockquote class="info-blockquote">${calloutIcon('info')}`;
+  });
+}
+function renderBlockquote(text) {
+  const content = innerCalloutText(text);
+  const infoMarker = 'ℹ️';
+  const infoMarkerPlain = 'ℹ';
+  const bookMarker = '📘';
+  const warningMarker = '⚠️';
+  const warningMarkerPlain = '⚠';
+  const dangerMarker = '❗';
+  if (content.startsWith(infoMarker) || content.startsWith(infoMarkerPlain) || content.startsWith(bookMarker)) {
+    return `<blockquote class="info-blockquote">${calloutIcon('info')}${text.replace(infoMarker, '').replace(infoMarkerPlain, '').replace(bookMarker, '').trim()}</blockquote>`;
+  }
+  if (content.startsWith(warningMarker) || content.startsWith(warningMarkerPlain)) {
+    return `<blockquote class="warning-blockquote">${calloutIcon('warning')}${text.replace(warningMarker, '').replace(warningMarkerPlain, '').trim()}</blockquote>`;
+  }
+  if (content.startsWith(dangerMarker)) {
+    return `<blockquote class="danger-blockquote">${calloutIcon('danger')}${text.replace(dangerMarker, '').trim()}</blockquote>`;
+  }
+  return `<blockquote class="info-blockquote">${calloutIcon('info')}${text}</blockquote>`;
+}
+marked.Renderer.prototype.blockquote = renderBlockquote;
+marked.Renderer.prototype.html = function htmlRenderer(htmlContent) {
+  return decorateDefaultBlockquotes(htmlContent);
+};
 // EXTERNAL MODULE: ./node_modules/xml-but-prettier/dist/index.js
 var dist = __webpack_require__(3131);
 var dist_default = /*#__PURE__*/__webpack_require__.n(dist);
@@ -20056,11 +20324,6 @@ class SchemaTree extends lit_element_s {
       <div class="tree ${this.schemaDescriptionExpanded === 'true' ? 'expanded-all-descr' : 'collapsed-all-descr'}" @click="${e => this.handleAllEvents(e)}">
         <div class="toolbar">
           <div class="toolbar-item schema-root-type ${((_this$data = this.data) === null || _this$data === void 0 ? void 0 : _this$data['::type']) || ''} "> ${((_this$data2 = this.data) === null || _this$data2 === void 0 ? void 0 : _this$data2['::type']) || ''} </div>
-          ${this.allowSchemaDescriptionExpandToggle === 'true' ? lit_html_x`
-              <div style="flex:1"></div>
-              <div part="schema-toolbar-item schema-multiline-toggle" class='toolbar-item schema-multiline-toggle'> 
-                ${this.schemaDescriptionExpanded === 'true' ? 'Single line description' : 'Multiline description'}
-              </div>` : ''}
         </div>
         <span part="schema-description" class='m-markdown'> ${unsafe_html_o(marked(((_this$data3 = this.data) === null || _this$data3 === void 0 ? void 0 : _this$data3['::description']) || ''))}</span>
         ${this.data ? lit_html_x`
@@ -21667,26 +21930,26 @@ class ApiActionsMenu extends lit_element_s {
     this.open = false;
 
     // fechar ao clicar fora / ESC (opcional mas útil)
-    this._onDocClick = e => {
+    this.onDocClick = e => {
       if (!this.open) return;
       const path = e.composedPath();
       if (!path.includes(this)) this.open = false;
     };
-    this._onKeyDown = e => {
+    this.onKeyDown = e => {
       if (e.key === 'Escape') this.open = false;
     };
   }
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener('click', this._onDocClick);
-    document.addEventListener('keydown', this._onKeyDown, true);
+    document.addEventListener('click', this.onDocClick);
+    document.addEventListener('keydown', this.onKeyDown, true);
   }
   disconnectedCallback() {
-    document.removeEventListener('click', this._onDocClick);
-    document.removeEventListener('keydown', this._onKeyDown, true);
+    document.removeEventListener('click', this.onDocClick);
+    document.removeEventListener('keydown', this.onKeyDown, true);
     super.disconnectedCallback();
   }
-  _toggleMenu() {
+  toggleMenu() {
     this.open = !this.open;
   }
   render() {
@@ -21699,7 +21962,7 @@ class ApiActionsMenu extends lit_element_s {
         ${postmanIcon()} Download Postman collection
       </button>
 
-      <button class="toggle-btn" @click=${this._toggleMenu}>
+      <button class="toggle-btn" @click=${this.toggleMenu}>
         <span class="caret">${iconCaret()}</span>
       </button>
 
@@ -21883,6 +22146,8 @@ customElements.define('api-dropdown-actions', ApiActionsMenu);
 
 
 
+
+
 class ApiRequest extends lit_element_s {
   constructor() {
     super();
@@ -21901,7 +22166,7 @@ class ApiRequest extends lit_element_s {
     this.activeParameterSchemaTabs = {};
     this.showCurlBeforeTry = true;
     this.selectedLanguage = 'shell';
-    this._copied = false;
+    this.copied = false;
   }
   static get properties() {
     return {
@@ -22086,19 +22351,18 @@ class ApiRequest extends lit_element_s {
         type: String,
         attribute: 'allow-spec-file-download'
       },
-      _copied: {
+      copied: {
         state: true
-      },
-      codeExample: {
-        type: String
-      },
-      selectedLanguage: {
-        type: String
       }
     };
   }
   static get styles() {
-    return [table_styles, input_styles, font_styles, flex_styles, border_styles, tab_styles, prism_styles, prism_languages_styles, i`
+    return [table_styles, input_styles, font_styles, info_styles, flex_styles, border_styles, tab_styles, prism_styles, prism_languages_styles, i`
+        :host {
+          display: block;
+          width: 100%;
+          overflow: visible;
+        }
         *, *:before, *:after { box-sizing: border-box; }
         :where(button, input[type="checkbox"], [tabindex="0"]):focus-visible { box-shadow: var(--focus-shadow); }
         :where(input[type="text"], input[type="password"], select, textarea):focus-visible { border-color: var(--primary-color); }
@@ -22238,13 +22502,16 @@ class ApiRequest extends lit_element_s {
                 </div>
               </div>
             `}
-        ${this.pathDescription ? lit_html_x`<div class="m-markdown"> ${unsafe_html_o(marked(this.pathDescription))}</div>` : ''}
+        ${this.pathDescription ? lit_html_x`<div class="m-markdown api-description"> ${unsafe_html_o(marked(this.pathDescription))}</div>` : ''}
         ${guard_i([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('path'))}
         ${guard_i([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('query'))}
         ${this.requestBodyTemplate()}
         ${guard_i([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('header'))}
         ${guard_i([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('cookie'))}
         ${this.allowTry === 'false' ? '' : lit_html_x`${this.apiCallTemplate()}`}
+        <h2 class="api-h2 row">
+          Responses
+        </h2>
         <api-response
         class = "${this.renderStyle}-mode"
         style = "width:100%;"
@@ -22732,13 +22999,13 @@ class ApiRequest extends lit_element_s {
     });
     return lit_html_x`
       <div class='request-body-container' data-selected-request-body-type="${this.selectedRequestBodyType}">
-        <div class="table-title top-gap row">
-          REQUEST BODY ${this.request_body.required ? lit_html_x`<span class="mono-font" style='color:var(--red)'>*</span>` : ''} 
+        <h2 class="api-h2 row">
+          Request Body ${this.request_body.required ? lit_html_x`<span class="mono-font" style='color:var(--red)'>*</span>` : ''} 
           <code style = "font-weight:normal; margin-left:5px"> ${this.selectedRequestBodyType}</code>
           <span style="flex:1"></span>
           ${reqBodyTypeSelectorHtml}
-        </div>
-        ${this.request_body.description ? lit_html_x`<div class="m-markdown-mal" style="margin-bottom:12px">${unsafe_html_o(marked(this.request_body.description))}</div>` : ''}
+        </h2>
+        ${this.request_body.description ? lit_html_x`<div class="m-markdown" style="margin-bottom:12px">${unsafe_html_o(marked(this.request_body.description))}</div>` : ''}
         
         ${this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose') ? lit_html_x`
             <div class="tab-panel col" style="border-width:0 0 1px 0; margin-top: 24px;">
@@ -22956,15 +23223,18 @@ class ApiRequest extends lit_element_s {
       ${schema.description ? lit_html_x`<span class="m-markdown-small">${unsafe_html_o(marked(schema.description))}</span>` : ''}
     `;
   }
-  async _copyCode(code) {
+  async copyCode(code) {
     try {
       await navigator.clipboard.writeText(code);
-      this._copied = true;
-      setTimeout(() => this._copied = false, 3000);
+      this.copied = true;
+      setTimeout(() => {
+        this.copied = false;
+      }, 3000);
     } catch (err) {
-      api_request_console.error('Unable to copy', err);
+      api_request_console.error('Unable to copy', err); // eslint-disable-line no-console
     }
   }
+
   codeExampleTemplate(display = 'flex') {
     const code = this.codeExample.replace(/\\$/, '');
     return lit_html_x`
@@ -22973,11 +23243,11 @@ class ApiRequest extends lit_element_s {
         class="copy-code"
         style="position:absolute; top:12px; right:32px"
         part="btn btn-fill"
-        @click=${() => this._copyCode(code)}
+        @click=${() => this.copyCode(code)}
       >
-        ${this._copied ? checkSymbol() : copySymbol()}
+        ${this.copied ? checkSymbol() : copySymbol()}
       </button>
-        <pre class="code-container" style="white-space: pre-wrap; word-break: break-all; border: none;"><code>${unsafe_html_o(prism_core_default().highlight(this.codeExample.trim().replace(/\\$/, ''), (prism_core_default()).languages[this.selectedLanguage], this.selectedLanguage))}</code></pre>
+        <pre class="code-container" style="border: none;"><code>${unsafe_html_o(prism_core_default().highlight(this.codeExample.trim().replace(/\\$/, ''), (prism_core_default()).languages[this.selectedLanguage], this.selectedLanguage))}</code></pre>
       </div>
       `;
   }
@@ -23001,11 +23271,14 @@ class ApiRequest extends lit_element_s {
       }
     }
     return lit_html_x`
-      <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 8px;">
-        ${this.codeExampleTemplate('flex')}
-        <div style="background: #F8F7FC; padding-inline: 32px;padding-block: 8px">
+      <div class="flex-btns">
+        <button class='clear-btn icon-btn' @click='${this.onTryClick}'>${playIcon()} Test method</button>
+        <button class="clear-btn icon-btn" part="btn btn-outline" @click="${this.clearResponseData}">${trash_icon_copySymbol()} Clear</button>
+      </div>
+      <div >
+        <div style=" padding-inline: 12px;padding-block: 8px">
           ${this.responseMessage ? lit_html_x`
-                <div class="row" style="width:100%; height:max-content; background:#E7E9EE; border-radius:2px;padding-inline:4px;margin-bottom:4px">
+                <div class="row" style="width:100%; height:max-content; border-radius:2px;padding-inline:4px;margin-bottom:4px">
                   <div style="min-width:8px;min-height:8px;width:8px;height:8px;border-radius:50%;${this.responseBlobUrl || this.responseText ? 'border: 1px solid #79A479;background: #E6F2E6;' : 'border: 1px solid #DC4C43;background: #F0E6E4;'}"></div>
                   <div style="margin-left:4px; color:#4A596B; font-size:12px; font-weight:500;">${this.responseMessage}</div>
                 </div>` : ''}
@@ -23028,10 +23301,9 @@ class ApiRequest extends lit_element_s {
                   <pre style="display:flex; white-space:pre; min-height:50px; height:auto; resize:vertical; overflow:auto">${responseContent}</pre>
                 </div>` : ''}`}
         </div>
-      </div>
-      <div class="flex-btns">
-        <button class='clear-btn icon-btn' @click='${this.onTryClick}'>${playIcon()} Test method</button>
-        <button class="clear-btn icon-btn" part="btn btn-outline" @click="${this.clearResponseData}">${trash_icon_copySymbol()} Clear</button>
+      <div class="tab-panel col" style="border-top: 1px solid #E7E9EE; border-bottom: 1px solid #E7E9EE; margin-top: 8px;">
+        ${this.codeExampleTemplate('flex')}
+        </div>
       </div>`;
   }
   apiCallTemplate() {
@@ -23160,7 +23432,7 @@ class ApiRequest extends lit_element_s {
       body: tempRequest.body
     };
 
-    //fetch uses the cookies in the browser, so we add the needed cookies for the request
+    // fetch uses the cookies in the browser, so we add the needed cookies for the request
     reqCookie.forEach(cookie => {
       document.cookie = `${cookie.name}=${cookie.value}; path=/`;
     });
@@ -23281,7 +23553,7 @@ class ApiRequest extends lit_element_s {
     }
     this.requestUpdate();
 
-    //now we remove the cookies added
+    // now we remove the cookies added
     reqCookie.forEach(cookie => {
       document.cookie = `${cookie.name}=; path=/`;
     });
@@ -23509,12 +23781,6 @@ class SchemaTable extends lit_element_s {
       <div class="table ${this.schemaDescriptionExpanded === 'true' ? 'expanded-all-descr' : 'collapsed-all-descr'}" @click="${e => this.handleAllEvents(e)}">
         <div class='toolbar'>
           <div class="toolbar-item schema-root-type ${((_this$data = this.data) === null || _this$data === void 0 ? void 0 : _this$data['::type']) || ''} "> ${((_this$data2 = this.data) === null || _this$data2 === void 0 ? void 0 : _this$data2['::type']) || ''} </div>
-          ${this.data && this.allowSchemaDescriptionExpandToggle === 'true' ? lit_html_x`
-              <div style="flex:1"></div>
-              <div part="schema-multiline-toggle" class='toolbar-item schema-multiline-toggle' > 
-                ${this.schemaDescriptionExpanded === 'true' ? 'Single line description' : 'Multiline description'}
-              </div>
-            ` : ''}
         </div>
         ${(_this$data3 = this.data) !== null && _this$data3 !== void 0 && _this$data3['::description'] ? lit_html_x`<span part="schema-description" class='m-markdown'> ${unsafe_html_o(marked(this.data['::description'] || ''))}</span>` : ''}
         ${this.data ? lit_html_x`<div class="param-table">
@@ -23573,7 +23839,7 @@ class SchemaTable extends lit_element_s {
     let isOneOfLabel = false;
     if (key.startsWith('::ONE~OF') || key.startsWith('::ANY~OF')) {
       keyLabel = key.replace('::', '').replace('~', ' ');
-      description = "Click <code>+</code> to expand or <code>-</code> to hide each valid schema.";
+      description = 'Click <code>+</code> to expand or <code>-</code> to hide each valid schema.';
       isOneOfLabel = true;
     } else if (key.startsWith('::OPTION')) {
       const parts = key.split('~');
@@ -23812,7 +24078,6 @@ class ApiResponse extends lit_element_s {
         flex-direction: row;
         flex: 1 1 auto;
         justify-content: space-around;
-        align-items: center;
         column-gap: 12px;
         padding: 12px;
       }
@@ -23829,15 +24094,12 @@ class ApiResponse extends lit_element_s {
       .resp-title {
         display: flex;
         flex-direction: row;
-        align-items: center;
         justify-content: space-between;
         flex: 1 1 auto;
         height: 45px;
         text-transform: uppercase;
       }
       .resp-content {
-        padding: 24px 40px;
-        max-height: calc(100vh - 5rem - 48px);
         overflow: auto;
         background-color: #FFFFFF;
       }
@@ -23873,7 +24135,6 @@ class ApiResponse extends lit_element_s {
       }
       .focused-mode,
       .read-mode {
-        margin: 32px 0px;
         display: flex;
         flex-direction: column;
       }
@@ -23958,59 +24219,41 @@ class ApiResponse extends lit_element_s {
     }
     return lit_html_x`
       ${Object.keys(this.responses).length >= 1 ? lit_html_x`<div class='row response-panel-header' style='flex-wrap:wrap; gap:12px'>
-          ${Object.keys(this.responses).map(respStatus => lit_html_x`
+          ${Object.keys(this.responses).map(respStatus => {
+      var _this$responses$respS;
+      return lit_html_x`
             ${respStatus === '$$ref' // Swagger-Client parser creates '$$ref' object if JSON references are used to create responses - this should be ignored
-    ? '' : lit_html_x`
+      ? '' : lit_html_x`
                 <div class="resp-box ${this.selectedStatus === respStatus ? 'active' : ''}"
                   @click="${() => {
-      this.selectedStatus = respStatus;
-      if (this.responses[respStatus].content && Object.keys(this.responses[respStatus].content)[0]) {
-        this.selectedMimeType = Object.keys(this.responses[respStatus].content)[0]; // eslint-disable-line prefer-destructuring
-      } else {
-        this.selectedMimeType = undefined;
-      }
-    }}"
+        this.selectedStatus = respStatus;
+        if (this.responses[respStatus].content && Object.keys(this.responses[respStatus].content)[0]) {
+          this.selectedMimeType = Object.keys(this.responses[respStatus].content)[0]; // eslint-disable-line prefer-destructuring
+        } else {
+          this.selectedMimeType = undefined;
+        }
+      }}"
                 >
-                  <div style='display: flex; flex-direction: row; justify-content: flex-start; align-items: center;'>
-                    <div style="margin: 0">
-                      ${this.callback === 'true' ? 'Callback Response' : 'Response'}
-                    </div>
-                  </div>
                   <div style='display: flex; flex-direction: row; justify-content: flex-end; align-items: center; color: var(--fg)'>
                     <div style='margin-right: 4px'>
                       <span class='dot ${this.getResponseStatusType(respStatus)}'></span>
                     </div>
                     <div>
-                      <span>${respStatus}</span>
+                      <span>${respStatus} ${((_this$responses$respS = this.responses[respStatus]) === null || _this$responses$respS === void 0 ? void 0 : _this$responses$respS.description) || ''}</span>
                     </div>
                   </div>
                 </div>
-                `}`)}</div>` : ''}
+                `}`;
+    })}</div>` : ''}
       </div>
 
       ${Object.keys(this.responses).map(status => {
-      var _this$responses$statu3, _this$headersForEachR;
+      var _this$headersForEachR;
       return lit_html_x`
         <div class="resp-content-container" id="resp-content-${status}" style="${this.selectedStatus === status ? 'display: block' : 'display: none'} ">
           <div class="resp-border resp-content">
-            <div class="resp-title">
-              <div style='display: flex; flex-direction: row; justify-content: flex-start; align-items: center;'>
-                <div class=" ${this.callback === 'true' ? 'tiny-title' : 'req-res-title'} " style="margin: 0">
-                  ${this.callback === 'true' ? 'Callback Response' : 'Response'}
-                </div>
-              </div>
-              <div style='display: flex; flex-direction: row; justify-content: flex-end; align-items: center; column-gap: 4px'>
-                <div>
-                  <span class='dot ${this.getResponseStatusType(status)}'></span>
-                </div>
-                <div>
-                  <span>${status}</span>
-                </div>
-              </div>
-            </div>
             <div class="resp-content-body">
               <div class="top-gap">
-                <span class="resp-descr m-markdown ">${unsafe_html_o(marked(((_this$responses$statu3 = this.responses[status]) === null || _this$responses$statu3 === void 0 ? void 0 : _this$responses$statu3.description) || ''))}</span>
                 ${this.headersForEachRespStatus[status] && ((_this$headersForEachR = this.headersForEachRespStatus[status]) === null || _this$headersForEachR === void 0 ? void 0 : _this$headersForEachR.length) > 0 ? lit_html_x`${this.responseHeaderListTemplate(this.headersForEachRespStatus[status])}` : ''}
               </div>
               ${Object.keys(this.mimeResponsesForEachStatus[status]).length === 0 ? '' : lit_html_x`  
@@ -24321,8 +24564,8 @@ content_copy_button_defineProperty(ContentCopyButton, "properties", {
 if (!customElements.get('content-copy-button')) customElements.define('content-copy-button', ContentCopyButton);
 ;// CONCATENATED MODULE: ./src/utils/magic-block-utils.js
 
+
 function replacerBlocks(_match, textBefore, blockType, blockContent, textAfter) {
-  var _block$title;
   let replaced = '';
   if (textBefore) replaced += `${marked(textBefore)}\n\n`;
   try {
@@ -24353,8 +24596,16 @@ function replacerBlocks(_match, textBefore, blockType, blockContent, textAfter) 
         replaced += marked(`## ${block.title}`);
         break;
       case 'callout':
-        replaced += `<blockquote class=${block.type}><h3>${(_block$title = block.title) !== null && _block$title !== void 0 ? _block$title : ''}</h3>${marked(block.body)}</blockquote>`;
-        break;
+        {
+          const type = resolveCalloutType(block.type);
+          const title = block.title ? `<h3>${block.title}</h3>` : '';
+          if (type === 'info' || type === 'warning' || type === 'danger') {
+            replaced += `<blockquote class="${type}-blockquote">${calloutIcon(type)}${title}${marked(block.body)}</blockquote>`;
+          } else {
+            replaced += `<blockquote class="${type}">${title}${marked(block.body)}</blockquote>`;
+          }
+          break;
+        }
       case 'embed':
         replaced += `\n\n${block.html}\n\n`;
         break;
@@ -24396,42 +24647,6 @@ function processPathDescription(description) {
   const magicBlockRegex = /(?<TextBefore>[^[\]]*)\[block:(?<Type>[^\]]*)\](?<Content>.+?)\[\/block\](?<TextAfter>[^[\]]*)/gms;
   const replacedMarkdown = description.replace(magicBlockRegex, replacerBlocks);
   return replacedMarkdown;
-}
-;// CONCATENATED MODULE: ./src/utils/renderBlockquote.js
-const calloutColors = {
-  info: '#8C929D',
-  warning: '#FFB100',
-  danger: '#DC5A41'
-};
-function calloutIcon(type) {
-  const fill = calloutColors[type] || calloutColors.info;
-  const glyph = type === 'info' ? '<rect x="9.1" y="5" width="1.8" height="1.8" rx="0.9" fill="white"/><rect x="9.1" y="8.2" width="1.8" height="6.8" rx="0.9" fill="white"/>' : '<rect x="9.1" y="5" width="1.8" height="7" rx="0.9" fill="white"/><rect x="9.1" y="13.5" width="1.8" height="1.8" rx="0.9" fill="white"/>';
-  return `<svg class="callout-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="${fill}"/>${glyph}</svg>`;
-}
-function renderBlockquote(text) {
-  const infoMarker = 'ℹ️';
-  const bookMarker = '📘';
-  const warningMarker = '⚠️';
-  const dangerMarker = '❗';
-  if (text.startsWith(`<p>${infoMarker}`)) {
-    // Apply custom styling for the info blockquote
-    return `<blockquote class="info-blockquote">${calloutIcon('info')}${text.replace(infoMarker, '').trim()}</blockquote>`;
-  }
-  if (text.startsWith(`<p>${bookMarker}`)) {
-    // Apply custom styling for the info blockquote
-    return `<blockquote class="info-blockquote">${calloutIcon('info')}${text.replace(bookMarker, '').trim()}</blockquote>`;
-  }
-  if (text.startsWith(`<p>${warningMarker} `)) {
-    // Apply custom styling for the warning blockquote
-    return `<blockquote class="warning-blockquote">${calloutIcon('warning')}${text.replace(warningMarker, '').trim()}</blockquote>`;
-  }
-  if (text.startsWith(`<p>${dangerMarker} `)) {
-    // Apply custom styling for the danger blockquote
-    return `<blockquote class="danger-blockquote">${calloutIcon('danger')}${text.replace(dangerMarker, '').trim()}</blockquote>`;
-  }
-
-  // Default rendering for regular blockquotes
-  return `<blockquote class="info-blockquote">${calloutIcon('info')}${text}</blockquote>`;
 }
 ;// CONCATENATED MODULE: ./src/templates/expanded-endpoint-template.js
 
@@ -24679,7 +24894,7 @@ function overviewTemplate() {
             ${this.resolvedSpec.info.termsOfService ? lit_html_x`<span><a href="${this.resolvedSpec.info.termsOfService}" part="anchor anchor-overview">Terms of Service</a></span>` : ''}
           </div>
           <slot name="overview"></slot>
-          <div id="api-description">
+          <div id="api-description" class="api-description">
           ${this.resolvedSpec.info.description ? lit_html_x`${unsafe_html_o(`
                 <div class="m-markdown regular-font">
                 ${marked(this.resolvedSpec.info.description, this.infoDescriptionHeadingsInNavBar === 'true' ? {
@@ -25174,7 +25389,7 @@ function endpointBodyTemplate(path) {
           <content-copy-button id='${path.method}${path.path}' content='${joinURLandPath(this.selectedServer.url, path.path)}'></content-copy-button>
         </div>
       </div>
-      ${path.description ? lit_html_x`<div class="m-markdown"> ${unsafe_html_o(marked(path.description))}</div>` : ''}
+      ${path.description ? lit_html_x`<div class="m-markdown api-description"> ${unsafe_html_o(marked(path.description))}</div>` : ''}
       <slot name="${path.elementId}"></slot>
       ${pathSecurityTemplate.call(this, path.security)}
       ${codeSampleTabPanel}
@@ -26439,10 +26654,10 @@ class RapiDoc extends lit_element_s {
         flex-direction: column;
         min-width:360px;
         width:100%;
-        height:100%;
+        height:auto;
         margin:0;
         padding:0;
-        overflow: hidden;
+        overflow: visible;
         letter-spacing:normal;
         color:var(--fg);
         background-color:var(--bg);
@@ -26452,7 +26667,7 @@ class RapiDoc extends lit_element_s {
       :where(input[type="text"], input[type="password"], select, textarea):focus-visible { border-color: var(--primary-color); }
     .body {
         display:flex;
-        height:100%;
+        height:auto;
         width:100%;
         max-width: 2087px;
       }
@@ -26461,9 +26676,8 @@ class RapiDoc extends lit_element_s {
         padding: 0; 
         display:block;
         flex:1;
-        height:100%;
-        overflow-y: auto;
-        overflow-x: hidden;
+        height:auto;
+        overflow: visible;
         scrollbar-width: thin;
         scrollbar-color: var(--border-color) transparent;
       }
@@ -26662,12 +26876,6 @@ class RapiDoc extends lit_element_s {
         .section-gap { 
           padding: 0 0 0 24px; 
         }
-        .section-gap--focused-mode {
-          padding: 24px 8px; 
-        }
-        .section-gap--read-mode { 
-          padding: 0px 80px;
-        }
         .endpoint-body {
           position: relative;
           padding:36px 0 48px 0;
@@ -26678,12 +26886,6 @@ class RapiDoc extends lit_element_s {
         .nav-bar {
           width: ${r(this.fontSize === 'default' ? '300px' : this.fontSize === 'large' ? '315px' : '330px')};
           display:flex;
-        }
-        .section-gap--focused-mode { 
-          padding: 0px 0px 12px 80px; 
-        }
-        .section-gap--read-mode { 
-          padding: 0px 80px;
         }
       }`, custom_styles];
   }
@@ -70794,7 +70996,7 @@ module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$s
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("415945698cc0cd065d3f")
+/******/ 		__webpack_require__.h = () => ("644862e36ab7b37d315d")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

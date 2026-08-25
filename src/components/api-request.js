@@ -37,7 +37,7 @@ import copySymbol from './assets/copy-symbol';
 import checkSymbol from './assets/check-symbol';
 import playIcon from './assets/play-icon';
 import trashIcon from './assets/trash-icon';
-import "./api-dropdown-actions"
+import './api-dropdown-actions';
 
 export default class ApiRequest extends LitElement {
   constructor() {
@@ -57,7 +57,7 @@ export default class ApiRequest extends LitElement {
     this.activeParameterSchemaTabs = {};
     this.showCurlBeforeTry = true;
     this.selectedLanguage = 'shell';
-    this._copied = false;
+    this.copied = false;
   }
 
   static get properties() {
@@ -122,9 +122,7 @@ export default class ApiRequest extends LitElement {
       specUrl: { type: String, attribute: 'spec-url' },
       allowSpecFileDownload: { type: String, attribute: 'allow-spec-file-download' },
 
-      _copied: { state: true },
-      codeExample: { type: String },
-      selectedLanguage: { type: String },
+      copied: { state: true },
     };
   }
 
@@ -279,8 +277,8 @@ export default class ApiRequest extends LitElement {
 
         <h2 part="section-operation-summary"> ${this.shortSummary || `${this.method.toUpperCase()} ${this.path}`}</h2>
         ${this.webhook === 'true'
-          ? html`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>`
-          : html`
+    ? html`<span part="section-operation-webhook" style="color:var(--primary-color); font-weight:bold; font-size: var(--font-size-regular);"> WEBHOOK </span>`
+    : html`
               <div class='mono-font regular-font-size label-operation-container' part="section-operation-webhook-method">
                 <div class='label-operation-method-container' style='border-color: var(--${this.method}-border-color); background-color: var(--${this.method}-bg-color);'>
                   <span part="label-operation-method" class='regular-font upper method-fg bold-text ${this.method}'>${this.method}</span>
@@ -290,7 +288,7 @@ export default class ApiRequest extends LitElement {
                 </div>
               </div>
             `
-        }
+}
         ${this.pathDescription ? html`<div class="m-markdown api-description"> ${unsafeHTML(marked(this.pathDescription))}</div>` : ''}
         ${guard([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('path'))}
         ${guard([this.method, this.path, this.allowTry, this.parameters, this.activeParameterSchemaTabs], () => this.inputParametersTemplate('query'))}
@@ -1096,13 +1094,13 @@ export default class ApiRequest extends LitElement {
     `;
   }
 
-  async _copyCode(code) {
+  async copyCode(code) {
     try {
       await navigator.clipboard.writeText(code);
-      this._copied = true;
-      setTimeout(() => (this._copied = false), 3000);
+      this.copied = true;
+      setTimeout(() => { this.copied = false; }, 3000);
     } catch (err) {
-      console.error('Unable to copy', err);
+      console.error('Unable to copy', err); // eslint-disable-line no-console
     }
   }
 
@@ -1114,9 +1112,9 @@ export default class ApiRequest extends LitElement {
         class="copy-code"
         style="position:absolute; top:12px; right:32px"
         part="btn btn-fill"
-        @click=${() => this._copyCode(code)}
+        @click=${() => this.copyCode(code)}
       >
-        ${this._copied
+        ${this.copied
           ? checkSymbol()
           : copySymbol()}
       </button>
@@ -1320,10 +1318,10 @@ export default class ApiRequest extends LitElement {
       body: tempRequest.body,
     };
 
-    //fetch uses the cookies in the browser, so we add the needed cookies for the request
+    // fetch uses the cookies in the browser, so we add the needed cookies for the request
     reqCookie.forEach((cookie) => {
-      document.cookie = `${cookie.name}=${cookie.value}; path=/`
-    })
+      document.cookie = `${cookie.name}=${cookie.value}; path=/`;
+    });
 
     const fetchRequest = new Request(tempRequest.url, updatedFetchOptions);
     let fetchResponse;
@@ -1437,10 +1435,10 @@ export default class ApiRequest extends LitElement {
     }
     this.requestUpdate();
 
-    //now we remove the cookies added
+    // now we remove the cookies added
     reqCookie.forEach((cookie) => {
-      document.cookie = `${cookie.name}=; path=/`
-    })
+      document.cookie = `${cookie.name}=; path=/`;
+    });
   }
 
   getRequestPanel(e) {

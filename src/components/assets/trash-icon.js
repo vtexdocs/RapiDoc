@@ -3,8 +3,8 @@ import { html } from 'lit';
 
 /* eslint-disable indent */
 export default function copySymbol(dimensions) {
-  const width = dimensions?.width ?? 12
-  const height = dimensions?.height ?? 12
+  const width = dimensions?.width ?? 12;
+  const height = dimensions?.height ?? 12;
 
   return html`
     <svg
@@ -35,5 +35,5 @@ export default function copySymbol(dimensions) {
         fill="currentColor"
       />
     </svg>
-  `
+  `;
 }
